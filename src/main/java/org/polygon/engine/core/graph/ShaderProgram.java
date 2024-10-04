@@ -1,6 +1,7 @@
 package org.polygon.engine.core.graph;
 
 import org.lwjgl.opengl.GL40;
+import org.polygon.engine.core.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ShaderProgram {
         // Creates a list of shader Ids referencing all compiled shaders
         List<Integer> shaderModuleIdsList = new ArrayList<>();
         shaderModuleDataList.forEach((shaderModule) -> shaderModuleIdsList.add(
-                createShader(shaderModule.shaderFilePath, shaderModule.shaderType)));
+                createShader(Utils.readFiles(shaderModule.shaderFilePath), shaderModule.shaderType)));
 
         // Links all shaders and free them from memory
         link(shaderModuleIdsList);

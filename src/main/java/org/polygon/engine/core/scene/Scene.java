@@ -15,6 +15,11 @@ public class Scene {
         meshMap.values().forEach(Mesh::cleanup);
     }
 
+    public void initNewScene() {
+        cleanup();
+        meshMap = new HashMap<>();
+    }
+
     public Map<String, Mesh> getMeshMap() {
         return meshMap;
     }
