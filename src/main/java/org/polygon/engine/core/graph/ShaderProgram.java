@@ -21,7 +21,7 @@ public class ShaderProgram {
         // Creates a list of shader Ids referencing all compiled shaders
         List<Integer> shaderModuleIdsList = new ArrayList<>();
         shaderModuleDataList.forEach((shaderModule) -> shaderModuleIdsList.add(
-                createShader(Utils.readFiles(shaderModule.shaderFilePath), shaderModule.shaderType)));
+                createShader(Utils.readFile(shaderModule.shaderFilePath), shaderModule.shaderType)));
 
         // Links all shaders and free them from memory
         link(shaderModuleIdsList);

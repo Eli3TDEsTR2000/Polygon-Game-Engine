@@ -11,7 +11,7 @@ public class Utils {
     }
 
     // reads file and saves it into a string object
-    public static String readFiles(String filePath) {
+    public static String readFile(String filePath) {
         String str;
         try {
             str = new String(Files.readAllBytes(Paths.get(filePath)));
