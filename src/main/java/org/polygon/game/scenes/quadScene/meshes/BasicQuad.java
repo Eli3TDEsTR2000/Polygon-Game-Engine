@@ -8,10 +8,8 @@ public class BasicQuad extends BasicShape {
         verticesPositions = new float[] {
                 -0.5f, 0.5f, 0.0f,
                 -0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f,
+                0.5f, 0.5f, 0.0f,
         };
         this.shapeId = shapeId;
 

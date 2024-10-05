@@ -13,13 +13,13 @@ public class GameScript implements IGameLogic {
 
     @Override
     public void init(Window window, Scene scene, EngineRender render) {
-        TriangleScene.initScene(scene);
+        new TriangleScene().initScene(scene);
     }
 
     @Override
     public void input(Window window, Scene scene, long diffTimeMS) {
         if(window.isKeyPressed(GLFW_KEY_Q)) {
-            QuadScene.initScene(scene);
+            new QuadScene().initScene(scene);
         }
     }
 
