@@ -26,5 +26,10 @@ public class BasicQuad extends BasicShape {
         for (int i = 0; i < verticesPositions.length; i++) {
             verticesPositions[i] *= scale;
         }
+
+        // Set the default z coordinate for each vertex
+        for(int i = 2; i < verticesPositions.length; i += 3) {
+            verticesPositions[i] = -1.0f;
+        }
     }
 }

@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL40.*;
 
 public class SceneRender {
     private ShaderProgram shaderProgram;
+    private UniformMap uniformMap;
     public SceneRender() {
         // This will hold shader modules
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
@@ -18,6 +19,14 @@ public class SceneRender {
                 "resources/shaders/scene.vert", GL_VERTEX_SHADER));
         // Initialize A shader program
         shaderProgram = new ShaderProgram(shaderModuleDataList);
+
+        // Initialize a uniformMap
+        createUniforms();
+    }
+
+    private void createUniforms() {
+        uniformMap = new UniformMap(shaderProgram.getProgramId());
+        uniformMap.createUniform("projectionMatrix");
     }
 
     public void cleanup() {
@@ -28,7 +37,11 @@ public class SceneRender {
     public void render(Scene scene) {
         shaderProgram.bind();
 
+        // Set the projectionMatrix uniform with the projection matrix stored in scene.
+        uniformMap.setUniform("projectionMatrix", scene.getProjection().getMatrix());
+
         // We get all scene meshes
+        // Draw calls initiated here
         scene.getMeshMap().values().forEach((mesh) -> {
             glBindVertexArray(mesh.getVaoId());
             glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
