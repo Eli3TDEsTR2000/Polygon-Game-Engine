@@ -10,17 +10,8 @@ public class QuadScene extends BasicScene {
     @Override
     public void initScene(Scene scene) {
         scene.initNewScene();
-        float[] colors = new float[]{
-                0.5f, 0.0f, 0.0f,
-                0.0f, 0.5f, 0.0f,
-                0.0f, 0.0f, 0.5f,
-                0.0f, 0.5f, 0.5f,
-        };
-        int[] indexArray = new int[] {
-                0, 1, 3, 3, 1, 2,
-        };
         BasicQuad quad = new BasicQuad("Quad-01", 1.0f);
-        Mesh quadMesh = new Mesh(quad.getVerticesPositions(), colors, indexArray);
+        Mesh quadMesh = new Mesh(quad.getVerticesPositions(), quad.getDefaultColor(), quad.getIndexArray());
         scene.addMesh(quad.getShapeId(), quadMesh);
     }
 }

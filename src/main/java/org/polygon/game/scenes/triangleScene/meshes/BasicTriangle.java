@@ -9,21 +9,19 @@ public class BasicTriangle extends BasicShape {
                 -0.5f, -0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f,
         };
+        defaultColor = new float[] {
+                1.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 1.0f,
+        };
+        indexArray = new int[] {
+                0, 1, 2
+        };
         this.shapeId = shapeId;
 
         // Set triangle scale
         for(int i = 0; i < verticesPositions.length; i++) {
             verticesPositions[i] *= scale;
         }
-    }
-
-    @Override
-    public String getShapeId() {
-        return shapeId;
-    }
-
-    @Override
-    public float[] getVerticesPositions() {
-        return verticesPositions;
     }
 }

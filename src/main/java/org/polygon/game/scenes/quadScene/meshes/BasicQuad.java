@@ -11,21 +11,20 @@ public class BasicQuad extends BasicShape {
                 0.5f, -0.5f, 0.0f,
                 0.5f, 0.5f, 0.0f,
         };
+        defaultColor = new float[]{
+                0.5f, 0.0f, 0.0f,
+                0.0f, 0.5f, 0.0f,
+                0.0f, 0.0f, 0.5f,
+                0.0f, 0.5f, 0.5f,
+        };
+        indexArray = new int[] {
+                0, 1, 3, 3, 1, 2
+        };
         this.shapeId = shapeId;
 
         // Scale quad
         for (int i = 0; i < verticesPositions.length; i++) {
             verticesPositions[i] *= scale;
         }
-    }
-
-    @Override
-    public String getShapeId() {
-        return shapeId;
-    }
-
-    @Override
-    public float[] getVerticesPositions() {
-        return verticesPositions;
     }
 }

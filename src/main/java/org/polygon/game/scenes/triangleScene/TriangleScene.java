@@ -9,17 +9,9 @@ public class TriangleScene extends BasicScene {
     @Override
     public void initScene(Scene scene) {
         scene.initNewScene();
-        float[] colors = new float[] {
-                1.0f, 0.0f, 0.0f,
-                1.0f, 0.0f, 0.0f,
-                1.0f, 0.0f, 0.0f,
-        };
-
-        int[] indexArray = new int[] {
-                0, 1, 2
-        };
         BasicTriangle triangle = new BasicTriangle("Triangle-01", 1.0f);
-        Mesh triangleMesh = new Mesh(triangle.getVerticesPositions(), colors, indexArray);
+        Mesh triangleMesh = new Mesh(triangle.getVerticesPositions(),
+                triangle.getDefaultColor(), triangle.getIndexArray());
         scene.addMesh(triangle.getShapeId(), triangleMesh);
     }
 }
