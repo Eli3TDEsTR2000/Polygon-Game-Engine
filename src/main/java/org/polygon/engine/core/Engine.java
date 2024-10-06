@@ -29,7 +29,7 @@ public class Engine {
         // initializing game;
         this.gameLogic = gameLogic;
         render = new EngineRender();
-        scene = new Scene();
+        scene = new Scene(window.getWidth(), window.getHeight());
         gameLogic.init(window, scene, render);
         running = true;
     }
@@ -46,7 +46,8 @@ public class Engine {
     }
 
     private void resize() {
-        // Implemented later
+        // Update the projection matrix each time the window is resized
+        scene.resize(window.getWidth(), window.getHeight());
     }
 
     // Main game loop
