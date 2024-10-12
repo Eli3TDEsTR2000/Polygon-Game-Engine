@@ -1,8 +1,6 @@
-package org.polygon.game.scenes;
+package org.polygon.test.scenes;
 
 import org.polygon.engine.core.scene.Scene;
-
-import java.lang.reflect.InvocationTargetException;
 
 public abstract class BasicScene {
     public BasicScene() {

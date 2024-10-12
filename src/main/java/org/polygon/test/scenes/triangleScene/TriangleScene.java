@@ -1,9 +1,9 @@
-package org.polygon.game.scenes.triangleScene;
+package org.polygon.test.scenes.triangleScene;
 
 import org.polygon.engine.core.graph.Mesh;
 import org.polygon.engine.core.scene.Scene;
-import org.polygon.game.scenes.BasicScene;
-import org.polygon.game.scenes.triangleScene.meshes.BasicTriangle;
+import org.polygon.test.scenes.BasicScene;
+import org.polygon.test.scenes.triangleScene.meshes.BasicTriangle;
 
 public class TriangleScene extends BasicScene {
     @Override

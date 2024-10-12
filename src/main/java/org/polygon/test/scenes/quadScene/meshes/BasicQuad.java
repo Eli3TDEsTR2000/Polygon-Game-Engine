@@ -1,6 +1,6 @@
-package org.polygon.game.scenes.quadScene.meshes;
+package org.polygon.test.scenes.quadScene.meshes;
 
-import org.polygon.game.scenes.BasicShape;
+import org.polygon.test.scenes.BasicShape;
 
 public class BasicQuad extends BasicShape {
 

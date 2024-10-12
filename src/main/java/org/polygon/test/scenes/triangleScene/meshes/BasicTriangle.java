@@ -1,6 +1,6 @@
-package org.polygon.game.scenes.triangleScene.meshes;
+package org.polygon.test.scenes.triangleScene.meshes;
 
-import org.polygon.game.scenes.BasicShape;
+import org.polygon.test.scenes.BasicShape;
 
 public class BasicTriangle extends BasicShape {
     public BasicTriangle(String shapeId, float scale) {

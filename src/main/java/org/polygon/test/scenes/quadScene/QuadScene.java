@@ -1,9 +1,9 @@
-package org.polygon.game.scenes.quadScene;
+package org.polygon.test.scenes.quadScene;
 
 import org.polygon.engine.core.graph.Mesh;
 import org.polygon.engine.core.scene.Scene;
-import org.polygon.game.scenes.BasicScene;
-import org.polygon.game.scenes.quadScene.meshes.BasicQuad;
+import org.polygon.test.scenes.BasicScene;
+import org.polygon.test.scenes.quadScene.meshes.BasicQuad;
 
 public class QuadScene extends BasicScene {
 

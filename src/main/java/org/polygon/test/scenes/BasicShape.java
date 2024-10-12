@@ -1,4 +1,4 @@
-package org.polygon.game.scenes;
+package org.polygon.test.scenes;
 
 public abstract class BasicShape {
     protected float[] verticesPositions;

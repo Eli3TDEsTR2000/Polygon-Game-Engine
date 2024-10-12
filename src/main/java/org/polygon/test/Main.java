@@ -1,4 +1,4 @@
-package org.polygon.game;
+package org.polygon.test;
 
 import org.polygon.engine.core.Engine;
 import org.polygon.engine.core.Window;
