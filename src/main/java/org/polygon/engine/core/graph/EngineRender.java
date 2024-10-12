@@ -15,6 +15,7 @@ public class EngineRender {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+        glEnable(GL_DEPTH_TEST);
         sceneRender = new SceneRender();
     }
 

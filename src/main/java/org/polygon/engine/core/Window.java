@@ -128,6 +128,10 @@ public class Window {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
     }
 
+    public boolean isKeyReleased(int keyCode) {
+        return glfwGetKey(windowHandle, keyCode) == GLFW_RELEASE;
+    }
+
     public void pollEvents() {
         // Poll for window events. The key callback above will only be
         // invoked during this call.

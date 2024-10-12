@@ -15,7 +15,7 @@ public class QuadScene extends BasicScene {
     @Override
     public void initScene(Scene scene) {
         scene.resetScene();
-        BasicQuad quad = new BasicQuad("Quad", 1.0f);
+        BasicQuad quad = new BasicQuad(1.0f);
         Mesh quadMesh = new Mesh(quad.getVerticesPositions(), quad.getDefaultColor(), quad.getIndexArray());
         List<Mesh> meshList = new ArrayList<>();
         meshList.add(quadMesh);

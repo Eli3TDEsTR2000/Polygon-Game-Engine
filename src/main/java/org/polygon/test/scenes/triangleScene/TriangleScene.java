@@ -14,7 +14,7 @@ public class TriangleScene extends BasicScene {
     @Override
     public void initScene(Scene scene) {
         scene.resetScene();
-        BasicTriangle triangle = new BasicTriangle("Triangle", 1.0f);
+        BasicTriangle triangle = new BasicTriangle(1.0f);
         Mesh triangleMesh = new Mesh(triangle.getVerticesPositions(),
                 triangle.getDefaultColor(), triangle.getIndexArray());
         List<Mesh> meshList = new ArrayList<>();
