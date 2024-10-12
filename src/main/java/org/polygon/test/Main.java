@@ -9,6 +9,7 @@ public class Main {
         Window.WindowOptions options = new Window.WindowOptions();
         options.width = 1920;
         options.height = 1080;
+        options.ups = 50;
         Engine engine = new Engine("Polygon Game Engine", options, script);
         engine.start();
     }

@@ -1,6 +1,6 @@
 package org.polygon.engine.core.scene;
 
-import org.polygon.engine.core.graph.Mesh;
+import org.polygon.engine.core.graph.Model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,31 +8,42 @@ import java.util.Map;
 public class Scene {
     // Holds projection matrix and updating projection matrix logic
     Projection projection;
-    // Holds all Meshes that are going to be rendered
-    private Map<String, Mesh> meshMap;
+    // Holds all Models that are going to be rendered
+    private Map<String, Model> modelMap;
     public Scene(int width, int height) {
-        // Initialize the Mesh map and projection matrix
-        meshMap = new HashMap<>();
+        // Initialize the scene with empty Model map and a projection matrix
+        modelMap = new HashMap<>();
         projection = new Projection(width, height);
     }
 
     public void cleanup() {
         // Removes VAO and VBO for each mesh
-        meshMap.values().forEach(Mesh::cleanup);
+        modelMap.values().forEach(Model::cleanup);
     }
 
-    public void initNewScene() {
+    public void resetScene() {
         // Removes VAO and VBO for each mesh and frees meshMap
         cleanup();
-        meshMap = new HashMap<>();
+        modelMap = new HashMap<>();
     }
 
-    public Map<String, Mesh> getMeshMap() {
-        return meshMap;
+    public void addEntity(Entity entity) {
+        String modelId = entity.getModelId();
+        Model model = modelMap.get(modelId);
+        if(model == null) {
+            throw new RuntimeException("Couldn't find model [" + modelId +"] for entity ["
+                    + entity.getEntityId() + "]");
+        }
+        // TODO LATER - clean entity list when we swap scenes
+        model.getEntityList().add(entity);
     }
 
-    public void addMesh(String meshId, Mesh mesh) {
-        meshMap.put(meshId, mesh);
+    public Map<String, Model> getModelMap() {
+        return modelMap;
+    }
+
+    public void addModel(Model model) {
+        modelMap.put(model.getModelId(), model);
     }
 
     public Projection getProjection() {

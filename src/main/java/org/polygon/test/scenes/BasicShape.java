@@ -4,11 +4,6 @@ public abstract class BasicShape {
     protected float[] verticesPositions;
     protected float[] defaultColor;
     protected int[] indexArray;
-    protected String shapeId;
-
-    public final String getShapeId() {
-        return shapeId;
-    }
     public final float[] getVerticesPositions() {
         return verticesPositions;
     }
@@ -17,5 +12,15 @@ public abstract class BasicShape {
     }
     public final int[] getIndexArray() {
         return indexArray;
+    }
+
+    protected void setScale(float scale) {
+        for(int i = 0; i < verticesPositions.length; i++) {
+            verticesPositions[i] *= scale;
+        }
+        // Set the default z coordinate for each vertex
+        for(int i = 2; i < verticesPositions.length; i += 3) {
+            verticesPositions[i] /= scale;
+        }
     }
 }

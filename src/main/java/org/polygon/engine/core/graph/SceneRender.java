@@ -27,6 +27,7 @@ public class SceneRender {
     private void createUniforms() {
         uniformMap = new UniformMap(shaderProgram.getProgramId());
         uniformMap.createUniform("projectionMatrix");
+        uniformMap.createUniform("modelMatrix");
     }
 
     public void cleanup() {
@@ -40,11 +41,15 @@ public class SceneRender {
         // Set the projectionMatrix uniform with the projection matrix stored in scene.
         uniformMap.setUniform("projectionMatrix", scene.getProjection().getMatrix());
 
-        // We get all scene meshes
         // Draw calls initiated here
-        scene.getMeshMap().values().forEach((mesh) -> {
-            glBindVertexArray(mesh.getVaoId());
-            glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+        scene.getModelMap().values().forEach((model) -> {
+            model.getMeshList().stream().forEach((mesh) -> {
+                glBindVertexArray(mesh.getVaoId());
+                model.getEntityList().forEach((entity) -> {
+                    uniformMap.setUniform("modelMatrix", entity.getModelMatrix());
+                    glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                });
+            });
         });
 
         glBindVertexArray(0);
