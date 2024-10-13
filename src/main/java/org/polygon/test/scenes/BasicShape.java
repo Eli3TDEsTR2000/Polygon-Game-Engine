@@ -2,13 +2,13 @@ package org.polygon.test.scenes;
 
 public abstract class BasicShape {
     protected float[] verticesPositions;
-    protected float[] defaultColor;
+    protected float[] defaultTextCoords;
     protected int[] indexArray;
     public final float[] getVerticesPositions() {
         return verticesPositions;
     }
-    public final float[] getDefaultColor() {
-        return defaultColor;
+    public final float[] getDefaultTextCoords() {
+        return defaultTextCoords;
     }
     public final int[] getIndexArray() {
         return indexArray;

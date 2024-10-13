@@ -2,8 +2,10 @@ package org.polygon.test.scenes.cubeScene;
 
 import org.joml.Vector4f;
 import org.polygon.engine.core.Window;
+import org.polygon.engine.core.graph.Material;
 import org.polygon.engine.core.graph.Mesh;
 import org.polygon.engine.core.graph.Model;
+import org.polygon.engine.core.graph.Texture;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.test.scenes.BasicScene;
@@ -21,9 +23,13 @@ public class CubeScene extends BasicScene {
     public void initScene(Scene scene) {
         scene.resetScene();
         BasicCube cube = new BasicCube(1.0f);
-        Mesh cubeMesh = new Mesh(cube.getVerticesPositions(), cube.getDefaultColor(), cube.getIndexArray());
+        Mesh cubeMesh = new Mesh(cube.getVerticesPositions(), cube.getDefaultTextCoords(), cube.getIndexArray());
+        Material material = new Material();
+        material.getMeshList().add(cubeMesh);
+        scene.getTextureCache().createTexture("resources/models/cube/cube.png");
+        material.setTexturePath("resources/models/cube/cube.png");
         Model basicCube = new Model("Cube", new ArrayList<>());
-        basicCube.getMeshList().add(cubeMesh);
+        basicCube.getMaterialList().add(material);
         scene.addModel(basicCube);
 
         cubeEntity = new Entity("Cube-01", "Cube");

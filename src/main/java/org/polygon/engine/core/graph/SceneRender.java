@@ -28,6 +28,7 @@ public class SceneRender {
         uniformMap = new UniformMap(shaderProgram.getProgramId());
         uniformMap.createUniform("projectionMatrix");
         uniformMap.createUniform("modelMatrix");
+        uniformMap.createUniform("textSampler");
     }
 
     public void cleanup() {
@@ -40,14 +41,21 @@ public class SceneRender {
 
         // Set the projectionMatrix uniform with the projection matrix stored in scene.
         uniformMap.setUniform("projectionMatrix", scene.getProjection().getMatrix());
+        // Set the textSampler uniform with 0 (one texture unit)
+        uniformMap.setUniform("textSampler", 0);
 
         // Draw calls initiated here
+
         scene.getModelMap().values().forEach((model) -> {
-            model.getMeshList().stream().forEach((mesh) -> {
-                glBindVertexArray(mesh.getVaoId());
-                model.getEntityList().forEach((entity) -> {
-                    uniformMap.setUniform("modelMatrix", entity.getModelMatrix());
-                    glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+            model.getMaterialList().forEach((material) -> {
+                glActiveTexture(GL_TEXTURE0);
+                scene.getTextureCache().getTexture(material.getTexturePath()).bind();
+                material.getMeshList().forEach((mesh) -> {
+                    glBindVertexArray(mesh.getVaoId());
+                    model.getEntityList().forEach((entity) -> {
+                        uniformMap.setUniform("modelMatrix", entity.getModelMatrix());
+                        glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                    });
                 });
             });
         });

@@ -6,6 +6,7 @@ import org.lwjgl.system.MemoryStack;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.lwjgl.opengl.GL40.glUniform1i;
 import static org.lwjgl.opengl.GL40.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL40.glGetUniformLocation;
 
@@ -31,15 +32,25 @@ public class UniformMap {
         uniformReferences.put(uniformName, uniformLocation);
     }
 
+    // Get uniform location for setUniform methods
+    private Integer getUniformLocation(String uniformName) {
+        Integer location = uniformReferences.get(uniformName);
+        if(location == null) {
+            throw new RuntimeException("Could not set value to uniform ["
+                    + uniformName + "], Uniform not found!");
+        }
+
+        return location;
+    }
+
     // set's the uniform reference with value. TODO LATER - this only supports mat4 uniforms
     public void setUniform(String uniformName, Matrix4f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            Integer location = uniformReferences.get(uniformName);
-            if(location == null) {
-                throw new RuntimeException("Could not set value to uniform ["
-                        + uniformName + "], Uniform not found!");
-            }
-            glUniformMatrix4fv(location, false, value.get(stack.mallocFloat(16)));
+            glUniformMatrix4fv(getUniformLocation(uniformName), false, value.get(stack.mallocFloat(16)));
         }
+    }
+
+    public void setUniform(String uniformName, int value) {
+        glUniform1i(getUniformLocation(uniformName), value);
     }
 }

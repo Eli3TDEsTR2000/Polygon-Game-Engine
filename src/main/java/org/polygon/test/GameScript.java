@@ -6,15 +6,11 @@ import org.polygon.engine.core.graph.EngineRender;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.test.scenes.BasicScene;
 import org.polygon.test.scenes.cubeScene.CubeScene;
-import org.polygon.test.scenes.quadScene.QuadScene;
-import org.polygon.test.scenes.triangleScene.TriangleScene;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class GameScript implements IGameLogic {
     private BasicScene[] scenes = new BasicScene[] {
-            new TriangleScene(),
-            new QuadScene(),
             new CubeScene(),
     };
 

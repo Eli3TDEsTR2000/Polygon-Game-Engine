@@ -15,7 +15,7 @@ public class Mesh {
     private List<Integer> vboIdList;
     private int numVertices;
 
-    public Mesh(float[] positions, float[] colors, int[] indexArray) {
+    public Mesh(float[] positions, float[] textCoords, int[] indexArray) {
         // Create a temp vboId reference
         // We don't need to store individual vbo references, instead we have an arrayList to store instead
         int vboId;
@@ -52,16 +52,17 @@ public class Mesh {
             // no strides as positions array only contains positions data for each vertex
             glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-            // Create Color VBO reference
+            // Create Texture coordinates  VBO reference
             vboId = glGenBuffers();
             vboIdList.add(vboId);
-            FloatBuffer colorsBuffer = stack.callocFloat(colors.length);
-            colorsBuffer.put(0, colors);
+            FloatBuffer textCoordsBuffer = stack.callocFloat(textCoords.length);
+            textCoordsBuffer.put(0, textCoords);
             glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
-            // Enable index 1 in the VAO attribute array, index 1 is colors for each vertex in vertex shader
+            glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
+            // Enable index 1 in the VAO attribute array
+            // Texture coordinates are 2D coordinate that takes a size of 2 in the buffer for X and Y
             glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+            glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 
             // Create Index VBO
             vboId = glGenBuffers();

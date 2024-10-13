@@ -1,6 +1,7 @@
 package org.polygon.engine.core.scene;
 
 import org.polygon.engine.core.graph.Model;
+import org.polygon.engine.core.graph.TextureCache;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,10 +11,14 @@ public class Scene {
     Projection projection;
     // Holds all Models that are going to be rendered
     private Map<String, Model> modelMap;
+    // Holds textures used in the scene
+    private TextureCache textureCache;
     public Scene(int width, int height) {
         // Initialize the scene with empty Model map and a projection matrix
         modelMap = new HashMap<>();
         projection = new Projection(width, height);
+        // Initialize the textureCache
+        textureCache = new TextureCache();
     }
 
     public void cleanup() {
@@ -34,7 +39,6 @@ public class Scene {
             throw new RuntimeException("Couldn't find model [" + modelId +"] for entity ["
                     + entity.getEntityId() + "]");
         }
-        // TODO LATER - clean entity list when we swap scenes
         model.getEntityList().add(entity);
     }
 
@@ -48,6 +52,10 @@ public class Scene {
 
     public Projection getProjection() {
         return projection;
+    }
+
+    public TextureCache getTextureCache() {
+        return textureCache;
     }
 
     public void resize(int width, int height) {

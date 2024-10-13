@@ -8,24 +8,24 @@ import java.util.List;
 public class Model {
     private final String modelId;
     private List<Entity> entityList;
-    private List<Mesh> meshList;
+    private List<Material> materialList;
 
-    public Model(String modelId, List<Mesh> meshList) {
+    public Model(String modelId, List<Material> materialList) {
         this.modelId = modelId;
-        this.meshList = meshList;
+        this.materialList = materialList;
         entityList = new ArrayList<>();
     }
 
     public void cleanup() {
-        meshList.forEach(Mesh::cleanup);
+        materialList.forEach(Material::cleanup);
     }
 
     public List<Entity> getEntityList() {
         return entityList;
     }
 
-    public List<Mesh> getMeshList() {
-        return meshList;
+    public List<Material> getMaterialList() {
+        return materialList;
     }
 
     public String getModelId() {
