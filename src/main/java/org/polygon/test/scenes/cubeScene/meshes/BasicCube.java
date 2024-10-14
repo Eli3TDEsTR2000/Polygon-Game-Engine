@@ -3,7 +3,12 @@ package org.polygon.test.scenes.cubeScene.meshes;
 import org.polygon.test.scenes.BasicShape;
 
 public class BasicCube extends BasicShape {
-    public BasicCube(float scale) {
+    public BasicCube() {
+
+    }
+
+    @Override
+    protected void initShape() {
         verticesPositions = new float[] {
                 // V0
                 -0.5f, 0.5f, 0.5f,
@@ -101,7 +106,7 @@ public class BasicCube extends BasicShape {
                 // Back face
                 4, 6, 7, 5, 4, 7,
         };
-
-        setScale(scale);
     }
+
+
 }

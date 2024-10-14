@@ -1,9 +1,19 @@
 package org.polygon.test.scenes;
 
+import org.polygon.engine.core.graph.Mesh;
+
 public abstract class BasicShape {
     protected float[] verticesPositions;
     protected float[] defaultTextCoords;
     protected int[] indexArray;
+    protected Mesh mesh;
+
+    protected BasicShape() {
+        initShape();
+        mesh = new Mesh(verticesPositions, defaultTextCoords, indexArray);
+    }
+
+    protected abstract void initShape();
     public final float[] getVerticesPositions() {
         return verticesPositions;
     }
@@ -14,13 +24,7 @@ public abstract class BasicShape {
         return indexArray;
     }
 
-    protected void setScale(float scale) {
-        for(int i = 0; i < verticesPositions.length; i++) {
-            verticesPositions[i] *= scale;
-        }
-        // Set the default z coordinate for each vertex
-        for(int i = 2; i < verticesPositions.length; i += 3) {
-            verticesPositions[i] /= scale;
-        }
+    public final Mesh getMesh() {
+        return mesh;
     }
 }

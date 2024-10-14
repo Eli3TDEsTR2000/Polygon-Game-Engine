@@ -22,10 +22,9 @@ public class CubeScene extends BasicScene {
     @Override
     public void initScene(Scene scene) {
         scene.resetScene();
-        BasicCube cube = new BasicCube(1.0f);
-        Mesh cubeMesh = new Mesh(cube.getVerticesPositions(), cube.getDefaultTextCoords(), cube.getIndexArray());
+        BasicCube cube = new BasicCube();
         Material material = new Material();
-        material.getMeshList().add(cubeMesh);
+        material.getMeshList().add(cube.getMesh());
         scene.getTextureCache().createTexture("resources/models/cube/cube.png");
         material.setTexturePath("resources/models/cube/cube.png");
         Model basicCube = new Model("Cube", new ArrayList<>());
@@ -38,6 +37,8 @@ public class CubeScene extends BasicScene {
         scene.addEntity(cubeEntity);
         rotation = 0;
         positionScaleVector = new Vector4f();
+
+
     }
 
     @Override
