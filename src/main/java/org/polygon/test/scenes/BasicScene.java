@@ -9,11 +9,7 @@ public abstract class BasicScene {
 
     public abstract void initScene(Scene scene);
 
-    public void input(Window window, Scene scene, long diffTimeMS) {
+    public abstract void input(Window window, Scene scene, long diffTimeMS);
 
-    }
-
-    public void update(Window window, Scene scene, long diffTimeMS) {
-
-    }
+    public abstract void update(Window window, Scene scene, long diffTimeMS);
 }

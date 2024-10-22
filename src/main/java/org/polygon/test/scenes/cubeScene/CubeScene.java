@@ -9,6 +9,7 @@ import org.polygon.engine.core.graph.Texture;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.test.scenes.BasicScene;
+import org.polygon.test.scenes.BasicShape;
 import org.polygon.test.scenes.cubeScene.meshes.BasicCube;
 
 import java.util.ArrayList;
@@ -22,23 +23,21 @@ public class CubeScene extends BasicScene {
     @Override
     public void initScene(Scene scene) {
         scene.resetScene();
-        BasicCube cube = new BasicCube();
+        BasicShape cubeShape = new BasicCube();
         Material material = new Material();
-        material.getMeshList().add(cube.getMesh());
+        material.getMeshList().add(cubeShape.getMesh());
         scene.getTextureCache().createTexture("resources/models/cube/cube.png");
         material.setTexturePath("resources/models/cube/cube.png");
-        Model basicCube = new Model("Cube", new ArrayList<>());
-        basicCube.getMaterialList().add(material);
-        scene.addModel(basicCube);
+        Model cube = new Model("Cube", new ArrayList<>());
+        cube.getMaterialList().add(material);
+        scene.addModel(cube);
 
-        cubeEntity = new Entity("Cube-01", "Cube");
+        cubeEntity = new Entity("Cube-01", cube.getModelId());
         cubeEntity.setPosition(0, 0, -2);
         cubeEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
         rotation = 0;
         positionScaleVector = new Vector4f();
-
-
     }
 
     @Override
