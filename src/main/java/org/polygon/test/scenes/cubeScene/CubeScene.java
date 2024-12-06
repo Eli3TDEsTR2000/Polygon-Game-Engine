@@ -20,9 +20,13 @@ public class CubeScene extends BasicScene {
     private Entity cubeEntity;
     private Vector4f positionScaleVector;
     private float rotation;
+
+    public CubeScene(Window window) {
+        super(window);
+    }
+
     @Override
-    public void initScene(Scene scene) {
-        scene.resetScene();
+    protected void init() {
         BasicShape cubeShape = new BasicCube();
         Material material = new Material();
         material.getMeshList().add(cubeShape.getMesh());
@@ -41,7 +45,7 @@ public class CubeScene extends BasicScene {
     }
 
     @Override
-    public void input(Window window, Scene scene, long diffTimeMS) {
+    public void input(Window window, long diffTimeMS) {
         positionScaleVector.zero();
         if(window.isKeyPressed(GLFW_KEY_UP)) {
             positionScaleVector.y = 1;
@@ -77,7 +81,7 @@ public class CubeScene extends BasicScene {
     }
 
     @Override
-    public void update(Window window, Scene scene, long diffTimeMS) {
+    public void update(Window window, long diffTimeMS) {
         rotation += 15 * diffTimeMS / 1000.0f;
         if (rotation > 360) {
             rotation = 0;

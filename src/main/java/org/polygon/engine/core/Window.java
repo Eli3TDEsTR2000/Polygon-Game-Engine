@@ -4,6 +4,7 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
+import org.polygon.engine.core.scene.Scene;
 
 import java.nio.*;
 import java.util.concurrent.Callable;
@@ -20,11 +21,10 @@ public class Window {
     private long windowHandle;
     private int width;
     private int height;
-    private Callable<Void> resizeFunc;
 
-    public Window(String title, WindowOptions opts, Callable<Void> resizeFunc) {
-        this.resizeFunc = resizeFunc;
+    private Scene currentScene;
 
+    public Window(String title, WindowOptions opts) {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -123,6 +123,20 @@ public class Window {
     public long getWindowHandle() {
         return windowHandle;
     }
+    public Scene getCurrentScene() {
+        if(currentScene == null) {
+            throw new RuntimeException("CurrentScene doesn't hold a scene yet!");
+        }
+        return currentScene;
+    }
+
+    public void setCurrentScene(Scene scene) {
+        currentScene = scene;
+    }
+
+    public Scene createScene() {
+        return new Scene(getWidth(), getHeight());
+    }
 
     public boolean isKeyPressed(int keyCode) {
         return glfwGetKey(windowHandle, keyCode) == GLFW_PRESS;
@@ -167,11 +181,7 @@ public class Window {
         this.width = width;
         this.height = height;
 
-        try {
-            resizeFunc.call();
-        } catch(Exception exception) {
-            System.err.println("Error calling the resize callback function\n" + exception.getMessage());
-        }
+        currentScene.resize(this.width, this.height);
     }
 
     public static class WindowOptions {

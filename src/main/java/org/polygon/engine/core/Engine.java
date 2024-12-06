@@ -8,7 +8,6 @@ public class Engine {
     private final IGameLogic gameLogic;
     private final Window window;
     private EngineRender render;
-    private Scene scene;
     private int targetFps;
     private int targetUps;
     private boolean running;
@@ -19,18 +18,16 @@ public class Engine {
         targetUps = opts.ups;
 
         // Creating engine's window and passing the resize function as reference
-        window = new Window(windowTitle, opts, () -> {
-            resize();
-            return null;
-        });
+        window = new Window(windowTitle, opts);
 
         // Passing game logic to engine
         // creating the renderer scene entities
         // initializing game;
         this.gameLogic = gameLogic;
         render = new EngineRender();
-        scene = new Scene(window.getWidth(), window.getHeight());
-        gameLogic.init(window, scene, render);
+        // Fail-safe to ensure the engine won't crash if the current scene is empty
+        window.setCurrentScene(window.createScene());
+        gameLogic.init(window, render);
         running = true;
     }
 
@@ -40,14 +37,9 @@ public class Engine {
         // Destroying Renderer entity
         render.cleanup();
         // Destroying Scene entity
-        scene.cleanup();
-        // Finally, destroying
+        window.getCurrentScene().cleanup();
+        // Finally, destroying window entity
         window.cleanup();
-    }
-
-    private void resize() {
-        // Update the projection matrix each time the window is resized
-        scene.resize(window.getWidth(), window.getHeight());
     }
 
     // Main game loop
@@ -82,13 +74,13 @@ public class Engine {
             deltaRender += (nowMS - rbeforeMS) / targetRenderMS;
 
             // Process game inputs and passing delta time taken between frames
-            gameLogic.input(window, scene, nowMS - rbeforeMS);
+            gameLogic.input(window, nowMS - rbeforeMS);
 
             // Caps updating according to targetUps
             if(deltaUpdate >= 1) {
                 // Updating game according to physics or game inputs
                 // and passing delta time taken between updates
-                gameLogic.update(window, scene, nowMS - ubeforeMS);
+                gameLogic.update(window, nowMS - ubeforeMS);
                 ubeforeMS = nowMS;
                 // Reset deltaUpdate to redetermine if a time matching targetUps in MS
                 // had passed or not for future update calls
@@ -97,7 +89,7 @@ public class Engine {
 
             if(targetFps <= 0 || deltaRender >= 1) {
                 // Clears the screen and initiate draw calls then redraw frame buffer
-                render.render(window, scene);
+                render.render(window);
                 // Reset deltaRender to redetermine if a time matching targetFps in MS
                 // had passed or not for future draw calls
                 deltaRender--;

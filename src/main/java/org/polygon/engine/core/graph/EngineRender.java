@@ -23,11 +23,11 @@ public class EngineRender {
         sceneRender.cleanup();
     }
 
-    public void render(Window window, Scene scene) {
+    public void render(Window window) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
         // Setup a viewport
         glViewport(0, 0, window.getWidth(), window.getHeight());
         // Render scene objects using shaders
-        sceneRender.render(scene);
+        sceneRender.render(window.getCurrentScene());
     }
 }
