@@ -26,10 +26,11 @@ public class Scene {
         modelMap.values().forEach(Model::cleanup);
     }
 
-    public void resetScene() {
+    public void reset() {
         // Removes VAO and VBO for each mesh and frees meshMap
         cleanup();
         modelMap = new HashMap<>();
+        textureCache = new TextureCache();
     }
 
     public void addEntity(Entity entity) {
