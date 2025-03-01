@@ -76,25 +76,27 @@ public class Camera {
         applyViewCalculation();
     }
 
-    // Move the camera opposite to the up vector representing the local y-axis of the camera with increment.
+    // Move the camera with increment opposite to the up vector representing the local y-axis.
     public void moveDown(float inc) {
         viewMatrix.positiveY(up).mul(inc);
         position.sub(up);
         applyViewCalculation();
     }
-    // Move the camera to the up vector representing the local x-axis of the camera with increment.
+    // Move the camera with increment to the up vector representing the local y-axis.
     public void moveUp(float inc) {
         viewMatrix.positiveY(up).mul(inc);
         position.add(up);
         applyViewCalculation();
     }
 
+    // Move the camera with increment opposite to the right vector representing the local x-axis.
     public void moveLeft(float inc) {
         viewMatrix.positiveX(right).mul(inc);
         position.sub(right);
         applyViewCalculation();
     }
 
+    // Move the camera with increment to the right vector representing the local x-axis.
     public void moveRight(float inc) {
         viewMatrix.positiveX(right).mul(inc);
         position.add(right);

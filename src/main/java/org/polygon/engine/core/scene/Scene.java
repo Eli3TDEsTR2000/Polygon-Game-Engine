@@ -13,12 +13,16 @@ public class Scene {
     private Map<String, Model> modelMap;
     // Holds textures used in the scene
     private TextureCache textureCache;
+    // Holds the Scene's camera
+    private Camera camera;
     public Scene(int width, int height) {
         // Initialize the scene with empty Model map and a projection matrix
         modelMap = new HashMap<>();
         projection = new Projection(width, height);
         // Initialize the textureCache
         textureCache = new TextureCache();
+        // Initialize Scene's camera
+        camera = new Camera();
     }
 
     public void cleanup() {
@@ -57,6 +61,10 @@ public class Scene {
 
     public TextureCache getTextureCache() {
         return textureCache;
+    }
+
+    public Camera getCamera() {
+        return camera;
     }
 
     public void resize(int width, int height) {

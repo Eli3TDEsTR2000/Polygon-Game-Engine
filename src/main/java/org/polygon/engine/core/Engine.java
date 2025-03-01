@@ -73,6 +73,8 @@ public class Engine {
             deltaUpdate += (nowMS - rbeforeMS) / targetUpdateMS;
             deltaRender += (nowMS - rbeforeMS) / targetRenderMS;
 
+            // Process the game window's mouse inputs
+            window.getMouseInputHandler().input();
             // Process game inputs and passing delta time taken between frames
             gameLogic.input(window, nowMS - rbeforeMS);
 
