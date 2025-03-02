@@ -5,6 +5,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 import org.polygon.engine.core.scene.Scene;
+import org.polygon.engine.core.utils.MouseInputHandler;
 
 import java.nio.*;
 import java.util.concurrent.Callable;
@@ -23,6 +24,7 @@ public class Window {
     private int height;
 
     private Scene currentScene;
+    private MouseInputHandler mouseInputHandler;
 
     public Window(String title, WindowOptions opts) {
         // Setup an error callback. The default implementation
@@ -110,6 +112,8 @@ public class Window {
 
         // Make the window visible
         glfwShowWindow(windowHandle);
+
+        mouseInputHandler = new MouseInputHandler(windowHandle);
     }
 
     public int getWidth() {
@@ -122,6 +126,10 @@ public class Window {
 
     public long getWindowHandle() {
         return windowHandle;
+    }
+
+    public MouseInputHandler getMouseInputHandler() {
+        return mouseInputHandler;
     }
     public Scene getCurrentScene() {
         if(currentScene == null) {

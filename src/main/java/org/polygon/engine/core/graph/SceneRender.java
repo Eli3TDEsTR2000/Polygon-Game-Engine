@@ -29,6 +29,7 @@ public class SceneRender {
         uniformMap.createUniform("projectionMatrix");
         uniformMap.createUniform("modelMatrix");
         uniformMap.createUniform("textSampler");
+        uniformMap.createUniform("viewMatrix");
     }
 
     public void cleanup() {
@@ -41,6 +42,8 @@ public class SceneRender {
 
         // Set the projectionMatrix uniform with the projection matrix stored in scene.
         uniformMap.setUniform("projectionMatrix", scene.getProjection().getMatrix());
+        // set the viewMatrix uniform with the scene's camera viewMatrix.
+        uniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
         // Set the textSampler uniform with 0 (one texture unit)
         uniformMap.setUniform("textSampler", 0);
 
