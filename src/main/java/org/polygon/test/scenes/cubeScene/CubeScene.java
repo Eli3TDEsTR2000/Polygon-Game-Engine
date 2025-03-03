@@ -1,20 +1,11 @@
 package org.polygon.test.scenes.cubeScene;
 
-import org.joml.Vector4f;
 import org.polygon.engine.core.Window;
-import org.polygon.engine.core.graph.Material;
-import org.polygon.engine.core.graph.Mesh;
 import org.polygon.engine.core.graph.Model;
-import org.polygon.engine.core.graph.Texture;
 import org.polygon.engine.core.scene.Camera;
 import org.polygon.engine.core.scene.Entity;
-import org.polygon.engine.core.scene.Scene;
-import org.polygon.engine.core.utils.MouseInputHandler;
+import org.polygon.engine.core.scene.ModelLoader;
 import org.polygon.test.scenes.BasicScene;
-import org.polygon.test.scenes.BasicShape;
-import org.polygon.test.scenes.cubeScene.meshes.BasicCube;
-
-import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -31,13 +22,8 @@ public class CubeScene extends BasicScene {
 
     @Override
     protected void init() {
-        BasicShape cubeShape = new BasicCube();
-        Material material = new Material();
-        material.getMeshList().add(cubeShape.getMesh());
-        scene.getTextureCache().createTexture("resources/models/cube/cube.png");
-        material.setTexturePath("resources/models/cube/cube.png");
-        Model cube = new Model("Cube", new ArrayList<>());
-        cube.getMaterialList().add(material);
+        Model cube = ModelLoader.loadModel("Cube", "resources/models/cube/cube.obj"
+                , scene.getTextureCache());
         scene.addModel(cube);
 
         cubeEntity = new Entity("Cube-01", cube.getModelId());

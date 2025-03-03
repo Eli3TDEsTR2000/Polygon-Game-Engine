@@ -1,8 +1,10 @@
 package org.polygon.engine.core.graph;
 
+import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.Scene;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL40.*;
@@ -30,6 +32,7 @@ public class SceneRender {
         uniformMap.createUniform("modelMatrix");
         uniformMap.createUniform("textSampler");
         uniformMap.createUniform("viewMatrix");
+        uniformMap.createUniform("material.diffuse");
     }
 
     public void cleanup() {
@@ -49,19 +52,25 @@ public class SceneRender {
 
         // Draw calls initiated here
 
-        scene.getModelMap().values().forEach((model) -> {
-            model.getMaterialList().forEach((material) -> {
+        Collection<Model> models = scene.getModelMap().values();
+        TextureCache textureCache = scene.getTextureCache();
+        for(Model model : models) {
+            List<Entity> entityList = model.getEntityList();
+
+            for(Material material : model.getMaterialList()) {
+                uniformMap.setUniform("material.diffuse", material.getDiffuseColor());
                 glActiveTexture(GL_TEXTURE0);
-                scene.getTextureCache().getTexture(material.getTexturePath()).bind();
-                material.getMeshList().forEach((mesh) -> {
+                textureCache.getTexture(material.getTexturePath()).bind();
+
+                for(Mesh mesh : material.getMeshList()) {
                     glBindVertexArray(mesh.getVaoId());
-                    model.getEntityList().forEach((entity) -> {
+                    for(Entity entity : entityList) {
                         uniformMap.setUniform("modelMatrix", entity.getModelMatrix());
                         glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-                    });
-                });
-            });
-        });
+                    }
+                }
+            }
+        }
 
         glBindVertexArray(0);
 

@@ -1,14 +1,23 @@
 package org.polygon.engine.core.graph;
 
+import org.joml.Vector4f;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Material {
+    // Material objects will hold the meshes that have this material assigned to them.
     private List<Mesh> meshList;
+    // The Material object's won't hold the texture loaded to OpenGL; instead, the TextureCache will hold the texture
+    //      and the Material object will hold a String reference to it called the texturePath.
     private String texturePath;
+    public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
+    private Vector4f diffuseColor;
 
     public Material() {
+        // Initialize the meshList that will hold meshes assigned to the Material object.
         meshList = new ArrayList<>();
+        diffuseColor = DEFAULT_COLOR;
     }
 
     public void cleanup() {
@@ -23,7 +32,14 @@ public class Material {
         return texturePath;
     }
 
+    public Vector4f getDiffuseColor() {
+        return diffuseColor;
+    }
+
     public void setTexturePath(String texturePath) {
         this.texturePath = texturePath;
+    }
+    public void setDiffuseColor(Vector4f diffuseColor) {
+        this.diffuseColor = diffuseColor;
     }
 }
