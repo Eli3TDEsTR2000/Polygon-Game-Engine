@@ -1,7 +1,6 @@
 package org.polygon.engine.core.graph;
 
 import org.lwjgl.opengl.GL40;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;

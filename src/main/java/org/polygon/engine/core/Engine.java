@@ -1,7 +1,6 @@
 package org.polygon.engine.core;
 
 import org.polygon.engine.core.graph.EngineRender;
-import org.polygon.engine.core.scene.Scene;
 
 public class Engine {
     public static final int TARGET_UPS = 30;

@@ -1,18 +1,14 @@
 package org.polygon.engine.core;
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.engine.core.utils.MouseInputHandler;
 
 import java.nio.*;
-import java.util.concurrent.Callable;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL40.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
