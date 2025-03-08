@@ -7,7 +7,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class EngineRender {
     private SceneRender sceneRender;
-    public EngineRender() {
+    private GuiRender guiRender;
+    public EngineRender(Window window) {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
@@ -18,17 +19,21 @@ public class EngineRender {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         sceneRender = new SceneRender();
+        guiRender = new GuiRender(window);
     }
 
     public void cleanup() {
         sceneRender.cleanup();
+        guiRender.cleanup();
     }
 
     public void render(Window window) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-        // Setup a viewport
+        // Setup a viewport.
         glViewport(0, 0, window.getWidth(), window.getHeight());
-        // Render scene objects using shaders
+        // Render scene's objects using shaders.
         sceneRender.render(window.getCurrentScene());
+        // Render scene's GUI instance.
+        guiRender.render(window.getCurrentScene());
     }
 }

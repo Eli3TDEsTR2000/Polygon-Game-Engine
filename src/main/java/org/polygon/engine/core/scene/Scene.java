@@ -1,5 +1,6 @@
 package org.polygon.engine.core.scene;
 
+import org.polygon.engine.core.IGuiInstance;
 import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.graph.TextureCache;
 
@@ -14,7 +15,13 @@ public class Scene {
     // Holds textures used in the scene
     private TextureCache textureCache;
     // Holds the Scene's camera
+    // Every Scene instance will hold a primary camera with control methods to navigate through the scene.
+    // The primary camera holds the view matrix sent to the vertex shader controlling the viewport layout.
+    // A more complex implementation of a camera system would need to extend this class, use the setCamera method.
     private Camera camera;
+    // Holds the current GUI instance.
+    private IGuiInstance guiInstance;
+
     public Scene(int width, int height) {
         // Initialize the scene with empty Model map and a projection matrix
         modelMap = new HashMap<>();
@@ -31,7 +38,8 @@ public class Scene {
     }
 
     public void reset() {
-        // Removes VAO and VBO for each mesh and frees meshMap
+        // Removes VAO and VBO for each mesh and reset modelMap and textureCache.
+        // Ideal for level resets.
         cleanup();
         modelMap = new HashMap<>();
         textureCache = new TextureCache();
@@ -65,6 +73,18 @@ public class Scene {
 
     public Camera getCamera() {
         return camera;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public IGuiInstance getGuiInstance() {
+        return guiInstance;
+    }
+
+    public void setGuiInstance(IGuiInstance guiInstance) {
+        this.guiInstance = guiInstance;
     }
 
     public void resize(int width, int height) {

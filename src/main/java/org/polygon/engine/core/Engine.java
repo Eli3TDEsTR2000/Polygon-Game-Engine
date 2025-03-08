@@ -23,10 +23,19 @@ public class Engine {
         // creating the renderer scene entities
         // initializing game;
         this.gameLogic = gameLogic;
-        render = new EngineRender();
+        render = new EngineRender(window);
         // Fail-safe to ensure the engine won't crash if the current scene is empty
         window.setCurrentScene(window.createScene());
         gameLogic.init(window, render);
+
+        // Initialize key call back functions if set
+        if(window.isKeyCallBacksSet()) {
+            window.initKeyCallbacks();
+        }
+
+        // Initialize the frame buffer size callback functions
+        window.initFrameBufferSizeCallbacks();
+
         running = true;
     }
 
@@ -74,8 +83,12 @@ public class Engine {
 
             // Process the game window's mouse inputs
             window.getMouseInputHandler().input();
+
+            // Handle GUI inputs and decide if the GUI is in the focus of the mouse or keyboard
+            boolean inputConsumed = window.getCurrentScene().getGuiInstance() != null
+                    && window.getCurrentScene().getGuiInstance().handleGuiInput(window);
             // Process game inputs and passing delta time taken between frames
-            gameLogic.input(window, nowMS - rbeforeMS);
+            gameLogic.input(window, nowMS - rbeforeMS, inputConsumed);
 
             // Caps updating according to targetUps
             if(deltaUpdate >= 1) {
@@ -83,7 +96,7 @@ public class Engine {
                 // and passing delta time taken between updates
                 gameLogic.update(window, nowMS - ubeforeMS);
                 ubeforeMS = nowMS;
-                // Reset deltaUpdate to redetermine if a time matching targetUps in MS
+                // Reset deltaUpdate to re-determine if a time matching targetUps in MS
                 // had passed or not for future update calls
                 deltaUpdate--;
             }

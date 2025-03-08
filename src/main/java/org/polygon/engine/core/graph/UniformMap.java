@@ -1,6 +1,7 @@
 package org.polygon.engine.core.graph;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryStack;
 
@@ -42,7 +43,7 @@ public class UniformMap {
         return location;
     }
 
-    // set's the uniform reference with value. TODO LATER - this only supports mat4 uniforms
+    // set's the uniform reference with value.
     public void setUniform(String uniformName, Matrix4f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
             glUniformMatrix4fv(getUniformLocation(uniformName), false, value.get(stack.mallocFloat(16)));
@@ -55,5 +56,9 @@ public class UniformMap {
 
     public void setUniform(String uniformName, Vector4f value) {
         glUniform4f(getUniformLocation(uniformName), value.x, value.y, value.z, value.w);
+    }
+
+    public void setUniform(String uniformName, Vector2f value) {
+        glUniform2f(getUniformLocation(uniformName), value.x, value.y);
     }
 }
