@@ -5,7 +5,7 @@ import org.polygon.engine.core.scene.Scene;
 
 public interface IGameLogic {
     void init(Window window, EngineRender render);
-    void input(Window window, long diffTimeMS);
+    void input(Window window, long diffTimeMS, boolean inputConsumed);
     void update(Window window, long diffTimeMS);
     void cleanup();
 }

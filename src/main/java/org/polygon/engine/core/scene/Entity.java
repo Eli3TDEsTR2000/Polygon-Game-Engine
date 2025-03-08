@@ -14,7 +14,7 @@ public class Entity {
 
     public Entity(String entityId, String modelId) {
         // entity object stores its ID and the referenced model ID in ordered to be rendered
-        // TODO LATER - Implement onCreate() and onUpdate() methods to script classes inheriting entities.
+        // TODO LATER - Implement onCreate() and onUpdate() methods to script classes inheriting Entity.
         this.entityId = entityId;
         this.modelId = modelId;
         modelMatrix = new Matrix4f();

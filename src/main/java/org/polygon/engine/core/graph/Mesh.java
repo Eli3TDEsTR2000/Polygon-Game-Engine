@@ -1,7 +1,6 @@
 package org.polygon.engine.core.graph;
 
 import org.lwjgl.opengl.GL40;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -75,6 +74,7 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
+        // Free the off-heap allocated memory.
         MemoryUtil.memFree(positionsBuffer);
         MemoryUtil.memFree(textCoordsBuffer);
         MemoryUtil.memFree(indexArrayBuffer);

@@ -1,18 +1,16 @@
 package org.polygon.engine.core;
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.engine.core.utils.MouseInputHandler;
 
 import java.nio.*;
-import java.util.concurrent.Callable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL40.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -25,6 +23,8 @@ public class Window {
 
     private Scene currentScene;
     private MouseInputHandler mouseInputHandler;
+    private List<KeyCallback> keyCallbacks;
+    private List<FrameBufferSizeCallback> frameBufferSizeCallbacks;
 
     public Window(String title, WindowOptions opts) {
         // Setup an error callback. The default implementation
@@ -32,8 +32,9 @@ public class Window {
         GLFWErrorCallback.createPrint(System.err).set();
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if ( !glfwInit() )
+        if ( !glfwInit() ) {
             throw new IllegalStateException("Unable to initialize GLFW");
+        }
 
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
@@ -66,13 +67,17 @@ public class Window {
 
         // Create the window
         windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
-        if ( windowHandle == NULL )
+        if ( windowHandle == NULL ) {
             throw new RuntimeException("Failed to create the GLFW window");
+        }
 
         // Setup a window resize callback. It will be called every time the window is resized
-        glfwSetFramebufferSizeCallback(windowHandle, (window, w, h) -> resized(w, h));
+        frameBufferSizeCallbacks = new ArrayList<>();
+        addFrameBufferSizeCallback((handle, w, h) -> resized(w, h));
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
+        // Default engine key callback function setup.
+        // the Window.addKeyCallback will override this default callback function if set.
         glfwSetKeyCallback(windowHandle, (window, key, scancode, action, mods) -> {
             keyCallBack(key, action);
         });
@@ -114,6 +119,7 @@ public class Window {
         glfwShowWindow(windowHandle);
 
         mouseInputHandler = new MouseInputHandler(windowHandle);
+        keyCallbacks = new ArrayList<>();
     }
 
     public int getWidth() {
@@ -131,11 +137,16 @@ public class Window {
     public MouseInputHandler getMouseInputHandler() {
         return mouseInputHandler;
     }
+
     public Scene getCurrentScene() {
         if(currentScene == null) {
-            throw new RuntimeException("CurrentScene doesn't hold a scene yet!");
+            throw new RuntimeException("currentScene doesn't hold a scene yet!");
         }
         return currentScene;
+    }
+
+    public boolean isKeyCallBacksSet() {
+        return keyCallbacks.size() > 0;
     }
 
     public void setCurrentScene(Scene scene) {
@@ -178,11 +189,42 @@ public class Window {
         glfwSetErrorCallback(null).free();
     }
 
-    private void keyCallBack(int key, int action) {
-        // If Escape key is pressed, the window will close;
+    // The default key callback function that will be called if there are no callback functions set
+    public void keyCallBack(int key, int action) {
+        // If Escape key is pressed, the window will close
         if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
             glfwSetWindowShouldClose(windowHandle, true);
         }
+    }
+
+    // This method is used to chain key callbacks.
+    public KeyCallback addKeyCallback(KeyCallback callBack) {
+        keyCallbacks.add(callBack);
+        return callBack;
+    }
+
+    // Adds the support for multiple key callback functions.
+    public void initKeyCallbacks() {
+        glfwSetKeyCallback(windowHandle, (handle, key, scancode, action, mods) -> {
+            for(KeyCallback keyCallback : keyCallbacks) {
+                keyCallback.invoke(handle, key, scancode, action, mods);
+            }
+        });
+    }
+
+    // This method is used to chain frame buffer size callbacks.
+    public FrameBufferSizeCallback addFrameBufferSizeCallback(FrameBufferSizeCallback callback) {
+        frameBufferSizeCallbacks.add(callback);
+        return callback;
+    }
+
+    // Adds the support for multiple frame buffer size callbacks.
+    public void initFrameBufferSizeCallbacks() {
+        glfwSetFramebufferSizeCallback(windowHandle, (handle, w, h) -> {
+            for(FrameBufferSizeCallback frameBufferSizeCallback : frameBufferSizeCallbacks) {
+                frameBufferSizeCallback.invoke(handle, w, h);
+            }
+        });
     }
 
     private void resized(int width, int height) {
@@ -198,5 +240,13 @@ public class Window {
         public int ups = Engine.TARGET_UPS;
         public int width;
         public int height;
+    }
+
+    public interface KeyCallback {
+        void invoke(long windowHandle, int key, int scancode, int action, int mods);
+    }
+
+    public interface FrameBufferSizeCallback {
+        void invoke(long windowHandle, int width, int height);
     }
 }
