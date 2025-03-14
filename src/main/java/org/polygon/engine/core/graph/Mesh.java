@@ -15,7 +15,7 @@ public class Mesh {
     private List<Integer> vboIdList;
     private int numVertices;
 
-    public Mesh(float[] positions, float[] textCoords, int[] indexArray) {
+    public Mesh(float[] positions, float[] normals, float[] textCoords, int[] indexArray) {
         // Create a temp vboId reference
         // We don't need to store individual vbo references, instead we have an arrayList to store instead
         int vboId;
@@ -49,17 +49,28 @@ public class Mesh {
         // no strides as positions array only contains positions data for each vertex
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 
-        // Create Texture coordinates  VBO reference
+        // Create Normals VBO reference
+        vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer normalsBuffer = MemoryUtil.memCallocFloat(normals.length);
+        normalsBuffer.put(0, normals);
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, normalsBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
+
+        // Create Texture coordinates VBO reference
         vboId = glGenBuffers();
         vboIdList.add(vboId);
         FloatBuffer textCoordsBuffer = MemoryUtil.memCallocFloat(textCoords.length);
         textCoordsBuffer.put(0, textCoords);
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-        // Enable index 1 in the VAO attribute array
+        // Enable index 2 in the VAO attribute array
         // Texture coordinates are 2D coordinate that takes a size of 2 in the buffer for X and Y
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+
 
         // Create Index VBO
         vboId = glGenBuffers();
@@ -76,6 +87,7 @@ public class Mesh {
 
         // Free the off-heap allocated memory.
         MemoryUtil.memFree(positionsBuffer);
+        MemoryUtil.memFree(normalsBuffer);
         MemoryUtil.memFree(textCoordsBuffer);
         MemoryUtil.memFree(indexArrayBuffer);
     }

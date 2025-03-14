@@ -1,50 +1,36 @@
-package org.polygon.engine.core.scene;
+package org.polygon.engine.core.scene.lights;
 
-import org.joml.*;
+import org.joml.Vector3f;
 
-public class PointLight {
-    private Attenuation attenuation;
-    private Vector3f color;
-    private Vector3f position;
-    private float intensity;
+public class PointLight extends Light{
+    protected Attenuation attenuation;
+    protected Vector3f position;
 
-    public PointLight(Vector3f color, Vector3f position, float intensity) {
+    public PointLight(Vector3f color, float intensity, Vector3f position) {
+        super(color, intensity);
         attenuation = new Attenuation(0, 0, 1);
-        this.color = color;
         this.position = position;
-        this.intensity = intensity;
+    }
+
+    public PointLight() {
+        attenuation = new Attenuation(0, 0, 1);
+        this.position = new Vector3f(0, 0, 0);
     }
 
     public Attenuation getAttenuation() {
         return attenuation;
     }
 
-    public Vector3f getColor() {
-        return color;
-    }
-
     public Vector3f getPosition() {
         return position;
-    }
-
-    public float getIntensity() {
-        return intensity;
     }
 
     public void setAttenuation(Attenuation attenuation) {
         this.attenuation = attenuation;
     }
 
-    public void setColor(float r, float g, float b) {
-        color.set(r, g, b);
-    }
-
     public void setPosition(float x, float y, float z) {
         position.set(x, y, z);
-    }
-
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
     }
 
     public static class Attenuation {

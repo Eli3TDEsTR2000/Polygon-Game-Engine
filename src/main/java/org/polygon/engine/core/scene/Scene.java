@@ -3,6 +3,7 @@ package org.polygon.engine.core.scene;
 import org.polygon.engine.core.IGuiInstance;
 import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.graph.TextureCache;
+import org.polygon.engine.core.scene.lights.SceneLights;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +23,10 @@ public class Scene {
     // Holds the current GUI instance.
     private IGuiInstance guiInstance;
 
+    private SceneLights sceneLights;
+
+    private boolean bypassLighting;
+
     public Scene(int width, int height) {
         // Initialize the scene with empty Model map and a projection matrix
         modelMap = new HashMap<>();
@@ -30,6 +35,8 @@ public class Scene {
         textureCache = new TextureCache();
         // Initialize Scene's camera
         camera = new Camera();
+
+        bypassLighting = false;
     }
 
     public void cleanup() {
@@ -43,6 +50,8 @@ public class Scene {
         cleanup();
         modelMap = new HashMap<>();
         textureCache = new TextureCache();
+        camera = new Camera();
+        bypassLighting = false;
     }
 
     public void addEntity(Entity entity) {
@@ -59,10 +68,6 @@ public class Scene {
         return modelMap;
     }
 
-    public void addModel(Model model) {
-        modelMap.put(model.getModelId(), model);
-    }
-
     public Projection getProjection() {
         return projection;
     }
@@ -75,16 +80,36 @@ public class Scene {
         return camera;
     }
 
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
-
     public IGuiInstance getGuiInstance() {
         return guiInstance;
     }
 
+    public SceneLights getSceneLights() {
+        return sceneLights;
+    }
+
+    public boolean isLightingDisabled() {
+        return bypassLighting;
+    }
+
     public void setGuiInstance(IGuiInstance guiInstance) {
         this.guiInstance = guiInstance;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public void setSceneLights(SceneLights sceneLights) {
+        this.sceneLights = sceneLights;
+    }
+
+    public void setBypassLighting(boolean bool) {
+        bypassLighting = bool;
+    }
+
+    public void addModel(Model model) {
+        modelMap.put(model.getModelId(), model);
     }
 
     public void resize(int width, int height) {

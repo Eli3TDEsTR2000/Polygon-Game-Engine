@@ -1,5 +1,6 @@
-package org.polygon.test.scenes.cubeScene;
+package org.polygon.test.scenes.lightTestScene;
 
+import org.joml.AxisAngle4f;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.scene.Camera;
@@ -12,14 +13,11 @@ import org.polygon.test.scenes.BasicScene;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class CubeScene extends BasicScene {
+public class LightTestScene extends BasicScene {
 
     private final float MOUSE_SENSITIVITY = 0.1f;
     private final float MOVEMENT_SPEED = 0.005f;
-    private Entity cubeEntity;
-    private float rotation;
-
-    public CubeScene(Window window) {
+    public LightTestScene(Window window) {
         super(window);
     }
 
@@ -29,13 +27,17 @@ public class CubeScene extends BasicScene {
                 , scene.getTextureCache());
         scene.addModel(cube);
 
-        cubeEntity = new Entity("Cube-01", cube.getModelId());
+        Entity cubeEntity = new Entity("Cube-01", cube.getModelId());
+        Entity cubeEntity2 = new Entity("Cube-02", cube.getModelId());
         cubeEntity.setPosition(0, 0, -2);
+        cubeEntity2.setPosition(2, 0, -2);
         cubeEntity.updateModelMatrix();
+        cubeEntity2.updateModelMatrix();
         scene.addEntity(cubeEntity);
-        rotation = 0;
+        scene.addEntity(cubeEntity2);
 
         SceneLights sceneLights = new SceneLights();
+        sceneLights.getAmbientLight().setIntensity(0.0f);
         sceneLights.getPointLightList().add(new PointLight());
         sceneLights.getSpotLightList().add(new SpotLight());
 
@@ -75,11 +77,6 @@ public class CubeScene extends BasicScene {
 
     @Override
     public void update(Window window, long diffTimeMS) {
-        rotation += 15 * diffTimeMS / 1000.0f;
-        if (rotation > 360) {
-            rotation = 0;
-        }
-        cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-        cubeEntity.updateModelMatrix();
+
     }
 }

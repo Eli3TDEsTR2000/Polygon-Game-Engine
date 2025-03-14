@@ -1,8 +1,9 @@
-package org.polygon.test.scenes.cubeScene;
+package org.polygon.test.scenes.lightTestScene;
 
 import imgui.*;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiMouseButton;
+import imgui.type.ImBoolean;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.polygon.engine.core.IGuiInstance;
@@ -34,6 +35,8 @@ public class LightTestGUI implements IGuiInstance {
     private float[] pointLightX;
     private float[] pointLightY;
     private float[] pointLightZ;
+
+    private ImBoolean active;
 
 
     public LightTestGUI(Scene scene) {
@@ -75,6 +78,8 @@ public class LightTestGUI implements IGuiInstance {
         directionalLightX = new float[]{position.x};
         directionalLightY = new float[]{position.y};
         directionalLightZ = new float[]{position.z};
+
+        active = new ImBoolean(false);
     }
 
     @Override
@@ -83,6 +88,8 @@ public class LightTestGUI implements IGuiInstance {
         ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
 
         ImGui.begin("Light test");
+        ImGui.checkbox("Bypass Lighting", active);
+        ImGui.separator();
         if(ImGui.collapsingHeader("Ambient Light")) {
             ImGui.colorEdit3("Ambient Light Color", ambientColor);
             ImGui.sliderFloat("Ambient Intensity", ambientIntensity, 0.0f, 1.0f, "%.2f");
@@ -97,17 +104,17 @@ public class LightTestGUI implements IGuiInstance {
         }
         if(ImGui.collapsingHeader("Point Light")) {
             ImGui.colorEdit3("Point Light Color", pointLightColor);
-            ImGui.sliderFloat("Point Light Intensity", pointLightIntensity, 0.0f, 1.0f, "%.2f");
-            ImGui.sliderFloat("Point Light - x", pointLightX, -1.0f,1.0f, "%.2f");
-            ImGui.sliderFloat("Point Light - y", pointLightY, -1.0f,1.0f, "%.2f");
-            ImGui.sliderFloat("Point Light - z", pointLightZ, -1.0f,1.0f, "%.2f");
+            ImGui.sliderFloat("Point Light Intensity", pointLightIntensity, 0.0f, 10.0f, "%.2f");
+            ImGui.sliderFloat("Point Light - x", pointLightX, -10.0f,10.0f, "%.2f");
+            ImGui.sliderFloat("Point Light - y", pointLightY, -10.0f,10.0f, "%.2f");
+            ImGui.sliderFloat("Point Light - z", pointLightZ, -10.0f,10.0f, "%.2f");
         }
         if(ImGui.collapsingHeader("Spot Light")) {
             ImGui.colorEdit3("Spot Light Color", spotLightColor);
             ImGui.sliderFloat("Spot Light Intensity", spotLightIntensity, 0.0f, 1.0f, "%.2f");
-            ImGui.sliderFloat("Spot Light - x", spotLightX, -1.0f,1.0f, "%.2f");
-            ImGui.sliderFloat("Spot Light - y", spotLightY, -1.0f,1.0f, "%.2f");
-            ImGui.sliderFloat("Spot Light - z", spotLightZ, -1.0f,1.0f, "%.2f");
+            ImGui.sliderFloat("Spot Light - x", spotLightX, -10.0f,10.0f, "%.2f");
+            ImGui.sliderFloat("Spot Light - y", spotLightY, -10.0f,10.0f, "%.2f");
+            ImGui.sliderFloat("Spot Light - z", spotLightZ, -10.0f,10.0f, "%.2f");
             ImGui.separator();
             ImGui.sliderFloat("Spot Light Cutoff", spotLightCutOff, 0.0f, 360.0f, "%2.f");
             ImGui.sliderFloat("cone direction - x", coneDirectionX, -1.0f, 1.0f, "%.2f");
@@ -152,6 +159,8 @@ public class LightTestGUI implements IGuiInstance {
             spotLight.setPosition(spotLightX[0], spotLightY[0], spotLightZ[0]);
             spotLight.setConeDirection(coneDirectionX[0], coneDirectionY[0], coneDirectionZ[0]);
             spotLight.setCutOffAngle(spotLightCutOff[0]);
+
+            window.getCurrentScene().setBypassLighting(active.get());
         }
 
         return consumed;
