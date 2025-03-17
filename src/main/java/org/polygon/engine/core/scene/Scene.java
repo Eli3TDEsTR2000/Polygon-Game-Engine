@@ -22,9 +22,12 @@ public class Scene {
     private Camera camera;
     // Holds the current GUI instance.
     private IGuiInstance guiInstance;
-
+    // Holds the SceneLights that contains all the scene's light casters.
     private SceneLights sceneLights;
+    // Holds the scene's skybox.
+    private SkyBox skyBox;
 
+    // Flag to bypass lighting in the shader.
     private boolean bypassLighting;
 
     public Scene(int width, int height) {
@@ -42,6 +45,7 @@ public class Scene {
     public void cleanup() {
         // Removes VAO and VBO for each mesh
         modelMap.values().forEach(Model::cleanup);
+        textureCache.cleanup();
     }
 
     public void reset() {
@@ -87,6 +91,9 @@ public class Scene {
     public SceneLights getSceneLights() {
         return sceneLights;
     }
+    public SkyBox getSkyBox() {
+        return skyBox;
+    }
 
     public boolean isLightingDisabled() {
         return bypassLighting;
@@ -98,6 +105,9 @@ public class Scene {
 
     public void setCamera(Camera camera) {
         this.camera = camera;
+    }
+    public void setSkyBox(SkyBox skyBox) {
+        this.skyBox = skyBox;
     }
 
     public void setSceneLights(SceneLights sceneLights) {

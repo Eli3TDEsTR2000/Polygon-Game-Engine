@@ -6,6 +6,7 @@ import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.scene.Camera;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.ModelLoader;
+import org.polygon.engine.core.scene.SkyBox;
 import org.polygon.engine.core.scene.lights.PointLight;
 import org.polygon.engine.core.scene.lights.SceneLights;
 import org.polygon.engine.core.scene.lights.SpotLight;
@@ -22,7 +23,7 @@ public class LightTestScene extends BasicScene {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         Model cube = ModelLoader.loadModel("Cube", "resources/models/cube/cube.obj"
                 , scene.getTextureCache());
         scene.addModel(cube);
@@ -37,12 +38,20 @@ public class LightTestScene extends BasicScene {
         scene.addEntity(cubeEntity2);
 
         SceneLights sceneLights = new SceneLights();
-        sceneLights.getAmbientLight().setIntensity(0.0f);
+        sceneLights.getAmbientLight().setIntensity(0.2f);
         sceneLights.getPointLightList().add(new PointLight());
         sceneLights.getSpotLightList().add(new SpotLight());
 
         scene.setSceneLights(sceneLights);
         scene.setGuiInstance(new LightTestGUI(scene));
+
+        SkyBox skyBox = new SkyBox("resources/models/skybox/skybox.obj"
+                , scene.getTextureCache());
+        scene.getTextureCache().createTexture("resources/models/skybox/skybox.jpeg");
+        skyBox.getSkyBoxModel().getMaterialList().get(1).setTexturePath("resources/models/skybox/skybox.jpeg");
+        skyBox.getSkyBoxEntity().setScale(40f);
+        skyBox.getSkyBoxEntity().updateModelMatrix();
+        scene.setSkyBox(skyBox);
     }
 
     @Override

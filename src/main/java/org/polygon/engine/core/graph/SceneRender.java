@@ -73,6 +73,7 @@ public class SceneRender {
         }
     }
 
+    // TODO - point light and spot light needs to be populated in the shader according to proximity with the camera
     private void updateLights(Scene scene) {
         Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
 

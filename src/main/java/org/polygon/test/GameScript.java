@@ -21,14 +21,17 @@ public class GameScript implements IGameLogic {
     public void init(Window window, EngineRender render) {
         scenes.add(new CubeScene(window));
         scenes.add(new LightTestScene(window));
+        scenes.get(currentSceneIndex).init();
         window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
         window.addKeyCallback((handle, key, scancode, action, mods) -> {
             if(key == GLFW_KEY_4 && action == GLFW_PRESS && currentSceneIndex < scenes.size() - 1) {
+                scenes.get(currentSceneIndex).cleanup();
                 currentSceneIndex++;
                 window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
                 scenes.get(currentSceneIndex).reset();
                 window.getCurrentScene().resize(window.getWidth(), window.getHeight());
             } else if(key == GLFW_KEY_2 && action == GLFW_PRESS && currentSceneIndex > 0) {
+                scenes.get(currentSceneIndex).cleanup();
                 currentSceneIndex --;
                 window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
                 scenes.get(currentSceneIndex).reset();

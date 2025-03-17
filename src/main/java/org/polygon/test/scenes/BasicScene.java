@@ -7,14 +7,17 @@ public abstract class BasicScene {
     protected Scene scene;
     public BasicScene(Window window) {
         scene = window.createScene();
-        init();
     }
 
     public Scene getScene() {
         return scene;
     }
 
-    protected abstract void init();
+    public abstract void init();
+
+    public void cleanup() {
+        scene.cleanup();
+    }
 
     public void reset() {
         scene.reset();
