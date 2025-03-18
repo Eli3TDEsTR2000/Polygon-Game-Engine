@@ -1,12 +1,10 @@
 package org.polygon.test.scenes.lightTestScene;
 
 import org.joml.AxisAngle4f;
+import org.joml.Vector3f;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.Model;
-import org.polygon.engine.core.scene.Camera;
-import org.polygon.engine.core.scene.Entity;
-import org.polygon.engine.core.scene.ModelLoader;
-import org.polygon.engine.core.scene.SkyBox;
+import org.polygon.engine.core.scene.*;
 import org.polygon.engine.core.scene.lights.PointLight;
 import org.polygon.engine.core.scene.lights.SceneLights;
 import org.polygon.engine.core.scene.lights.SpotLight;
@@ -28,6 +26,10 @@ public class LightTestScene extends BasicScene {
                 , scene.getTextureCache());
         scene.addModel(cube);
 
+        Model terrain = ModelLoader.loadModel("terrain", "resources/models/terrain/terrain.obj"
+                , scene.getTextureCache());
+        scene.addModel(terrain);
+
         Entity cubeEntity = new Entity("Cube-01", cube.getModelId());
         Entity cubeEntity2 = new Entity("Cube-02", cube.getModelId());
         cubeEntity.setPosition(0, 0, -2);
@@ -37,10 +39,19 @@ public class LightTestScene extends BasicScene {
         scene.addEntity(cubeEntity);
         scene.addEntity(cubeEntity2);
 
+        Entity terrainEntity = new Entity("terrain-entity", terrain.getModelId());
+        terrainEntity.setPosition(0, -0.5f, 0);
+        terrainEntity.setScale(100f);
+        terrainEntity.updateModelMatrix();
+        scene.addEntity(terrainEntity);
+
         SceneLights sceneLights = new SceneLights();
-        sceneLights.getAmbientLight().setIntensity(0.2f);
+        sceneLights.getAmbientLight().setIntensity(0.3f);
         sceneLights.getPointLightList().add(new PointLight());
+        PointLight pointLight = sceneLights.getPointLightList().get(0);
+        pointLight.setIntensity(0f);
         sceneLights.getSpotLightList().add(new SpotLight());
+        sceneLights.getSpotLightList().get(0).setConeDirection(cubeEntity.getPosition());
 
         scene.setSceneLights(sceneLights);
         scene.setGuiInstance(new LightTestGUI(scene));
@@ -49,9 +60,12 @@ public class LightTestScene extends BasicScene {
                 , scene.getTextureCache());
         scene.getTextureCache().createTexture("resources/models/skybox/skybox.jpeg");
         skyBox.getSkyBoxModel().getMaterialList().get(1).setTexturePath("resources/models/skybox/skybox.jpeg");
+        skyBox.getSkyBoxEntity().setPosition(0, -70, -120);
         skyBox.getSkyBoxEntity().setScale(40f);
         skyBox.getSkyBoxEntity().updateModelMatrix();
         scene.setSkyBox(skyBox);
+
+        scene.setFog(new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.03f));
     }
 
     @Override

@@ -50,13 +50,30 @@ struct SpotLight {
     Attenuation attenuation;
 };
 
+struct Fog {
+    int activeFog;
+    vec3 color;
+    float density;
+};
+
 uniform sampler2D textSampler;
 uniform Material material;
 uniform AmbientLight ambientLight;
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLights[MAX_POINT_LIGHT];
 uniform SpotLight spotLights[MAX_SPOT_LIGHT];
+uniform Fog fog;
 uniform int bypassLighting;
+
+vec4 calcFog(vec3 position, vec4 color, Fog fog, vec3 ambientLightColor, DirectionalLight directionalLight) {
+    vec3 fogColor = fog.color * (ambientLightColor + directionalLight.color * directionalLight.intensity);
+    float distance = length(position);
+    float fogFactor = 1.0 / exp((distance * fog.density) * (distance * fog.density));
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+
+    vec3 resultColor = mix(fogColor, color.xyz, fogFactor);
+    return vec4(resultColor.xyz, color.w);
+}
 
 vec4 calcAmbient(AmbientLight ambientLight, vec4 ambientMat) {
     return vec4(ambientLight.intensity * ambientLight.color, 1) * ambientMat;
@@ -152,4 +169,8 @@ void main()
     }
 
     fragColor = ambient + diffuseSpecular;
+
+    if(fog.activeFog == 1) {
+        fragColor = calcFog(outPosition, fragColor, fog, ambientLight.color, directionalLight);
+    }
 }

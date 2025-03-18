@@ -26,6 +26,8 @@ public class Scene {
     private SceneLights sceneLights;
     // Holds the scene's skybox.
     private SkyBox skyBox;
+    // Holds the scene's fog instance.
+    private Fog fog;
 
     // Flag to bypass lighting in the shader.
     private boolean bypassLighting;
@@ -38,6 +40,8 @@ public class Scene {
         textureCache = new TextureCache();
         // Initialize Scene's camera
         camera = new Camera();
+        // Initialize the scene's fog.
+        fog = new Fog();
 
         bypassLighting = false;
     }
@@ -94,6 +98,9 @@ public class Scene {
     public SkyBox getSkyBox() {
         return skyBox;
     }
+    public Fog getFog() {
+        return fog;
+    }
 
     public boolean isLightingDisabled() {
         return bypassLighting;
@@ -112,6 +119,9 @@ public class Scene {
 
     public void setSceneLights(SceneLights sceneLights) {
         this.sceneLights = sceneLights;
+    }
+    public void setFog(Fog fog) {
+        this.fog = fog;
     }
 
     public void setBypassLighting(boolean bool) {

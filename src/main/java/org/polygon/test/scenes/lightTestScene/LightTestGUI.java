@@ -97,7 +97,7 @@ public class LightTestGUI implements IGuiInstance {
         if(ImGui.collapsingHeader("Directional Light")) {
             ImGui.colorEdit3("Directional Light Color", directionalLightColor);
             ImGui.sliderFloat("Directional Light Intensity", directionalLightIntensity
-                    , 0.0f, 1.0f, "%.2f");
+                    , 0.0f, 10.0f, "%.2f");
             ImGui.sliderFloat("direction-x", directionalLightX, -1.0f, 1.0f, "%.2f");
             ImGui.sliderFloat("direction-y", directionalLightY, -1.0f, 1.0f, "%.2f");
             ImGui.sliderFloat("direction-z", directionalLightZ, -1.0f, 1.0f, "%.2f");

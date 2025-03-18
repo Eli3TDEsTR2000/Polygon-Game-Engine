@@ -48,6 +48,10 @@ public class SceneRender {
         uniformMap.createUniform("directionalLight.intensity");
         uniformMap.createUniform("directionalLight.direction");
 
+        uniformMap.createUniform("fog.activeFog");
+        uniformMap.createUniform("fog.color");
+        uniformMap.createUniform("fog.density");
+
         uniformMap.createUniform("bypassLighting");
 
         for(int i = 0; i < MAX_POINT_LIGHTS; i++)  {
@@ -188,6 +192,9 @@ public class SceneRender {
     }
 
     public void render(Scene scene) {
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         shaderProgram.bind();
 
         if(scene.getSceneLights() == null) {
@@ -200,6 +207,9 @@ public class SceneRender {
         uniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
         // Set the textSampler uniform with 0 (one texture unit)
         uniformMap.setUniform("textSampler", 0);
+        uniformMap.setUniform("fog.activeFog", scene.getFog().isActive() ? 1 : 0);
+        uniformMap.setUniform("fog.color", scene.getFog().getColor());
+        uniformMap.setUniform("fog.density", scene.getFog().getDensity());
         uniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
 
         if(!scene.isLightingDisabled()) {
@@ -232,7 +242,7 @@ public class SceneRender {
         }
 
         glBindVertexArray(0);
-
         shaderProgram.unbind();
+        glDisable(GL_BLEND);
     }
 }

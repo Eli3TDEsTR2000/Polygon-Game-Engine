@@ -47,8 +47,8 @@ public class SkyBoxRender {
             return;
         }
 
-        shaderProgram.bind();
         glDisable(GL_CULL_FACE);
+        shaderProgram.bind();
 
         // disable transformation for the skybox to stay in the center and
         // only rotates the skybox based on the viewMatrix.
@@ -84,8 +84,8 @@ public class SkyBoxRender {
             }
         }
 
-        glEnable(GL_CULL_FACE);
         glBindVertexArray(0);
         shaderProgram.unbind();
+        glEnable(GL_CULL_FACE);
     }
 }
