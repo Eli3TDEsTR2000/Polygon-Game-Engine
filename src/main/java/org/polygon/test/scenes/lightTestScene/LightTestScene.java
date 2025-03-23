@@ -22,22 +22,31 @@ public class LightTestScene extends BasicScene {
 
     @Override
     public void init() {
-        Model cube = ModelLoader.loadModel("Cube", "resources/models/cube/cube.obj"
+        Model cube = ModelLoader.loadModel("Cube-model", "resources/models/cube/cube.obj"
                 , scene.getTextureCache());
         scene.addModel(cube);
 
-        Model terrain = ModelLoader.loadModel("terrain", "resources/models/terrain/terrain.obj"
+        Model backpack = ModelLoader.loadModel("backpack-model"
+                , "resources/models/backpack/Survival_BackPack_2.fbx"
+                , scene.getTextureCache());
+        scene.addModel(backpack);
+
+        scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_albedo.jpg");
+        backpack.getMaterialList().get(0).setTexturePath("resources/models/backpack/textures/1001_albedo.jpg");
+
+        Model terrain = ModelLoader.loadModel("terrain-model", "resources/models/terrain/terrain.obj"
                 , scene.getTextureCache());
         scene.addModel(terrain);
 
         Entity cubeEntity = new Entity("Cube-01", cube.getModelId());
-        Entity cubeEntity2 = new Entity("Cube-02", cube.getModelId());
+        Entity backpackEntity = new Entity("backpack-01", backpack.getModelId());
         cubeEntity.setPosition(0, 0, -2);
-        cubeEntity2.setPosition(2, 0, -2);
+        backpackEntity.setPosition(2, 0.71f, -2);
+        backpackEntity.setScale(0.005f);
         cubeEntity.updateModelMatrix();
-        cubeEntity2.updateModelMatrix();
+        backpackEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
-        scene.addEntity(cubeEntity2);
+        scene.addEntity(backpackEntity);
 
         Entity terrainEntity = new Entity("terrain-entity", terrain.getModelId());
         terrainEntity.setPosition(0, -0.5f, 0);
@@ -49,9 +58,9 @@ public class LightTestScene extends BasicScene {
         sceneLights.getAmbientLight().setIntensity(0.3f);
         sceneLights.getPointLightList().add(new PointLight());
         PointLight pointLight = sceneLights.getPointLightList().get(0);
-        pointLight.setIntensity(0f);
+        pointLight.setIntensity(1);
         sceneLights.getSpotLightList().add(new SpotLight());
-        sceneLights.getSpotLightList().get(0).setConeDirection(cubeEntity.getPosition());
+        sceneLights.getSpotLightList().get(0).setIntensity(0);
 
         scene.setSceneLights(sceneLights);
         scene.setGuiInstance(new LightTestGUI(scene));
@@ -65,7 +74,7 @@ public class LightTestScene extends BasicScene {
         skyBox.getSkyBoxEntity().updateModelMatrix();
         scene.setSkyBox(skyBox);
 
-        scene.setFog(new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.03f));
+        scene.setFog(new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.02f));
     }
 
     @Override
