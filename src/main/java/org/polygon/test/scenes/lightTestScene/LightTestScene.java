@@ -34,6 +34,9 @@ public class LightTestScene extends BasicScene {
         scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_albedo.jpg");
         backpack.getMaterialList().get(0).setTexturePath("resources/models/backpack/textures/1001_albedo.jpg");
 
+        scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_normal.png");
+        backpack.getMaterialList().get(0).setNormalMapPath("resources/models/backpack/textures/1001_normal.png");
+
         Model terrain = ModelLoader.loadModel("terrain-model", "resources/models/terrain/terrain.obj"
                 , scene.getTextureCache());
         scene.addModel(terrain);

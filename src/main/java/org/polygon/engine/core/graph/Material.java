@@ -11,6 +11,7 @@ public class Material {
     // The Material object's won't hold the texture loaded to OpenGL; instead, the TextureCache will hold the texture
     //      and the Material object will hold a String reference to it called the texturePath.
     private String texturePath;
+    private String normalMapPath;
     public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
     private Vector4f diffuseColor;
     private Vector4f ambientColor;
@@ -36,6 +37,9 @@ public class Material {
     public String getTexturePath() {
         return texturePath;
     }
+    public String getNormalMapPath() {
+        return normalMapPath;
+    }
 
     public Vector4f getDiffuseColor() {
         return diffuseColor;
@@ -55,6 +59,10 @@ public class Material {
 
     public void setTexturePath(String texturePath) {
         this.texturePath = texturePath;
+        diffuseColor = DEFAULT_COLOR;
+    }
+    public void setNormalMapPath(String normalMapPath) {
+        this.normalMapPath = normalMapPath;
     }
 
     public void setDiffuseColor(Vector4f diffuseColor) {

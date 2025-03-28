@@ -254,6 +254,7 @@ public class GuiRender {
 
             for(int j = 0; j < drawData.getCmdListCmdBufferSize(i); j++) {
                 final int indices = drawData.getCmdListCmdBufferIdxOffset(i, j) * ImDrawData.sizeOfImDrawIdx();
+                glActiveTexture(GL_TEXTURE0);
                 texture.bind();
                 glDrawElements(GL_TRIANGLES, drawData.getCmdListCmdBufferElemCount(i, j)
                         , GL_UNSIGNED_SHORT, indices);

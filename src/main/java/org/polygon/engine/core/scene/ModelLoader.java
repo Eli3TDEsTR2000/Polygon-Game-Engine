@@ -34,7 +34,7 @@ public class ModelLoader {
         return loadModel(modelId, modelPath, textureCache
                 , aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices
                         | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace
-                        | aiProcess_LimitBoneWeights | aiProcess_PreTransformVertices | aiProcess_GenNormals);
+                        | aiProcess_LimitBoneWeights | aiProcess_PreTransformVertices);
     }
 
     public static Model loadModel(String modelId, String modelPath, TextureCache textureCache, int flags) {
@@ -129,7 +129,15 @@ public class ModelLoader {
             if (texturePath != null && texturePath.length() > 0) {
                 material.setTexturePath(modelDir + File.separator + new File(texturePath).getName());
                 textureCache.createTexture(material.getTexturePath());
-                material.setDiffuseColor(Material.DEFAULT_COLOR);
+            }
+
+            AIString aiNormalMapPath = AIString.calloc(stack);
+            aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, aiNormalMapPath, (IntBuffer) null
+                    , null, null, null, null, null);
+            String normalMapPath = aiNormalMapPath.dataString();
+            if(normalMapPath != null && normalMapPath.length() > 0) {
+                material.setNormalMapPath(modelDir + File.separator + new File(normalMapPath).getName());
+                textureCache.createTexture(material.getNormalMapPath());
             }
 
             return material;
@@ -139,6 +147,8 @@ public class ModelLoader {
     private static Mesh processMesh(AIMesh aiMesh) {
         float[] vertices = processVertices(aiMesh);
         float[] normals = processNormals(aiMesh);
+        float[] tangents = processTangents(aiMesh, normals);
+        float[] bitangents = processBitangents(aiMesh, normals);
         float[] textCoords = processTextCoords(aiMesh);
         int[] indexArray = processIndexArray(aiMesh);
 
@@ -149,7 +159,7 @@ public class ModelLoader {
             textCoords = new float[numOfElements];
         }
 
-        return new Mesh(vertices, normals, textCoords, indexArray);
+        return new Mesh(vertices, normals, tangents, bitangents, textCoords, indexArray);
     }
 
     private static float[] processVertices(AIMesh aiMesh) {
@@ -177,6 +187,42 @@ public class ModelLoader {
             normals[position++] = normal.z();
         }
         return normals;
+    }
+
+    private static float[] processTangents(AIMesh aiMesh, float[] normals) {
+        AIVector3D.Buffer buffer = aiMesh.mTangents();
+        float[] tangents = new float[buffer.remaining() * 3];
+        int position = 0;
+        while(buffer.remaining() > 0) {
+            AIVector3D aiTangent = buffer.get();
+            tangents[position++] = aiTangent.x();
+            tangents[position++] = aiTangent.y();
+            tangents[position++] = aiTangent.z();
+        }
+
+        if(tangents.length == 0) {
+            tangents = new float[normals.length];
+        }
+
+        return tangents;
+    }
+
+    private static float[] processBitangents(AIMesh aiMesh, float[] normals) {
+        AIVector3D.Buffer buffer = aiMesh.mBitangents();
+        float[] bitangents = new float[buffer.remaining() * 3];
+        int position = 0;
+        while(buffer.remaining() > 0) {
+            AIVector3D aiBitangent = buffer.get();
+            bitangents[position++] = aiBitangent.x();
+            bitangents[position++] = aiBitangent.y();
+            bitangents[position++] = aiBitangent.z();
+        }
+
+        if(bitangents.length == 0) {
+            bitangents = new float[normals.length];
+        }
+
+        return bitangents;
     }
 
     private static float[] processTextCoords(AIMesh aiMesh) {

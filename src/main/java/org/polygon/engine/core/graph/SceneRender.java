@@ -35,11 +35,14 @@ public class SceneRender {
         uniformMap.createUniform("projectionMatrix");
         uniformMap.createUniform("modelMatrix");
         uniformMap.createUniform("textSampler");
+        uniformMap.createUniform("normalSampler");
         uniformMap.createUniform("viewMatrix");
+
         uniformMap.createUniform("material.ambient");
         uniformMap.createUniform("material.diffuse");
         uniformMap.createUniform("material.specular");
         uniformMap.createUniform("material.reflectance");
+        uniformMap.createUniform("material.hasNormalMap");
 
         uniformMap.createUniform("ambientLight.color");
         uniformMap.createUniform("ambientLight.intensity");
@@ -207,6 +210,7 @@ public class SceneRender {
         uniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
         // Set the textSampler uniform with 0 (one texture unit)
         uniformMap.setUniform("textSampler", 0);
+        uniformMap.setUniform("normalSampler", 1);
         uniformMap.setUniform("fog.activeFog", scene.getFog().isActive() ? 1 : 0);
         uniformMap.setUniform("fog.color", scene.getFog().getColor());
         uniformMap.setUniform("fog.density", scene.getFog().getDensity());
@@ -224,12 +228,20 @@ public class SceneRender {
             List<Entity> entityList = model.getEntityList();
 
             for(Material material : model.getMaterialList()) {
+                boolean hasNormalMap = material.getNormalMapPath() != null;
+
                 uniformMap.setUniform("material.ambient", material.getAmbientColor());
                 uniformMap.setUniform("material.diffuse", material.getDiffuseColor());
                 uniformMap.setUniform("material.specular", material.getSpecularColor());
                 uniformMap.setUniform("material.reflectance", material.getReflectance());
+                uniformMap.setUniform("material.hasNormalMap", hasNormalMap ? 1 : 0);
                 glActiveTexture(GL_TEXTURE0);
                 textureCache.getTexture(material.getTexturePath()).bind();
+
+                if(hasNormalMap) {
+                    glActiveTexture(GL_TEXTURE1);
+                    textureCache.getTexture(material.getNormalMapPath()).bind();
+                }
 
                 for(Mesh mesh : material.getMeshList()) {
                     glBindVertexArray(mesh.getVaoId());
