@@ -10,12 +10,12 @@ import org.polygon.engine.core.graph.gui.backend.gl3.ImGuiImplGl3;
 import org.polygon.engine.core.graph.gui.backend.glfw.ImGuiImplGlfw;
 import org.polygon.engine.core.scene.Scene;
 
-public class GuiRenderBeta {
+public class GuiRender {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
     private String glslVersion;
 
-    public GuiRenderBeta(Window window) {
+    public GuiRender(Window window) {
         glslVersion = "#version 410";
         initImGui();
         imGuiGlfw.init(window.getWindowHandle(), true);

@@ -2,6 +2,7 @@ package org.polygon.engine.core.graph;
 
 import org.lwjgl.opengl.GL;
 import org.polygon.engine.core.Window;
+import org.polygon.engine.core.graph.gui.GuiRender;
 import org.polygon.engine.core.scene.Scene;
 
 import static org.lwjgl.opengl.GL11.*;

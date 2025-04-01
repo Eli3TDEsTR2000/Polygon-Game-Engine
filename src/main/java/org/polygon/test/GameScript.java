@@ -5,7 +5,7 @@ import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.EngineRender;
 import org.polygon.test.scenes.BasicScene;
 import org.polygon.test.scenes.cubeScene.CubeScene;
-import org.polygon.test.scenes.lightTestScene.LightTestScene;
+import org.polygon.test.scenes.normalScene.NormalTestScene;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class GameScript implements IGameLogic {
     @Override
     public void init(Window window, EngineRender render) {
         scenes.add(new CubeScene(window));
-        scenes.add(new LightTestScene(window));
+        scenes.add(new NormalTestScene(window));
         scenes.get(currentSceneIndex).init();
         window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
         window.addKeyCallback((handle, key, scancode, action, mods) -> {

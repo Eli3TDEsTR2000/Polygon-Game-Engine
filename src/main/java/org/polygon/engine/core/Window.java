@@ -43,7 +43,7 @@ public class Window {
 
         // Sets glfw OpenGL context version to 4.x
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
         // Checks if compatible profile is enabled, (default: false)
         if(opts.compatibleProfile) {

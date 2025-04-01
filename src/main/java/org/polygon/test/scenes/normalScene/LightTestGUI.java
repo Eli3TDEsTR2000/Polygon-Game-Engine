@@ -1,4 +1,4 @@
-package org.polygon.test.scenes.lightTestScene;
+package org.polygon.test.scenes.normalScene;
 
 import imgui.*;
 import imgui.flag.ImGuiCond;
@@ -84,10 +84,10 @@ public class LightTestGUI implements IGuiInstance {
 
     @Override
     public void drawGui() {
-        ImGui.newFrame();
         ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
+        ImGui.setNextWindowSize(400, 400, ImGuiCond.Once);
 
-        ImGui.begin("Light test");
+        ImGui.begin("Normal mapping test - light controls");
         ImGui.checkbox("Bypass Lighting", active);
         ImGui.separator();
         if(ImGui.collapsingHeader("Ambient Light")) {
@@ -122,18 +122,11 @@ public class LightTestGUI implements IGuiInstance {
             ImGui.sliderFloat("cone direction - z", coneDirectionZ, -1.0f, 1.0f, "%.2f");
         }
         ImGui.end();
-        ImGui.endFrame();
-        ImGui.render();
     }
 
     @Override
     public boolean handleGuiInput(Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
-        Vector2f mousePosition = window.getMouseInputHandler().getCurrentPosition();
-        imGuiIO.addMousePosEvent(mousePosition.x, mousePosition.y);
-        imGuiIO.addMouseButtonEvent(ImGuiMouseButton.Left, window.getMouseInputHandler().isLeftButtonPressed());
-        imGuiIO.addMouseButtonEvent(ImGuiMouseButton.Right, window.getMouseInputHandler().isRightButtonPressed());
-
         boolean consumed = imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
 
         if(consumed) {
