@@ -43,7 +43,7 @@ public class EngineRender {
         skyBoxRender.render(scene);
         // Render scene's objects using shaders.
         sceneRender.render(scene);
-        // Render scene's GUI instance.
-        guiRender.render(scene);
+        // Render scene's GUI instance and window's GUI instance.
+        guiRender.render(window);
     }
 }

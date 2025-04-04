@@ -2,9 +2,7 @@ package org.polygon.test.scenes.normalScene;
 
 import imgui.*;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiMouseButton;
 import imgui.type.ImBoolean;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.polygon.engine.core.IGuiInstance;
 import org.polygon.engine.core.Window;

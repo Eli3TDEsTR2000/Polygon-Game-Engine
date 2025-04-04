@@ -31,6 +31,8 @@ public class CubeScene extends BasicScene {
         cubeEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
         rotation = 0;
+
+        scene.setGuiInstance(new UpdateFpsTestGUI(window));
     }
 
     @Override

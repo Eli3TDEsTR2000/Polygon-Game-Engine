@@ -8,7 +8,6 @@ import org.polygon.engine.core.IGuiInstance;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.gui.backend.gl3.ImGuiImplGl3;
 import org.polygon.engine.core.graph.gui.backend.glfw.ImGuiImplGlfw;
-import org.polygon.engine.core.scene.Scene;
 
 public class GuiRender {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
@@ -36,21 +35,29 @@ public class GuiRender {
         io.setIniFilename(null);                                // We don't want to save .ini file
         io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);  // Enable Keyboard Controls
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);      // Enable Docking
+
+        // Currently disabled, tanks performance
 //        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);    // Enable Multi-Viewport / Platform Windows
         io.setConfigViewportsNoTaskBarIcon(true);
     }
 
-    public void render(Scene scene) {
-        IGuiInstance guiInstance = scene.getGuiInstance();
+    public void render(Window window) {
+        IGuiInstance sceneGuiInstance = window.getCurrentScene().getGuiInstance();
+        IGuiInstance windowGuiInstance = window.getGuiInstance();
 
-        if(guiInstance == null) {
+        if(windowGuiInstance == null && sceneGuiInstance == null) {
             return;
         }
 
         imGuiGl3.newFrame();
         imGuiGlfw.newFrame();
         ImGui.newFrame();
-        guiInstance.drawGui();
+        if(windowGuiInstance != null) {
+            windowGuiInstance.drawGui();
+        }
+        if(sceneGuiInstance != null) {
+            sceneGuiInstance.drawGui();
+        }
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
         // Update and Render additional Platform Windows
