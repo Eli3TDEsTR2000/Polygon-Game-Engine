@@ -54,6 +54,7 @@ public class Engine {
 
         float targetUpdateMS;
         float targetRenderMS;
+        float beforeTargetUpdateMs = 1000.0f / opts.ups;
         float beforeTargetRenderMS = opts.fps > 0 ? 1000.0f / opts.fps : 0;
 
         // Will determine if we should update or render based on targetFps and targetUps
@@ -72,6 +73,11 @@ public class Engine {
             // This reset is needed for instant target FPS change.
             if(beforeTargetRenderMS != targetRenderMS) {
                 deltaRender = 0;
+            }
+            // Check if the user changed target UPS
+            // This reset is needed for instant target UPS change.
+            if(beforeTargetUpdateMs != targetUpdateMS) {
+                deltaUpdate = 0;
             }
 
             // Poll window events and key callbacks will only invoke during this call
@@ -120,6 +126,8 @@ public class Engine {
 
             // Used to track if user changed target FPS
             beforeTargetRenderMS = targetRenderMS;
+            // Used to track if user changed target UPS
+            beforeTargetUpdateMs = targetUpdateMS;
         }
         // Cleans up engine components when window closes (game loop shutdown)
         cleanup();
