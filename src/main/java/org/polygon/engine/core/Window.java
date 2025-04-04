@@ -20,13 +20,17 @@ public class Window {
     private long windowHandle;
     private int width;
     private int height;
-
+    private WindowOptions opts;
     private Scene currentScene;
+    private IGuiInstance guiInstance;
     private MouseInputHandler mouseInputHandler;
     private List<KeyCallback> keyCallbacks;
+    private GLFWKeyCallback prevKeyCallback;
     private List<FrameBufferSizeCallback> frameBufferSizeCallbacks;
+    private GLFWFramebufferSizeCallback prevFramebufferSizeCallback;
 
     public Window(String title, WindowOptions opts) {
+        this.opts = opts;
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -43,10 +47,10 @@ public class Window {
 
         // Sets glfw OpenGL context version to 4.x
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
         // Checks if compatible profile is enabled, (default: false)
-        if(opts.compatibleProfile) {
+        if(this.opts.compatibleProfile) {
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
         } else {
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -56,9 +60,9 @@ public class Window {
         // Get the resolution of the primary monitor
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-        if(opts.width > 0 && opts.height > 0) {
-            this.width = opts.width;
-            this.height = opts.height;
+        if(this.opts.width > 0 && this.opts.height > 0) {
+            this.width = this.opts.width;
+            this.height = this.opts.height;
         } else {
             glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
             this.width = vidmode.width();
@@ -107,7 +111,7 @@ public class Window {
         glfwMakeContextCurrent(windowHandle);
 
         // If a custom fps is set, it will disable v-sync
-        if(opts.fps > 0) {
+        if(this.opts.fps > 0) {
             // disable v-sync
             glfwSwapInterval(0);
         } else {
@@ -133,6 +137,12 @@ public class Window {
     public long getWindowHandle() {
         return windowHandle;
     }
+    public WindowOptions getWindowOptions() {
+        return opts;
+    }
+    public IGuiInstance getGuiInstance() {
+        return guiInstance;
+    }
 
     public MouseInputHandler getMouseInputHandler() {
         return mouseInputHandler;
@@ -151,6 +161,9 @@ public class Window {
 
     public void setCurrentScene(Scene scene) {
         currentScene = scene;
+    }
+    public void setGuiInstance(IGuiInstance guiInstance) {
+        this.guiInstance = guiInstance;
     }
 
     public Scene createScene() {
@@ -205,7 +218,10 @@ public class Window {
 
     // Adds the support for multiple key callback functions.
     public void initKeyCallbacks() {
-        glfwSetKeyCallback(windowHandle, (handle, key, scancode, action, mods) -> {
+        prevKeyCallback = glfwSetKeyCallback(windowHandle, (handle, key, scancode, action, mods) -> {
+            if(prevKeyCallback != null) {
+                prevKeyCallback.invoke(handle, key, scancode, action, mods);
+            }
             for(KeyCallback keyCallback : keyCallbacks) {
                 keyCallback.invoke(handle, key, scancode, action, mods);
             }
@@ -220,7 +236,10 @@ public class Window {
 
     // Adds the support for multiple frame buffer size callbacks.
     public void initFrameBufferSizeCallbacks() {
-        glfwSetFramebufferSizeCallback(windowHandle, (handle, w, h) -> {
+        prevFramebufferSizeCallback = glfwSetFramebufferSizeCallback(windowHandle, (handle, w, h) -> {
+            if(prevFramebufferSizeCallback != null) {
+                prevFramebufferSizeCallback.invoke(handle, w, h);
+            }
             for(FrameBufferSizeCallback frameBufferSizeCallback : frameBufferSizeCallbacks) {
                 frameBufferSizeCallback.invoke(handle, w, h);
             }

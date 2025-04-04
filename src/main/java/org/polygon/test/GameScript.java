@@ -5,6 +5,7 @@ import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.EngineRender;
 import org.polygon.test.scenes.BasicScene;
 import org.polygon.test.scenes.cubeScene.CubeScene;
+import org.polygon.test.scenes.normalScene.NormalTestScene;
 
 import java.util.ArrayList;
 
@@ -18,17 +19,23 @@ public class GameScript implements IGameLogic {
 
     @Override
     public void init(Window window, EngineRender render) {
+        window.setGuiInstance(new performanceGUI(true));
         scenes.add(new CubeScene(window));
+        scenes.add(new NormalTestScene(window));
+        scenes.get(currentSceneIndex).init();
         window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
-        window.getCurrentScene().setGuiInstance(new ImGuiDemo());
         window.addKeyCallback((handle, key, scancode, action, mods) -> {
-            if(key == GLFW_KEY_4 && action == GLFW_PRESS && currentSceneIndex < scenes.size() - 1) {
+            if(key == GLFW_KEY_PAGE_DOWN && action == GLFW_PRESS && currentSceneIndex < scenes.size() - 1) {
+                scenes.get(currentSceneIndex).cleanup();
                 currentSceneIndex++;
                 window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
+                scenes.get(currentSceneIndex).reset();
                 window.getCurrentScene().resize(window.getWidth(), window.getHeight());
-            } else if(key == GLFW_KEY_2 && action == GLFW_PRESS && currentSceneIndex > 0) {
+            } else if(key == GLFW_KEY_PAGE_UP && action == GLFW_PRESS && currentSceneIndex > 0) {
+                scenes.get(currentSceneIndex).cleanup();
                 currentSceneIndex --;
                 window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
+                scenes.get(currentSceneIndex).reset();
                 window.getCurrentScene().resize(window.getWidth(), window.getHeight());
             }
         });

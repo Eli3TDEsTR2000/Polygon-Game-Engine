@@ -3,6 +3,7 @@ package org.polygon.engine.core.scene;
 import org.polygon.engine.core.IGuiInstance;
 import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.graph.TextureCache;
+import org.polygon.engine.core.scene.lights.SceneLights;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,15 @@ public class Scene {
     private Camera camera;
     // Holds the current GUI instance.
     private IGuiInstance guiInstance;
+    // Holds the SceneLights that contains all the scene's light casters.
+    private SceneLights sceneLights;
+    // Holds the scene's skybox.
+    private SkyBox skyBox;
+    // Holds the scene's fog instance.
+    private Fog fog;
+
+    // Flag to bypass lighting in the shader.
+    private boolean bypassLighting;
 
     public Scene(int width, int height) {
         // Initialize the scene with empty Model map and a projection matrix
@@ -30,11 +40,16 @@ public class Scene {
         textureCache = new TextureCache();
         // Initialize Scene's camera
         camera = new Camera();
+        // Initialize the scene's fog.
+        fog = new Fog();
+
+        bypassLighting = false;
     }
 
     public void cleanup() {
         // Removes VAO and VBO for each mesh
         modelMap.values().forEach(Model::cleanup);
+        textureCache.cleanup();
     }
 
     public void reset() {
@@ -43,6 +58,8 @@ public class Scene {
         cleanup();
         modelMap = new HashMap<>();
         textureCache = new TextureCache();
+        camera = new Camera();
+        bypassLighting = false;
     }
 
     public void addEntity(Entity entity) {
@@ -59,10 +76,6 @@ public class Scene {
         return modelMap;
     }
 
-    public void addModel(Model model) {
-        modelMap.put(model.getModelId(), model);
-    }
-
     public Projection getProjection() {
         return projection;
     }
@@ -75,16 +88,48 @@ public class Scene {
         return camera;
     }
 
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
-
     public IGuiInstance getGuiInstance() {
         return guiInstance;
     }
 
+    public SceneLights getSceneLights() {
+        return sceneLights;
+    }
+    public SkyBox getSkyBox() {
+        return skyBox;
+    }
+    public Fog getFog() {
+        return fog;
+    }
+
+    public boolean isLightingDisabled() {
+        return bypassLighting;
+    }
+
     public void setGuiInstance(IGuiInstance guiInstance) {
         this.guiInstance = guiInstance;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+    public void setSkyBox(SkyBox skyBox) {
+        this.skyBox = skyBox;
+    }
+
+    public void setSceneLights(SceneLights sceneLights) {
+        this.sceneLights = sceneLights;
+    }
+    public void setFog(Fog fog) {
+        this.fog = fog;
+    }
+
+    public void setBypassLighting(boolean bool) {
+        bypassLighting = bool;
+    }
+
+    public void addModel(Model model) {
+        modelMap.put(model.getModelId(), model);
     }
 
     public void resize(int width, int height) {

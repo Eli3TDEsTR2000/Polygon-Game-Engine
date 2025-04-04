@@ -7,15 +7,9 @@ public class Engine {
     private final IGameLogic gameLogic;
     private final Window window;
     private EngineRender render;
-    private int targetFps;
-    private int targetUps;
     private boolean running;
 
     public Engine(String windowTitle, Window.WindowOptions opts, IGameLogic gameLogic) {
-        // Assign game engine's target fps and ups from options
-        targetFps = opts.fps;
-        targetUps = opts.ups;
-
         // Creating engine's window and passing the resize function as reference
         window = new Window(windowTitle, opts);
 
@@ -52,23 +46,40 @@ public class Engine {
 
     // Main game loop
     private void run() {
+        // Track user options
+        Window.WindowOptions opts = window.getWindowOptions();
         // This will hold before loop time in MS to calculate lag
         long rbeforeMS = System.currentTimeMillis();
         long ubeforeMS = rbeforeMS;
 
-        // Finds the target update time in MS to manage fixed game updates
-        float targetUpdateMS = 1000.0f / targetUps;
-
-        // Finds the target render time in MS to manage capped frame rate
-        // If there is no specified frame rate cap, we will depend on
-        // GLFW v-sync to control render calls rate instead
-        float targetRenderMS = targetFps > 0 ? 1000.0f / targetFps : 0;
+        float targetUpdateMS;
+        float targetRenderMS;
+        float beforeTargetUpdateMs = 1000.0f / opts.ups;
+        float beforeTargetRenderMS = opts.fps > 0 ? 1000.0f / opts.fps : 0;
 
         // Will determine if we should update or render based on targetFps and targetUps
         float deltaUpdate = 0;
         float deltaRender = 0;
 
         while(running && !window.windowShouldClose()) {
+            // Finds the target update time in MS to manage fixed game updates
+            targetUpdateMS = 1000.0f / opts.ups;
+            // Finds the target render time in MS to manage capped frame rate
+            // If there is no specified frame rate cap, we will depend on
+            // GLFW v-sync to control render calls rate instead
+            targetRenderMS = opts.fps > 0 ? 1000.0f / opts.fps : 0;
+
+            // Check if the user changed target FPS
+            // This reset is needed for instant target FPS change.
+            if(beforeTargetRenderMS != targetRenderMS) {
+                deltaRender = 0;
+            }
+            // Check if the user changed target UPS
+            // This reset is needed for instant target UPS change.
+            if(beforeTargetUpdateMs != targetUpdateMS) {
+                deltaUpdate = 0;
+            }
+
             // Poll window events and key callbacks will only invoke during this call
             window.pollEvents();
 
@@ -101,7 +112,7 @@ public class Engine {
                 deltaUpdate--;
             }
 
-            if(targetFps <= 0 || deltaRender >= 1) {
+            if(opts.fps <= 0 || deltaRender >= 1) {
                 // Clears the screen and initiate draw calls then redraw frame buffer
                 render.render(window);
                 // Reset deltaRender to redetermine if a time matching targetFps in MS
@@ -112,6 +123,11 @@ public class Engine {
             }
 
             rbeforeMS = nowMS;
+
+            // Used to track if user changed target FPS
+            beforeTargetRenderMS = targetRenderMS;
+            // Used to track if user changed target UPS
+            beforeTargetUpdateMs = targetUpdateMS;
         }
         // Cleans up engine components when window closes (game loop shutdown)
         cleanup();

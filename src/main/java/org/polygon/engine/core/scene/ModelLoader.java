@@ -92,12 +92,33 @@ public class ModelLoader {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             AIColor4D aiColor4D = AIColor4D.create();
 
+            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT
+                    , aiTextureType_NONE, 0, aiColor4D);
+            if(result == aiReturn_SUCCESS) {
+                material.setAmbientColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
+            }
+
             // Get the diffuse color of the texture and assign it to the material by default
-            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE
                     , aiTextureType_NONE, 0, aiColor4D);
             if (result == aiReturn_SUCCESS) {
                 material.setDiffuseColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
             }
+
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, aiColor4D);
+            if(result == aiReturn_SUCCESS) {
+                material.setSpecularColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
+            }
+
+            float reflectance = 0.0f;
+            float[] shininessFactor = new float[] {0.0f};
+            int[] pMax = new int[] {1};
+            result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS_STRENGTH, aiTextureType_NONE
+                    , 0, shininessFactor, pMax);
+            if(result != aiReturn_SUCCESS) {
+                reflectance = shininessFactor[0];
+            }
+            material.setReflectance(reflectance);
 
             // If there is a texture path defined, assign the texture to the material and
             //      set the diffuse color to the default color.
@@ -108,7 +129,15 @@ public class ModelLoader {
             if (texturePath != null && texturePath.length() > 0) {
                 material.setTexturePath(modelDir + File.separator + new File(texturePath).getName());
                 textureCache.createTexture(material.getTexturePath());
-                material.setDiffuseColor(Material.DEFAULT_COLOR);
+            }
+
+            AIString aiNormalMapPath = AIString.calloc(stack);
+            aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, aiNormalMapPath, (IntBuffer) null
+                    , null, null, null, null, null);
+            String normalMapPath = aiNormalMapPath.dataString();
+            if(normalMapPath != null && normalMapPath.length() > 0) {
+                material.setNormalMapPath(modelDir + File.separator + new File(normalMapPath).getName());
+                textureCache.createTexture(material.getNormalMapPath());
             }
 
             return material;
@@ -117,6 +146,9 @@ public class ModelLoader {
 
     private static Mesh processMesh(AIMesh aiMesh) {
         float[] vertices = processVertices(aiMesh);
+        float[] normals = processNormals(aiMesh);
+        float[] tangents = processTangents(aiMesh, normals);
+        float[] bitangents = processBitangents(aiMesh, normals);
         float[] textCoords = processTextCoords(aiMesh);
         int[] indexArray = processIndexArray(aiMesh);
 
@@ -127,7 +159,7 @@ public class ModelLoader {
             textCoords = new float[numOfElements];
         }
 
-        return new Mesh(vertices, textCoords, indexArray);
+        return new Mesh(vertices, normals, tangents, bitangents, textCoords, indexArray);
     }
 
     private static float[] processVertices(AIMesh aiMesh) {
@@ -142,6 +174,55 @@ public class ModelLoader {
         }
 
         return vertices;
+    }
+
+    private static float[] processNormals(AIMesh aiMesh) {
+        AIVector3D.Buffer buffer = aiMesh.mNormals();
+        float[] normals = new float[buffer.remaining() * 3];
+        int position = 0;
+        while(buffer.remaining() > 0) {
+            AIVector3D normal = buffer.get();
+            normals[position++] = normal.x();
+            normals[position++] = normal.y();
+            normals[position++] = normal.z();
+        }
+        return normals;
+    }
+
+    private static float[] processTangents(AIMesh aiMesh, float[] normals) {
+        AIVector3D.Buffer buffer = aiMesh.mTangents();
+        float[] tangents = new float[buffer.remaining() * 3];
+        int position = 0;
+        while(buffer.remaining() > 0) {
+            AIVector3D aiTangent = buffer.get();
+            tangents[position++] = aiTangent.x();
+            tangents[position++] = aiTangent.y();
+            tangents[position++] = aiTangent.z();
+        }
+
+        if(tangents.length == 0) {
+            tangents = new float[normals.length];
+        }
+
+        return tangents;
+    }
+
+    private static float[] processBitangents(AIMesh aiMesh, float[] normals) {
+        AIVector3D.Buffer buffer = aiMesh.mBitangents();
+        float[] bitangents = new float[buffer.remaining() * 3];
+        int position = 0;
+        while(buffer.remaining() > 0) {
+            AIVector3D aiBitangent = buffer.get();
+            bitangents[position++] = aiBitangent.x();
+            bitangents[position++] = aiBitangent.y();
+            bitangents[position++] = aiBitangent.z();
+        }
+
+        if(bitangents.length == 0) {
+            bitangents = new float[normals.length];
+        }
+
+        return bitangents;
     }
 
     private static float[] processTextCoords(AIMesh aiMesh) {

@@ -21,7 +21,7 @@ public class CubeScene extends BasicScene {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         Model cube = ModelLoader.loadModel("Cube", "resources/models/cube/cube.obj"
                 , scene.getTextureCache());
         scene.addModel(cube);
@@ -31,6 +31,8 @@ public class CubeScene extends BasicScene {
         cubeEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
         rotation = 0;
+
+        scene.setGuiInstance(new UpdateFpsTestGUI(window));
     }
 
     @Override

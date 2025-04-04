@@ -5,16 +5,21 @@ import org.polygon.engine.core.scene.Scene;
 
 public abstract class BasicScene {
     protected Scene scene;
+    protected Window window;
     public BasicScene(Window window) {
         scene = window.createScene();
-        init();
+        this.window = window;
     }
 
     public Scene getScene() {
         return scene;
     }
 
-    protected abstract void init();
+    public abstract void init();
+
+    public void cleanup() {
+        scene.cleanup();
+    }
 
     public void reset() {
         scene.reset();
