@@ -4,16 +4,29 @@ import org.polygon.engine.core.Window;
 import org.polygon.engine.core.scene.Scene;
 
 public abstract class BasicScene {
-    public BasicScene() {
+    protected Scene scene;
+    protected Window window;
+    public BasicScene(Window window) {
+        scene = window.createScene();
+        this.window = window;
     }
 
-    public abstract void initScene(Scene scene);
-
-    public void input(Window window, Scene scene, long diffTimeMS) {
-
+    public Scene getScene() {
+        return scene;
     }
 
-    public void update(Window window, Scene scene, long diffTimeMS) {
+    public abstract void init();
 
+    public void cleanup() {
+        scene.cleanup();
     }
+
+    public void reset() {
+        scene.reset();
+        init();
+    }
+
+    public abstract void input(Window window, long diffTimeMS);
+
+    public abstract void update(Window window, long diffTimeMS);
 }

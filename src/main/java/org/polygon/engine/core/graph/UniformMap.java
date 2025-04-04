@@ -1,13 +1,12 @@
 package org.polygon.engine.core.graph;
 
-import org.joml.Matrix4f;
+import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL40.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL40.glGetUniformLocation;
+import static org.lwjgl.opengl.GL40.*;
 
 // This class will create uniform references and sets up their values
 public class UniformMap {
@@ -31,15 +30,47 @@ public class UniformMap {
         uniformReferences.put(uniformName, uniformLocation);
     }
 
-    // set's the uniform reference with value. TODO LATER - this only supports mat4 uniforms
+    // Get uniform location for setUniform methods
+    private Integer getUniformLocation(String uniformName) {
+        Integer location = uniformReferences.get(uniformName);
+        if(location == null) {
+            throw new RuntimeException("Could not set value to uniform ["
+                    + uniformName + "], Uniform not found!");
+        }
+
+        return location;
+    }
+
+    // set's the uniform reference with value.
     public void setUniform(String uniformName, Matrix4f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            Integer location = uniformReferences.get(uniformName);
-            if(location == null) {
-                throw new RuntimeException("Could not set value to uniform ["
-                        + uniformName + "], Uniform not found!");
-            }
-            glUniformMatrix4fv(location, false, value.get(stack.mallocFloat(16)));
+            glUniformMatrix4fv(getUniformLocation(uniformName), false, value.get(stack.mallocFloat(16)));
         }
+    }
+
+    public void setUniform(String uniformName, boolean value) {
+        if(value == true) {
+            setUniform(uniformName, 1);
+        } else {
+            setUniform(uniformName, 0);
+        }
+    }
+    public void setUniform(String uniformName, int value) {
+        glUniform1i(getUniformLocation(uniformName), value);
+    }
+
+    public void setUniform(String uniformName, float value) {
+        glUniform1f(getUniformLocation(uniformName), value);
+    }
+
+    public void setUniform(String uniformName, Vector4f value) {
+        glUniform4f(getUniformLocation(uniformName), value.x, value.y, value.z, value.w);
+    }
+    public void setUniform(String uniformName, Vector3f value) {
+        glUniform3f(getUniformLocation(uniformName), value.x, value.y, value.z);
+    }
+
+    public void setUniform(String uniformName, Vector2f value) {
+        glUniform2f(getUniformLocation(uniformName), value.x, value.y);
     }
 }
