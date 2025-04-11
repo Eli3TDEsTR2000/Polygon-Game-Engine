@@ -5,7 +5,7 @@ import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.gui.GuiRender;
 import org.polygon.engine.core.scene.Scene;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL40.*;
 
 public class EngineRender {
     private SceneRender sceneRender;
@@ -18,9 +18,11 @@ public class EngineRender {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+        glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
+
         sceneRender = new SceneRender();
         guiRender = new GuiRender(window);
         skyBoxRender = new SkyBoxRender();
