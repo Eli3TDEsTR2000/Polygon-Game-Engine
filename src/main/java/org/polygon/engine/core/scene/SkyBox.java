@@ -9,7 +9,7 @@ public class SkyBox {
     private Entity skyBoxEntity;
 
     public SkyBox(String skyBoxModelPath, TextureCache textureCache) {
-        skyBoxModel = ModelLoader.loadModel("skybox-model", skyBoxModelPath, textureCache);
+        skyBoxModel = ModelLoader.loadModel("skybox-model", skyBoxModelPath, textureCache, false);
         skyBoxEntity = new Entity("skybox-entity", skyBoxModel.getModelId());
     }
 

@@ -1,6 +1,7 @@
 package org.polygon.engine.core.graph;
 
 import org.joml.*;
+import org.polygon.engine.core.scene.AnimationData;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.engine.core.scene.lights.*;
@@ -56,6 +57,8 @@ public class SceneRender {
         uniformMap.createUniform("fog.density");
 
         uniformMap.createUniform("bypassLighting");
+
+        uniformMap.createUniform("bonesMatrices");
 
         for(int i = 0; i < MAX_POINT_LIGHTS; i++)  {
             String name = "pointLights[" + i + "]";
@@ -247,6 +250,13 @@ public class SceneRender {
                     glBindVertexArray(mesh.getVaoId());
                     for(Entity entity : entityList) {
                         uniformMap.setUniform("modelMatrix", entity.getModelMatrix());
+                        AnimationData animationData = entity.getAnimationData();
+                        if(animationData == null) {
+                            uniformMap.setUniform("bonesMatrices", AnimationData.DEFAULT_BONES_MATRICES);
+                        } else {
+                            uniformMap.setUniform("bonesMatrices"
+                                    , animationData.getCurrentFrame().boneMatrices());
+                        }
                         glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
                     }
                 }

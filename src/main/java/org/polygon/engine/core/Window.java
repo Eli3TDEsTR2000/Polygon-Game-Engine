@@ -45,6 +45,10 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
+        // TODO - This antiAliasing implementation is temporary until FBO is introduced to the engine
+        // Using GLFW MSAA
+        checkAntiAliasing();
+
         // Sets glfw OpenGL context version to 4.x
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -158,7 +162,6 @@ public class Window {
     public boolean isKeyCallBacksSet() {
         return keyCallbacks.size() > 0;
     }
-
     public void setCurrentScene(Scene scene) {
         currentScene = scene;
     }
@@ -253,12 +256,40 @@ public class Window {
         currentScene.resize(this.width, this.height);
     }
 
+    public void checkAntiAliasing() {
+        int sampleSize;
+        switch(this.opts.antiAliasing) {
+            case 1:
+                sampleSize = 2;
+                break;
+            case 2:
+                sampleSize = 4;
+                break;
+            case 3:
+                sampleSize = 8;
+                break;
+
+            default :
+                sampleSize = 0;
+        }
+
+        // TODO - This antiAliasing implementation is temporary until FBO is introduced to the engine
+        if(windowHandle == NULL) {
+            glfwWindowHint(GLFW_SAMPLES, sampleSize);
+        }
+    }
+
     public static class WindowOptions {
+        public static final int MSAA_2X = 1;
+        public static final int MSAA_4X = 2;
+        public static final int MSAA_16X = 3;
         public boolean compatibleProfile;
         public int fps;
         public int ups = Engine.TARGET_UPS;
         public int width;
         public int height;
+        public int antiAliasing;
+
     }
 
     public interface KeyCallback {

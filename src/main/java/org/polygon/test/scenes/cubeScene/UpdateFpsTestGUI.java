@@ -15,16 +15,18 @@ public class UpdateFpsTestGUI implements IGuiInstance {
     private ImInt fps;
     private ImBoolean vsyncEnabled;
     private Window window;
+    private boolean isWindowHovered;
 
     public UpdateFpsTestGUI(Window window) {
         ups = new ImInt();
         fps = new ImInt();
         vsyncEnabled = new ImBoolean();
         ups.set(window.getWindowOptions().ups);
-        if(window.getWindowOptions().fps <=0) {
+        if(window.getWindowOptions().fps == 0) {
             vsyncEnabled.set(true);
             fps.set(0);
         } else {
+            vsyncEnabled.set(false);
             fps.set(window.getWindowOptions().fps);
         }
 
@@ -38,6 +40,8 @@ public class UpdateFpsTestGUI implements IGuiInstance {
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, new ImVec2(20, 20));
         ImGui.begin("Engine's Fixed-updates / V-Sync Test");
 
+        isWindowHovered = ImGui.isWindowHovered();
+
         ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, new ImVec2(10, 18));
         if(ImGui.checkbox("V-Sync", vsyncEnabled)) {
             if(vsyncEnabled.get()) {
@@ -45,6 +49,7 @@ public class UpdateFpsTestGUI implements IGuiInstance {
                 window.getWindowOptions().fps = 0;
             } else {
                 glfwSwapInterval(0);
+                window.getWindowOptions().fps = 10000;
                 fps.set(10000);
             }
         }
@@ -84,7 +89,7 @@ public class UpdateFpsTestGUI implements IGuiInstance {
     @Override
     public boolean handleGuiInput(Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
-        boolean consumed = imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
+        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard()) && isWindowHovered;
 
         return consumed;
     }

@@ -1,43 +1,35 @@
-package org.polygon.test.scenes.normalScene;
+package org.polygon.test.scenes.skeletalMeshScene;
 
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.Model;
-import org.polygon.engine.core.scene.Camera;
-import org.polygon.engine.core.scene.Entity;
-import org.polygon.engine.core.scene.ModelLoader;
-import org.polygon.engine.core.scene.lights.PointLight;
-import org.polygon.engine.core.scene.lights.SceneLights;
-import org.polygon.engine.core.scene.lights.SpotLight;
+import org.polygon.engine.core.scene.*;
+import org.polygon.engine.core.scene.lights.*;
 import org.polygon.test.scenes.BasicScene;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class NormalTestScene extends BasicScene {
+public class SkeletalMeshTestScene extends BasicScene {
     private final float MOUSE_SENSITIVITY = 0.1f;
     private final float MOVEMENT_SPEED = 0.005f;
 
-    public NormalTestScene(Window window) {
+    private AnimationData animationData;
+
+    public SkeletalMeshTestScene(Window window) {
         super(window);
     }
-
     @Override
     public void init() {
-        Model backpack = ModelLoader.loadModel("backpack-model"
-                , "resources/models/backpack/Survival_BackPack_2.fbx"
-                , scene.getTextureCache(), false);
-        scene.addModel(backpack);
-
-        scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_albedo.jpg");
-        backpack.getMaterialList().get(0).setTexturePath("resources/models/backpack/textures/1001_albedo.jpg");
-
-        scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_normal.png");
-        backpack.getMaterialList().get(0).setNormalMapPath("resources/models/backpack/textures/1001_normal.png");
-
-        Entity backpackEntity = new Entity("backpack-01", backpack.getModelId());
-        backpackEntity.setPosition(0, 0.71f, -2);
-        backpackEntity.setScale(0.005f);
-        backpackEntity.updateModelMatrix();
-        scene.addEntity(backpackEntity);
+        String bobModelId = "bobModel";
+        Model bobModel = ModelLoader.loadModel(bobModelId, "resources/models/bob/boblamp.md5mesh",
+                scene.getTextureCache(), true);
+        scene.addModel(bobModel);
+        Entity bobEntity = new Entity("bobEntity", bobModelId);
+        bobEntity.setPosition(0, -1, -2);
+        bobEntity.setScale(0.03f);
+        bobEntity.updateModelMatrix();
+        animationData = new AnimationData(bobModel.getAnimationList().get(0));
+        bobEntity.setAnimationData(animationData);
+        scene.addEntity(bobEntity);
 
         SceneLights sceneLights = new SceneLights();
         sceneLights.getAmbientLight().setIntensity(0.3f);
@@ -48,7 +40,7 @@ public class NormalTestScene extends BasicScene {
         sceneLights.getSpotLightList().get(0).setIntensity(0);
 
         scene.setSceneLights(sceneLights);
-        scene.setGuiInstance(new LightTestGUI(scene, "Normal mapping test - light controls"));
+        scene.setGuiInstance(new AnimationTestGUI(animationData));
     }
 
     @Override
@@ -83,6 +75,6 @@ public class NormalTestScene extends BasicScene {
 
     @Override
     public void update(Window window, long diffTimeMS) {
-
+        animationData.nextFrame(diffTimeMS / 1000.0f);
     }
 }

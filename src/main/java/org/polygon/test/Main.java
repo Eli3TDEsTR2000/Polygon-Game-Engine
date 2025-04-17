@@ -10,6 +10,7 @@ public class Main {
         options.width = 1280;
         options.height = 720;
         options.ups = 50;
+        options.antiAliasing = options.MSAA_16X;
         Engine engine = new Engine("Polygon Game Engine", options, script);
         engine.start();
     }

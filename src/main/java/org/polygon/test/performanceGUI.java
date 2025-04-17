@@ -40,8 +40,6 @@ public class performanceGUI implements IGuiInstance {
 
     @Override
     public boolean handleGuiInput(Window window) {
-        ImGuiIO imGuiIO = ImGui.getIO();
-
-        return imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
+        return false;
     }
 }
