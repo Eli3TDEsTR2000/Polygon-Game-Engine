@@ -23,7 +23,7 @@ public class CubeScene extends BasicScene {
     @Override
     public void init() {
         Model cube = ModelLoader.loadModel("Cube", "resources/models/cube/cube.obj"
-                , scene.getTextureCache());
+                , scene.getTextureCache(), false);
         scene.addModel(cube);
 
         cubeEntity = new Entity("Cube-01", cube.getModelId());

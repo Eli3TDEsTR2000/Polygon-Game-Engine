@@ -11,6 +11,7 @@ public class Entity {
     private Vector3f position;
     private Quaternionf rotation;
     private float scale;
+    private AnimationData animationData;
 
     public Entity(String entityId, String modelId) {
         // entity object stores its ID and the referenced model ID in ordered to be rendered
@@ -46,6 +47,9 @@ public class Entity {
     public float getScale() {
         return scale;
     }
+    public AnimationData getAnimationData() {
+        return animationData;
+    }
 
     public void setPosition(float x, float y, float z) {
         position.x = x;
@@ -60,8 +64,11 @@ public class Entity {
     public void setScale(float scale) {
         this.scale = scale;
     }
+    public void setAnimationData(AnimationData animationData) {
+        this.animationData = animationData;
+    }
 
-    // We need to call this each time we edit the attributes of the entity
+    // We need to call this every time we edit the attributes of the entity
     public void updateModelMatrix() {
         modelMatrix.translationRotateScale(position, rotation, scale);
     }

@@ -35,9 +35,11 @@ public class LightTestGUI implements IGuiInstance {
     private float[] pointLightZ;
 
     private ImBoolean active;
+    private boolean isWindowHovered;
+    String title;
 
 
-    public LightTestGUI(Scene scene) {
+    public LightTestGUI(Scene scene, String title) {
         SceneLights sceneLights = scene.getSceneLights();
         AmbientLight ambientLight= sceneLights.getAmbientLight();
         Vector3f color = ambientLight.getColor();
@@ -78,6 +80,8 @@ public class LightTestGUI implements IGuiInstance {
         directionalLightZ = new float[]{position.z};
 
         active = new ImBoolean(false);
+
+        this.title = title;
     }
 
     @Override
@@ -85,7 +89,10 @@ public class LightTestGUI implements IGuiInstance {
         ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
         ImGui.setNextWindowSize(400, 400, ImGuiCond.Once);
 
-        ImGui.begin("Normal mapping test - light controls");
+        ImGui.begin(title);
+
+        isWindowHovered = ImGui.isWindowHovered();
+
         ImGui.checkbox("Bypass Lighting", active);
         ImGui.separator();
         if(ImGui.collapsingHeader("Ambient Light")) {
@@ -125,7 +132,7 @@ public class LightTestGUI implements IGuiInstance {
     @Override
     public boolean handleGuiInput(Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
-        boolean consumed = imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
+        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard()) && isWindowHovered;
 
         if(consumed) {
             SceneLights sceneLights = window.getCurrentScene().getSceneLights();

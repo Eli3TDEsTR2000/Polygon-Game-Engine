@@ -11,12 +11,14 @@ import java.util.List;
 import static org.lwjgl.opengl.GL40.*;
 
 public class Mesh {
+    public static final int MAX_WEIGHTS = 4;
     private int vaoId;
     private List<Integer> vboIdList;
     private int numVertices;
 
+
     public Mesh(float[] positions, float[] normals, float[] tangents, float[] bitangents
-            , float[] textCoords, int[] indexArray) {
+            , float[] textCoords, int[] indexArray, int[] boneIndices, float[] weights) {
         // Create a temp vboId reference
         // We don't need to store individual vbo references, instead we have an arrayList to store instead
         int vboId;
@@ -88,10 +90,32 @@ public class Mesh {
         textCoordsBuffer.put(0, textCoords);
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         glBufferData(GL_ARRAY_BUFFER, textCoordsBuffer, GL_STATIC_DRAW);
-        // Enable index 2 in the VAO attribute array
+        // Enable index 4 in the VAO attribute array
         // Texture coordinates are 2D coordinate that takes a size of 2 in the buffer for X and Y
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 2, GL_FLOAT, false, 0, 0);
+
+
+        // Create Bone weights VBO reference
+        vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        FloatBuffer weightsBuffer = MemoryUtil.memCallocFloat(weights.length);
+        weightsBuffer.put(weights).flip();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, weightsBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(5);
+        glVertexAttribPointer(5, 4, GL_FLOAT, false, 0, 0);
+
+
+        // Create Bone indices VBO reference
+        vboId = glGenBuffers();
+        vboIdList.add(vboId);
+        IntBuffer boneIndicesBuffer = MemoryUtil.memCallocInt(boneIndices.length);
+        boneIndicesBuffer.put(boneIndices).flip();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        glBufferData(GL_ARRAY_BUFFER, boneIndicesBuffer, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(6);
+        glVertexAttribIPointer(6, 4, GL_INT, 0, 0);
 
 
         // Create Index VBO
@@ -113,6 +137,8 @@ public class Mesh {
         MemoryUtil.memFree(tangentsBuffer);
         MemoryUtil.memFree(bitangentsBuffer);
         MemoryUtil.memFree(textCoordsBuffer);
+        MemoryUtil.memFree(weightsBuffer);
+        MemoryUtil.memFree(boneIndicesBuffer);
         MemoryUtil.memFree(indexArrayBuffer);
     }
 

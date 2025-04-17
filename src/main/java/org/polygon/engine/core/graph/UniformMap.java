@@ -3,6 +3,7 @@ package org.polygon.engine.core.graph;
 import org.joml.*;
 import org.lwjgl.system.MemoryStack;
 
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,17 @@ public class UniformMap {
     public void setUniform(String uniformName, Matrix4f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
             glUniformMatrix4fv(getUniformLocation(uniformName), false, value.get(stack.mallocFloat(16)));
+        }
+    }
+
+    public void setUniform(String uniformName, Matrix4f[] values) {
+        try(MemoryStack stack = MemoryStack.stackPush()) {
+            int length = values != null ? values.length : 0;
+            FloatBuffer floatBuffer = stack.mallocFloat(16 * length);
+            for(int i = 0; i < length; i++) {
+                values[i].get(16 * i, floatBuffer);
+            }
+            glUniformMatrix4fv(uniformReferences.get(uniformName), false, floatBuffer);
         }
     }
 
