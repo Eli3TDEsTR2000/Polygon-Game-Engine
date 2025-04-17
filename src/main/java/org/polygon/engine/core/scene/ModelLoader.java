@@ -134,7 +134,7 @@ public class ModelLoader {
         List<Bone> boneList = new ArrayList<>();
         for (int i = 0; i < aiScene.mNumMeshes(); i++) {
             AIMesh aiMesh = AIMesh.create(aiScene.mMeshes().get(i));
-            AnimMeshData animMeshData = processBones(aiMesh, boneList);
+            processBones(aiMesh, boneList);
         }
 
         List<Model.Animation> animationList = new ArrayList<>();

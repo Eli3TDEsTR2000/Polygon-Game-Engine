@@ -25,7 +25,7 @@ public class AnimationData {
     // Default 30 FPS as an animationSpeed.
     private float animationSpeed = 30.0f;
 
-    // Used to decide to interpolate between animation frames.
+    // Used to decide interpolation between animation frames.
     private boolean interpolate = true;
 
     public AnimationData(Model.Animation currentAnimation) {
@@ -60,7 +60,13 @@ public class AnimationData {
     }
 
     public int getCurrentFrameIndex() {
-        return (int) Math.floor(currentTime * currentAnimation.frames().size() / currentAnimation.duration());
+        int frameIndex = (int) Math.floor(currentTime * currentAnimation.frames().size() / currentAnimation.duration());
+        // Ensure the frame index never exceeds the last valid frame
+        return Math.min(frameIndex, currentAnimation.frames().size() - 1);
+    }
+
+    public float getCurrentTime() {
+        return currentTime;
     }
 
     public int getNextFrameIndex() {
@@ -107,5 +113,14 @@ public class AnimationData {
 
     public void setInterpolate(boolean interpolate) {
         this.interpolate = interpolate;
+    }
+
+    public void setCurrentTime(float time) {
+        if (time < 0) {
+            time = 0;
+        } else if (time > currentAnimation.duration()) {
+            time = (float)currentAnimation.duration();
+        }
+        this.currentTime = time;
     }
 }

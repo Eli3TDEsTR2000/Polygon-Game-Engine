@@ -11,7 +11,6 @@ import org.polygon.engine.core.scene.lights.SpotLight;
 import org.polygon.test.scenes.BasicScene;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_V;
 
 public class NormalTestScene extends BasicScene {
     private final float MOUSE_SENSITIVITY = 0.1f;

@@ -132,7 +132,7 @@ public class LightTestGUI implements IGuiInstance {
     @Override
     public boolean handleGuiInput(Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
-        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard()) && isWindowHovered;
+        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard());
 
         if(consumed) {
             SceneLights sceneLights = window.getCurrentScene().getSceneLights();

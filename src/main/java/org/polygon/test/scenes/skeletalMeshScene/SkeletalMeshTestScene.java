@@ -7,7 +7,6 @@ import org.polygon.engine.core.scene.lights.*;
 import org.polygon.test.scenes.BasicScene;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_V;
 
 public class SkeletalMeshTestScene extends BasicScene {
     private final float MOUSE_SENSITIVITY = 0.1f;
@@ -30,7 +29,6 @@ public class SkeletalMeshTestScene extends BasicScene {
         bobEntity.updateModelMatrix();
         animationData = new AnimationData(bobModel.getAnimationList().get(0));
         bobEntity.setAnimationData(animationData);
-        animationData.setInterpolate(true);
         scene.addEntity(bobEntity);
 
         SceneLights sceneLights = new SceneLights();
@@ -42,6 +40,7 @@ public class SkeletalMeshTestScene extends BasicScene {
         sceneLights.getSpotLightList().get(0).setIntensity(0);
 
         scene.setSceneLights(sceneLights);
+        scene.setGuiInstance(new AnimationTestGUI(animationData));
     }
 
     @Override
