@@ -44,7 +44,7 @@ public class ModelLoader {
     }
 
     public static Model loadAnimation(String modelId, String modelPath, TextureCache textureCache) {
-        return loadAnimation(modelId, modelPath, textureCache
+        return loadAnimation(modelId, modelPath
                 , aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices
                         | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace
                         | aiProcess_LimitBoneWeights);
@@ -116,14 +116,12 @@ public class ModelLoader {
         return new Model(modelId, materialList, animationList);
     }
 
-    private static Model loadAnimation(String modelId, String modelPath, TextureCache textureCache, int flags) {
+    private static Model loadAnimation(String modelId, String modelPath, int flags) {
         // check if the model path exists
         File file = new File(modelPath);
         if (!file.exists()) {
             throw new RuntimeException("Model path does not exists + [" + modelPath + "]");
         }
-        // hold the parent directory of the model file
-        String modelDir = file.getParent();
 
         // load the model with the selected flags
         AIScene aiScene = aiImportFile(modelPath, flags);
