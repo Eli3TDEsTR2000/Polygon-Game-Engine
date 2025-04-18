@@ -55,21 +55,27 @@ public class Entity {
         position.x = x;
         position.y = y;
         position.z = z;
+
+        updateModelMatrix();
     }
 
     public void setRotation(float x, float y, float z, float angle) {
         rotation.fromAxisAngleRad(x, y, z, angle);
+
+        updateModelMatrix();
     }
 
     public void setScale(float scale) {
         this.scale = scale;
+
+        updateModelMatrix();
     }
     public void setAnimationData(AnimationData animationData) {
         this.animationData = animationData;
     }
 
     // We need to call this every time we edit the attributes of the entity
-    public void updateModelMatrix() {
+    private void updateModelMatrix() {
         modelMatrix.translationRotateScale(position, rotation, scale);
     }
 }

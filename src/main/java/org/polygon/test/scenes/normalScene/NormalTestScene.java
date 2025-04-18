@@ -36,7 +36,6 @@ public class NormalTestScene extends BasicScene {
         Entity backpackEntity = new Entity("backpack-01", backpack.getModelId());
         backpackEntity.setPosition(0, 0.71f, -2);
         backpackEntity.setScale(0.005f);
-        backpackEntity.updateModelMatrix();
         scene.addEntity(backpackEntity);
 
         SceneLights sceneLights = new SceneLights();
@@ -84,5 +83,10 @@ public class NormalTestScene extends BasicScene {
     @Override
     public void update(Window window, long diffTimeMS) {
 
+    }
+
+    @Override
+    public void cleanup() {
+        scene.cleanup();
     }
 }

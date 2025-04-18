@@ -17,10 +17,6 @@ public abstract class BasicScene {
 
     public abstract void init();
 
-    public void cleanup() {
-        scene.cleanup();
-    }
-
     public void reset() {
         scene.reset();
         init();
@@ -29,4 +25,6 @@ public abstract class BasicScene {
     public abstract void input(Window window, long diffTimeMS);
 
     public abstract void update(Window window, long diffTimeMS);
+
+    public abstract void cleanup();
 }

@@ -28,7 +28,6 @@ public class CubeScene extends BasicScene {
 
         cubeEntity = new Entity("Cube-01", cube.getModelId());
         cubeEntity.setPosition(0, 0, -2);
-        cubeEntity.updateModelMatrix();
         scene.addEntity(cubeEntity);
         rotation = 0;
 
@@ -72,6 +71,10 @@ public class CubeScene extends BasicScene {
             rotation = 0;
         }
         cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-        cubeEntity.updateModelMatrix();
+    }
+
+    @Override
+    public void cleanup() {
+        scene.cleanup();
     }
 }
