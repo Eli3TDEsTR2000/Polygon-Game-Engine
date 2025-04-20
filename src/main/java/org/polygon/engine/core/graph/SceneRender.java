@@ -81,6 +81,12 @@ public class SceneRender {
             uniformMap.createUniform(name + ".coneDirection");
             uniformMap.createUniform(name + ".cutOff");
         }
+
+        for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
+            uniformMap.createUniform("shadowMap[" + i + "]");
+            uniformMap.createUniform("cascadeshadows[" + i + "]" + ".projViewMatrix");
+            uniformMap.createUniform("cascadeshadows[" + i + "]" + ".splitDistance");
+        }
     }
 
     // TODO - point light and spot light needs to be populated in the shader according to proximity with the camera
@@ -197,7 +203,7 @@ public class SceneRender {
         shaderProgram.cleanup();
     }
 
-    public void render(Scene scene) {
+    public void render(Scene scene, ShadowRender shadowRender) {
         glEnable(GL_BLEND);
         glBlendEquation(GL_FUNC_ADD);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -214,12 +220,28 @@ public class SceneRender {
         // Set the textSampler uniform with 0 (one texture unit)
         uniformMap.setUniform("textSampler", 0);
         uniformMap.setUniform("normalSampler", 1);
+
+
         uniformMap.setUniform("fog.activeFog", scene.getFog().isActive() ? 1 : 0);
         uniformMap.setUniform("fog.color", scene.getFog().getColor());
         uniformMap.setUniform("fog.density", scene.getFog().getDensity());
         uniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
 
+
+
         if(!scene.isLightingDisabled()) {
+            int startSlot = 2;
+            List<CascadeShadow> cascadeShadows = shadowRender.getCascadeShadowList();
+            for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
+                uniformMap.setUniform("shadowMap[" + i + "]", startSlot + i);
+                CascadeShadow cascadeShadow = cascadeShadows.get(i);
+                uniformMap.setUniform("cascadeshadows[" + i + "]" + ".projViewMatrix"
+                        , cascadeShadow.getProjViewMatrix());
+                uniformMap.setUniform("cascadeshadows[" + i + "]" + ".splitDistance"
+                        , cascadeShadow.getSplitDistance());
+            }
+            shadowRender.getShadowBuffer().bindTextures(GL_TEXTURE2);
+
             updateLights(scene);
         }
 

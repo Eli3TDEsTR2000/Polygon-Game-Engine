@@ -22,6 +22,15 @@ public class NormalTestScene extends BasicScene {
 
     @Override
     public void init() {
+        String terrainModelId = "terrain";
+        Model terrainModel = ModelLoader.loadModel(terrainModelId, "resources/models/terrain/terrain.obj",
+                scene.getTextureCache(), false);
+        scene.addModel(terrainModel);
+        Entity terrainEntity = new Entity("terrainEntity", terrainModelId);
+        terrainEntity.setScale(100.0f);
+        terrainEntity.setPosition(0, -0.50f, 0);
+        scene.addEntity(terrainEntity);
+
         Model backpack = ModelLoader.loadModel("backpack-model"
                 , "resources/models/backpack/Survival_BackPack_2.fbx"
                 , scene.getTextureCache(), false);
