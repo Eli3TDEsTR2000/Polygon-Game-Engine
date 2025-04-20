@@ -8,6 +8,7 @@ import org.polygon.engine.core.scene.Scene;
 import static org.lwjgl.opengl.GL40.*;
 
 public class EngineRender {
+    private ShadowRender shadowRender;
     private SceneRender sceneRender;
     private GuiRender guiRender;
     private SkyBoxRender skyBoxRender;
@@ -23,28 +24,37 @@ public class EngineRender {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
+        shadowRender = new ShadowRender();
         sceneRender = new SceneRender();
         guiRender = new GuiRender(window);
         skyBoxRender = new SkyBoxRender();
     }
 
     public void cleanup() {
+        shadowRender.cleanup();
         sceneRender.cleanup();
         guiRender.cleanup();
         skyBoxRender.cleanup();
     }
 
     public void render(Window window) {
+        Scene scene = window.getCurrentScene();
+
+        if(!scene.isLightingDisabled()) {
+            // Render shadowMaps first
+            glDisable(GL_CULL_FACE);
+            shadowRender.render(scene);
+            glEnable(GL_CULL_FACE);
+        }
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
         // Setup a viewport.
         glViewport(0, 0, window.getWidth(), window.getHeight());
 
-        Scene scene = window.getCurrentScene();
-
-        // Render skybox first, any objects that have transparent materials will be blended to the skybox.
+        // Render skybox, any objects that have transparent materials will be blended to the skybox.
         skyBoxRender.render(scene);
         // Render scene's objects using shaders.
-        sceneRender.render(scene);
+        sceneRender.render(scene, shadowRender);
         // Render scene's GUI instance and window's GUI instance.
         guiRender.render(window);
     }
