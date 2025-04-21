@@ -87,10 +87,23 @@ float textureProj(vec4 shadowCoord, vec2 offset, int idx) {
 
     if (shadowCoord.z > -1.0 && shadowCoord.z < 1.0) {
         float dist = 0.0;
-        dist = texture(shadowMap[idx], vec2(shadowCoord.xy + offset)).r;
-        if (shadowCoord.w > 0 && dist < shadowCoord.z - BIAS) {
-            shadow = SHADOW_FACTOR;
+        float texelSize = 1.0 / textureSize(shadowMap[idx], 0).x;
+
+        // PCF with 3x3 kernel
+        float shadowCount = 0.0;
+        for(int x = -1; x <= 1; x++) {
+            for(int y = -1; y <= 1; y++) {
+                vec2 offset = vec2(x, y) * texelSize;
+                float pcfDepth = texture(shadowMap[idx], vec2(shadowCoord.xy + offset)).r;
+                if (shadowCoord.w > 0 && pcfDepth < shadowCoord.z - BIAS) {
+                    shadowCount += 1.0;
+                }
+            }
         }
+
+        // Calculate final shadow with minimum value to prevent too dark shadows
+        float shadowFactor = shadowCount / 9.0;  // 9 samples for 3x3 kernel
+        shadow = mix(1.0, 0.5, shadowFactor);  // Mix between full light (1.0) and half light (0.5)
     }
     return shadow;
 }
