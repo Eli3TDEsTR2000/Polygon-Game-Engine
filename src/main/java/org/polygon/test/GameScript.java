@@ -46,7 +46,7 @@ public class GameScript implements IGameLogic {
     @Override
     public void input(Window window, long diffTimeMS, boolean inputConsumed) {
         // Stop handling scene input if a GUI instance is on focus of the mouse or keyboard.
-        if(inputConsumed && window.getCurrentScene().getGuiInstance() != null) {
+        if(inputConsumed) {
             return;
         }
         scenes.get(currentSceneIndex).input(window, diffTimeMS);

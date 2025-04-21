@@ -40,7 +40,7 @@ public class UpdateFpsTestGUI implements IGuiInstance {
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, new ImVec2(20, 20));
         ImGui.begin("Engine's Fixed-updates / V-Sync Test");
 
-        isWindowHovered = ImGui.isWindowHovered();
+        isWindowHovered = ImGui.isWindowFocused();
 
         ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, new ImVec2(10, 18));
         if(ImGui.checkbox("V-Sync", vsyncEnabled)) {

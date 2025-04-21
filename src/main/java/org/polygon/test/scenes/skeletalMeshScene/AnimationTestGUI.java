@@ -30,7 +30,7 @@ public class AnimationTestGUI implements IGuiInstance {
 
         ImGui.begin("AnimationTest - Animation Controls");
 
-        isWindowHovered = ImGui.isWindowHovered();
+        isWindowHovered = ImGui.isWindowFocused();
 
         Model.Animation currentAnimation = animationData.getCurrentAnimation();
 

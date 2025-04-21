@@ -91,7 +91,7 @@ public class LightTestGUI implements IGuiInstance {
 
         ImGui.begin(title);
 
-        isWindowHovered = ImGui.isWindowHovered();
+        isWindowHovered = ImGui.isWindowFocused();
 
         ImGui.checkbox("Bypass Lighting", active);
         ImGui.separator();
@@ -132,7 +132,7 @@ public class LightTestGUI implements IGuiInstance {
     @Override
     public boolean handleGuiInput(Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
-        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard());
+        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard()) && isWindowHovered;
 
         if(consumed) {
             SceneLights sceneLights = window.getCurrentScene().getSceneLights();
