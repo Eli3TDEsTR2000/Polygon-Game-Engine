@@ -4,7 +4,6 @@ const int MAX_POINT_LIGHT = 5;
 const int MAX_SPOT_LIGHT = 5;
 const float SPECULAR_POWER = 10;
 
-const int DEBUG_SHADOWS = 0;
 const int NUM_CASCADES = 3;
 const float BIAS = 0.0005;
 const float SHADOW_FACTOR = 0.25;
@@ -246,22 +245,5 @@ void main()
 
     if(fog.activeFog == 1) {
         fragColor = calcFog(outViewPosition, fragColor, fog, ambientLight.color, directionalLight);
-    }
-
-    if (DEBUG_SHADOWS == 1) {
-        switch (cascadeIndex) {
-            case 0:
-                fragColor.rgb *= vec3(1.0f, 0.25f, 0.25f);
-                break;
-            case 1:
-                fragColor.rgb *= vec3(0.25f, 1.0f, 0.25f);
-                break;
-            case 2:
-                fragColor.rgb *= vec3(0.25f, 0.25f, 1.0f);
-                break;
-            default :
-                fragColor.rgb *= vec3(1.0f, 1.0f, 0.25f);
-                break;
-        }
     }
 }

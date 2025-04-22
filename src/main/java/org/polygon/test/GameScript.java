@@ -6,6 +6,7 @@ import org.polygon.engine.core.graph.EngineRender;
 import org.polygon.test.scenes.BasicScene;
 import org.polygon.test.scenes.cubeScene.CubeScene;
 import org.polygon.test.scenes.normalScene.NormalTestScene;
+import org.polygon.test.scenes.selectionScene.EntitySelectionTestScene;
 import org.polygon.test.scenes.skeletalMeshScene.SkeletalMeshTestScene;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class GameScript implements IGameLogic {
         scenes.add(new CubeScene(window));
         scenes.add(new NormalTestScene(window));
         scenes.add(new SkeletalMeshTestScene(window));
+        scenes.add(new EntitySelectionTestScene(window));
         scenes.get(currentSceneIndex).init();
         window.setCurrentScene(scenes.get(currentSceneIndex).getScene());
         window.addKeyCallback((handle, key, scancode, action, mods) -> {

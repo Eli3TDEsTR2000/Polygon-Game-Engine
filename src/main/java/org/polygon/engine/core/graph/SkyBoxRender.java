@@ -57,7 +57,7 @@ public class SkyBoxRender {
         viewMatrix.m31(0);
         viewMatrix.m32(0);
 
-        uniformMap.setUniform("projectionMatrix", scene.getProjection().getMatrix());
+        uniformMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
         uniformMap.setUniform("viewMatrix", viewMatrix);
         uniformMap.setUniform("textSampler", 0);
 

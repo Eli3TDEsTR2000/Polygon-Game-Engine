@@ -89,7 +89,6 @@ public class SceneRender {
         }
     }
 
-    // TODO - point light and spot light needs to be populated in the shader according to proximity with the camera
     private void updateLights(Scene scene) {
         Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
 
@@ -214,7 +213,7 @@ public class SceneRender {
         }
 
         // Set the projectionMatrix uniform with the projection matrix stored in scene.
-        uniformMap.setUniform("projectionMatrix", scene.getProjection().getMatrix());
+        uniformMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
         // set the viewMatrix uniform with the scene's camera viewMatrix.
         uniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
         // Set the textSampler uniform with 0 (one texture unit)

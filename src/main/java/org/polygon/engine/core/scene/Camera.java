@@ -9,6 +9,7 @@ public class Camera {
     private Vector3f up;
     private Vector2f rotation;
     private Matrix4f viewMatrix;
+    private Matrix4f invViewMatrix;
 
     // Initialize the position vector. The camera's world coordinates.
     // Initialize the direction vector. the direction the camera is looking at which is a vector intersecting the
@@ -27,6 +28,7 @@ public class Camera {
         up = new Vector3f();
         rotation = new Vector2f();
         viewMatrix = new Matrix4f();
+        invViewMatrix = new Matrix4f();
     }
 
     public Vector3f getPosition() {
@@ -36,6 +38,9 @@ public class Camera {
     public Matrix4f getViewMatrix() {
         return viewMatrix;
     }
+    public Matrix4f getInvViewMatrix() {
+        return invViewMatrix;
+    }
 
     // Recalculate the view matrix with new rotation and position values
     private void applyViewCalculation() {
@@ -43,6 +48,7 @@ public class Camera {
                 .rotateX(rotation.x)
                 .rotateY(rotation.y)
                 .translate(-position.x, -position.y, -position.z);
+        invViewMatrix.set(viewMatrix).invert();
     }
 
     public void setPosition(float x, float y, float z) {
