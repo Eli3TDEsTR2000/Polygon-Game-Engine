@@ -30,7 +30,7 @@ public class CascadeShadow {
         }
 
         Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
-        Matrix4f projectionMatrix = scene.getProjection().getMatrix();
+        Matrix4f projectionMatrix = scene.getProjection().getProjMatrix();
         Vector4f directionalLightPosition =
                 new Vector4f(scene.getSceneLights().getDirectionalLight().getDirection(), 0);
 

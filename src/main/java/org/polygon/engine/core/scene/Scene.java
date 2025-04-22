@@ -13,6 +13,8 @@ public class Scene {
     Projection projection;
     // Holds all Models that are going to be rendered
     private Map<String, Model> modelMap;
+    // Scene objects can hold a reference to a selectedEntity used for game interactions.
+    private Entity selectedEntity;
     // Holds textures used in the scene
     private TextureCache textureCache;
     // Holds the Scene's camera
@@ -76,6 +78,10 @@ public class Scene {
         return modelMap;
     }
 
+    public Entity getSelectedEntity() {
+        return selectedEntity;
+    }
+
     public Projection getProjection() {
         return projection;
     }
@@ -104,6 +110,10 @@ public class Scene {
 
     public boolean isLightingDisabled() {
         return bypassLighting;
+    }
+
+    public void setSelectedEntity(Entity selectedEntity) {
+        this.selectedEntity = selectedEntity;
     }
 
     public void setGuiInstance(IGuiInstance guiInstance) {

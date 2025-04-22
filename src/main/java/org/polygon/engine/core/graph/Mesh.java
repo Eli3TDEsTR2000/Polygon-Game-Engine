@@ -1,5 +1,6 @@
 package org.polygon.engine.core.graph;
 
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL40;
 import org.lwjgl.system.MemoryUtil;
 
@@ -15,10 +16,17 @@ public class Mesh {
     private int vaoId;
     private List<Integer> vboIdList;
     private int numVertices;
+    private Vector3f aabbMinCorner;
+    private Vector3f aabbMaxCorner;
 
 
     public Mesh(float[] positions, float[] normals, float[] tangents, float[] bitangents
-            , float[] textCoords, int[] indexArray, int[] boneIndices, float[] weights) {
+            , float[] textCoords, int[] indexArray, int[] boneIndices, float[] weights
+            , Vector3f aabbMinCorner, Vector3f aabbMaxCorner) {
+        // Bounding box min and max corners.
+        this.aabbMinCorner = aabbMinCorner;
+        this.aabbMaxCorner = aabbMaxCorner;
+
         // Create a temp vboId reference
         // We don't need to store individual vbo references, instead we have an arrayList to store instead
         int vboId;
@@ -153,5 +161,13 @@ public class Mesh {
 
     public int getVaoId() {
         return vaoId;
+    }
+
+    public Vector3f getAabbMinCorner() {
+        return aabbMinCorner;
+    }
+
+    public Vector3f getAabbMaxCorner() {
+        return aabbMaxCorner;
     }
 }
