@@ -52,6 +52,7 @@ public class Scene {
         // Removes VAO and VBO for each mesh
         modelMap.values().forEach(Model::cleanup);
         textureCache.cleanup();
+        sceneLights = null;
     }
 
     public void reset() {

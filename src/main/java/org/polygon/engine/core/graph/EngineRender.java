@@ -9,7 +9,9 @@ import static org.lwjgl.opengl.GL40.*;
 
 public class EngineRender {
     private ShadowRender shadowRender;
+    private GBuffer gBuffer;
     private SceneRender sceneRender;
+    private LightsRender lightsRender;
     private GuiRender guiRender;
     private SkyBoxRender skyBoxRender;
     public EngineRender(Window window) {
@@ -25,37 +27,47 @@ public class EngineRender {
         glCullFace(GL_BACK);
 
         shadowRender = new ShadowRender();
+        gBuffer = new GBuffer(window);
         sceneRender = new SceneRender();
+        lightsRender = new LightsRender();
         guiRender = new GuiRender(window);
         skyBoxRender = new SkyBoxRender();
     }
 
     public void cleanup() {
         shadowRender.cleanup();
+        gBuffer.cleanup();
         sceneRender.cleanup();
+        lightsRender.cleanup();
         guiRender.cleanup();
         skyBoxRender.cleanup();
+    }
+
+    private void lightRenderFinish() {
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    private void lightRenderStart(Window window) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glViewport(0, 0, window.getWidth(), window.getHeight());
+
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer.getGBufferId());
     }
 
     public void render(Window window) {
         Scene scene = window.getCurrentScene();
 
-        if(!scene.isLightingDisabled()) {
-            // Render shadowMaps first
-            glDisable(GL_CULL_FACE);
-            shadowRender.render(scene);
-            glEnable(GL_CULL_FACE);
-        }
-
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-        // Setup a viewport.
-        glViewport(0, 0, window.getWidth(), window.getHeight());
-
-        // Render skybox, any objects that have transparent materials will be blended to the skybox.
+        shadowRender.render(scene);
+        sceneRender.render(scene, gBuffer);
+        lightRenderStart(window);
+        lightsRender.render(scene, shadowRender, gBuffer);
         skyBoxRender.render(scene);
-        // Render scene's objects using shaders.
-        sceneRender.render(scene, shadowRender);
-        // Render scene's GUI instance and window's GUI instance.
+        lightRenderFinish();
         guiRender.render(window);
     }
 }
