@@ -22,15 +22,6 @@ public class NormalTestScene extends BasicScene {
 
     @Override
     public void init() {
-        String terrainModelId = "terrain";
-        Model terrainModel = ModelLoader.loadModel(terrainModelId, "resources/models/terrain/terrain.obj",
-                scene.getTextureCache(), false);
-        scene.addModel(terrainModel);
-        Entity terrainEntity = new Entity("terrainEntity", terrainModelId);
-        terrainEntity.setScale(100.0f);
-        terrainEntity.setPosition(0, -0.50f, 0);
-        scene.addEntity(terrainEntity);
-
         Model backpack = ModelLoader.loadModel("backpack-model"
                 , "resources/models/backpack/Survival_BackPack_2.fbx"
                 , scene.getTextureCache(), false);
@@ -42,10 +33,25 @@ public class NormalTestScene extends BasicScene {
         scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_normal.png");
         backpack.getMaterialList().get(0).setNormalMapPath("resources/models/backpack/textures/1001_normal.png");
 
-        Entity backpackEntity = new Entity("backpack-01", backpack.getModelId());
-        backpackEntity.setPosition(0, 0.71f, -2);
-        backpackEntity.setScale(0.005f);
-        scene.addEntity(backpackEntity);
+        float spacingX = 2.5f;
+        float spacingZ = 2.0f;
+        float startX = -(5 - 1) * spacingX / 2.0f;
+        float startZ = -2.0f;
+        float posY = 0.71f;
+        float scale = 0.005f;
+
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 5; col++) {
+                String entityId = "backpack-" + row + "-" + col;
+                Entity backpackEntity = new Entity(entityId, backpack.getModelId());
+                float posX = startX + col * spacingX;
+                float posZ = startZ - row * spacingZ;
+                backpackEntity.setPosition(posX, posY, posZ);
+                backpackEntity.setScale(scale);
+                backpackEntity.setRotation(1, 1, 1, (float)Math.toRadians(180.0));
+                scene.addEntity(backpackEntity);
+            }
+        }
 
         SceneLights sceneLights = new SceneLights();
         sceneLights.getAmbientLight().setIntensity(0.3f);
@@ -56,7 +62,7 @@ public class NormalTestScene extends BasicScene {
         sceneLights.getSpotLightList().get(0).setIntensity(0);
 
         scene.setSceneLights(sceneLights);
-        scene.setGuiInstance(new LightTestGUI(scene, "Normal mapping test - light controls"));
+        scene.setGuiInstance(new LightTestGUI(scene, "Light Test Scene - light controls"));
     }
 
     @Override

@@ -1,7 +1,5 @@
 #version 410
 
-const int MAX_POINT_LIGHT = 5;
-const int MAX_SPOT_LIGHT = 5;
 const float SPECULAR_POWER = 10;
 
 const int NUM_CASCADES = 3;
@@ -17,12 +15,6 @@ struct CascadeShadow {
     float splitDistance;
 };
 
-struct Attenuation {
-    float constant;
-    float linear;
-    float exponent;
-};
-
 struct AmbientLight {
     vec3 color;
     float intensity;
@@ -32,22 +24,6 @@ struct DirectionalLight {
     vec3 color;
     float intensity;
     vec3 direction;
-};
-
-struct PointLight {
-    vec3 color;
-    float intensity;
-    vec3 position;
-    Attenuation attenuation;
-};
-
-struct SpotLight {
-    vec3 color;
-    float intensity;
-    vec3 position;
-    vec3 coneDirection;
-    float cutOff;
-    Attenuation attenuation;
 };
 
 struct Fog {
@@ -68,8 +44,6 @@ uniform mat4 invViewMatrix;
 
 uniform AmbientLight ambientLight;
 uniform DirectionalLight directionalLight;
-uniform PointLight pointLights[MAX_POINT_LIGHT];
-uniform SpotLight spotLights[MAX_SPOT_LIGHT];
 
 uniform Fog fog;
 
@@ -96,8 +70,9 @@ float textureProj(vec4 shadowCoord, vec2 offset, int idx) {
         }
 
         // Calculate final shadow with minimum value to prevent too dark shadows
-        float shadowFactor = shadowCount / 9.0;  // 9 samples for 3x3 kernel
-        shadow = mix(1.0, 0.5, shadowFactor);  // Mix between full light (1.0) and half light (0.5)
+        // 9 samples for 3x3 kernel
+        float shadowFactor = shadowCount / 9.0;
+        shadow = mix(1.0, 0.5, shadowFactor);
     }
     return shadow;
 }
@@ -144,71 +119,9 @@ vec4 calcLightColor(vec4 diffuse, vec4 specular, float reflectance, vec3 lightCo
     return (diffuseColor + specColor);
 }
 
-vec4 calcPointLight(vec4 diffuse, vec4 specular, float reflectance, PointLight light, vec3 position, vec3 normal) {
-    vec3 light_direction = light.position - position;
-    vec3 to_light_dir  = normalize(light_direction);
-    vec4 light_color = calcLightColor(diffuse, specular, reflectance, light.color, light.intensity, position
-    , to_light_dir, normal);
-
-    // Apply Attenuation
-    float distance = length(light_direction);
-    float attenuationInv = light.attenuation.constant + light.attenuation.linear * distance +
-    light.attenuation.exponent * distance * distance;
-    return light_color / attenuationInv;
-}
-
-vec4 calcSpotLight(vec4 diffuse, vec4 specular, float reflectance, SpotLight light, vec3 position, vec3 normal) {
-    vec3 light_direction = light.position - position;
-    vec3 to_light_dir  = normalize(light_direction);
-    vec3 from_light_dir  = -to_light_dir;
-    float spot_alfa = dot(from_light_dir, normalize(light.coneDirection));
-
-    vec4 color = vec4 (0, 0, 0, 0);
-
-    if(spot_alfa > light.cutOff) {
-        vec4 light_color = calcLightColor(diffuse, specular, reflectance, light.color, light.intensity, position
-        , to_light_dir, normal);
-        float distance = length(light_direction);
-        float attenuationInverse = light.attenuation.constant + light.attenuation.linear * distance
-        + light.attenuation.exponent * distance * distance;
-        color = light_color / attenuationInverse;
-        color *= (1.0 - (1.0 - spot_alfa) / (1.0 - light.cutOff));
-    }
-
-    return color;
-}
-
 vec4 calcDirLight(vec4 diffuse, vec4 specular, float reflectance, DirectionalLight light, vec3 position, vec3 normal) {
     return calcLightColor(diffuse, specular, reflectance, light.color, light.intensity, position
     , normalize(light.direction), normal);
-}
-
-void phongLighting(vec4 diffuse, vec4 specular, float reflectance, vec3 view_pos, vec4 world_pos, vec3 normal) {
-    vec4 diffuseSpecularComp = calcDirLight(diffuse, specular, reflectance, directionalLight, view_pos, normal);
-
-    int cascadeIndex = 0;
-    for (int i=0; i<NUM_CASCADES - 1; i++) {
-        if (view_pos.z < cascadeshadows[i].splitDistance) {
-            cascadeIndex = i + 1;
-        }
-    }
-    float shadowFactor = calcShadow(world_pos, cascadeIndex);
-
-    for (int i=0; i<MAX_POINT_LIGHT; i++) {
-        if (pointLights[i].intensity > 0) {
-            diffuseSpecularComp += calcPointLight(diffuse, specular, reflectance, pointLights[i], view_pos, normal);
-        }
-    }
-
-    for (int i=0; i<MAX_SPOT_LIGHT; i++) {
-        if (spotLights[i].intensity > 0) {
-            diffuseSpecularComp += calcSpotLight(diffuse, specular, reflectance, spotLights[i], view_pos, normal);
-        }
-    }
-
-    vec4 ambient = calcAmbient(ambientLight, diffuse);
-    fragColor = ambient + diffuseSpecularComp;
-    fragColor.rgb = fragColor.rgb * shadowFactor;
 }
 
 void main() {
@@ -235,7 +148,18 @@ void main() {
     vec3 view_pos  = view_w.xyz / view_w.w;
     vec4 world_pos = invViewMatrix * vec4(view_pos, 1);
 
-    phongLighting(diffuse, specular, reflectance, view_pos, world_pos, normal);
+    vec4 diffuseSpecularComp = calcDirLight(diffuse, specular, reflectance, directionalLight, view_pos, normal);
+
+    int cascadeIndex = 0;
+    for (int i=0; i<NUM_CASCADES - 1; i++) {
+        if (view_pos.z < cascadeshadows[i].splitDistance) {
+            cascadeIndex = i + 1;
+        }
+    }
+    float shadowFactor = calcShadow(world_pos, cascadeIndex);
+
+    vec4 ambient = calcAmbient(ambientLight, diffuse);
+    fragColor = ambient + (diffuseSpecularComp * shadowFactor);
 
     if (fog.activeFog == 1) {
         fragColor = calcFog(view_pos, fragColor, fog, ambientLight.color, directionalLight);

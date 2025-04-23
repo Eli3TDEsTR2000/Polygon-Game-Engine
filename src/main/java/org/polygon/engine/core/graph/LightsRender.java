@@ -3,9 +3,11 @@ package org.polygon.engine.core.graph;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.joml.Vector2f;
 import org.polygon.engine.core.scene.Fog;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.engine.core.scene.lights.*;
+import org.polygon.engine.core.utils.ShapeGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,91 +15,121 @@ import java.util.List;
 import static org.lwjgl.opengl.GL40.*;
 
 public class LightsRender {
-    private static final int MAX_POINT_LIGHTS = 5;
-    private static final int MAX_SPOT_LIGHTS = 5;
-
-    private final ShaderProgram shaderProgram;
+    private final ShaderProgram baseLightShaderProgram;
+    private UniformMap baseLightUniformMap;
     private QuadMesh quadMesh;
-    private UniformMap uniformMap;
+
+    private ShaderProgram lightVolumeShaderProgram;
+    private UniformMap lightVolumeUniformMap;
+    private Mesh sphereMesh;
+    private final Matrix4f modelMatrix;
+    // Temp vec3 and vec4 used to send light data to the shader.
+    private final Vector4f auxVec4;
+    private final Vector3f auxVec3;
+    private final Vector2f screenSizeVec;
 
     public LightsRender() {
-        List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
-        shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("resources/shaders/lights.vert"
+        List<ShaderProgram.ShaderModuleData> baseShaderModules = new ArrayList<>();
+        baseShaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/lights.vert"
                 , GL_VERTEX_SHADER));
-        shaderModuleDataList.add(new ShaderProgram.ShaderModuleData("resources/shaders/lights.frag"
+        baseShaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/lights.frag"
                 , GL_FRAGMENT_SHADER));
-        shaderProgram = new ShaderProgram(shaderModuleDataList);
+        baseLightShaderProgram = new ShaderProgram(baseShaderModules);
         quadMesh = new QuadMesh();
-        createUniforms();
+        createBaseLightUniforms();
+
+        List<ShaderProgram.ShaderModuleData> volumeShaderModules = new ArrayList<>();
+        volumeShaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/light_volume.vert"
+                , GL_VERTEX_SHADER));
+        volumeShaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/light_volume.frag"
+                , GL_FRAGMENT_SHADER));
+        lightVolumeShaderProgram = new ShaderProgram(volumeShaderModules);
+        createLightVolumeUniforms();
+
+        sphereMesh = ShapeGenerator.generateSphere(1.0f, 16, 16);
+
+        modelMatrix = new Matrix4f();
+        auxVec4 = new Vector4f();
+        auxVec3 = new Vector3f();
+        screenSizeVec = new Vector2f();
     }
 
     public void cleanup() {
         quadMesh.cleanup();
-        shaderProgram.cleanup();
+        baseLightShaderProgram.cleanup();
+        if (sphereMesh != null) {
+            sphereMesh.cleanup();
+        }
+        lightVolumeShaderProgram.cleanup();
     }
 
-    public void createUniforms() {
-        uniformMap = new UniformMap(shaderProgram.getProgramId());
-
-        uniformMap.createUniform("bypassLighting");
-
-        uniformMap.createUniform("albedoSampler");
-        uniformMap.createUniform("normalSampler");
-        uniformMap.createUniform("specularSampler");
-        uniformMap.createUniform("depthSampler");
-        uniformMap.createUniform("invProjectionMatrix");
-        uniformMap.createUniform("invViewMatrix");
-
-        uniformMap.createUniform("ambientLight.color");
-        uniformMap.createUniform("ambientLight.intensity");
-
-        uniformMap.createUniform("directionalLight.color");
-        uniformMap.createUniform("directionalLight.intensity");
-        uniformMap.createUniform("directionalLight.direction");
-
-        for(int i = 0; i < MAX_POINT_LIGHTS; i++)  {
-            String name = "pointLights[" + i + "]";
-            uniformMap.createUniform(name + ".color");
-            uniformMap.createUniform(name + ".intensity");
-            uniformMap.createUniform(name + ".position");
-            uniformMap.createUniform(name + ".attenuation.constant");
-            uniformMap.createUniform(name + ".attenuation.linear");
-            uniformMap.createUniform(name + ".attenuation.exponent");
-        }
-
-        for(int i = 0; i < MAX_SPOT_LIGHTS; i++) {
-            String name = "spotLights[" + i + "]";
-            uniformMap.createUniform(name + ".color");
-            uniformMap.createUniform(name + ".intensity");
-            uniformMap.createUniform(name + ".position");
-            uniformMap.createUniform(name + ".attenuation.constant");
-            uniformMap.createUniform(name + ".attenuation.linear");
-            uniformMap.createUniform(name + ".attenuation.exponent");
-            uniformMap.createUniform(name + ".coneDirection");
-            uniformMap.createUniform(name + ".cutOff");
-        }
-
-        uniformMap.createUniform("fog.activeFog");
-        uniformMap.createUniform("fog.color");
-        uniformMap.createUniform("fog.density");
-
+    private void createBaseLightUniforms() {
+        baseLightUniformMap = new UniformMap(baseLightShaderProgram.getProgramId());
+        baseLightUniformMap.createUniform("bypassLighting");
+        baseLightUniformMap.createUniform("albedoSampler");
+        baseLightUniformMap.createUniform("normalSampler");
+        baseLightUniformMap.createUniform("specularSampler");
+        baseLightUniformMap.createUniform("depthSampler");
+        baseLightUniformMap.createUniform("invProjectionMatrix");
+        baseLightUniformMap.createUniform("invViewMatrix");
+        baseLightUniformMap.createUniform("ambientLight.color");
+        baseLightUniformMap.createUniform("ambientLight.intensity");
+        baseLightUniformMap.createUniform("directionalLight.color");
+        baseLightUniformMap.createUniform("directionalLight.intensity");
+        baseLightUniformMap.createUniform("directionalLight.direction");
+        baseLightUniformMap.createUniform("fog.activeFog");
+        baseLightUniformMap.createUniform("fog.color");
+        baseLightUniformMap.createUniform("fog.density");
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
-            uniformMap.createUniform("shadowMap[" + i + "]");
-            uniformMap.createUniform("cascadeshadows[" + i + "]" + ".projViewMatrix");
-            uniformMap.createUniform("cascadeshadows[" + i + "]" + ".splitDistance");
+            baseLightUniformMap.createUniform("shadowMap[" + i + "]");
+            baseLightUniformMap.createUniform("cascadeshadows[" + i + "]" + ".projViewMatrix");
+            baseLightUniformMap.createUniform("cascadeshadows[" + i + "]" + ".splitDistance");
         }
     }
 
-    public void render(Scene scene, ShadowRender shadowRender, GBuffer gBuffer) {
+    private void createLightVolumeUniforms() {
+        lightVolumeUniformMap = new UniformMap(lightVolumeShaderProgram.getProgramId());
+        lightVolumeUniformMap.createUniform("projectionMatrix");
+        lightVolumeUniformMap.createUniform("viewMatrix");
+        lightVolumeUniformMap.createUniform("modelMatrix");
+        lightVolumeUniformMap.createUniform("albedoSampler");
+        lightVolumeUniformMap.createUniform("normalSampler");
+        lightVolumeUniformMap.createUniform("specularSampler");
+        lightVolumeUniformMap.createUniform("depthSampler");
+        lightVolumeUniformMap.createUniform("screenSize");
+        lightVolumeUniformMap.createUniform("invProjectionMatrix");
+        lightVolumeUniformMap.createUniform("lightType");
+        lightVolumeUniformMap.createUniform("pointLight.color");
+        lightVolumeUniformMap.createUniform("pointLight.intensity");
+        lightVolumeUniformMap.createUniform("pointLight.position_view");
+        lightVolumeUniformMap.createUniform("pointLight.attenuation.constant");
+        lightVolumeUniformMap.createUniform("pointLight.attenuation.linear");
+        lightVolumeUniformMap.createUniform("pointLight.attenuation.exponent");
+        lightVolumeUniformMap.createUniform("spotLight.color");
+        lightVolumeUniformMap.createUniform("spotLight.intensity");
+        lightVolumeUniformMap.createUniform("spotLight.position_view");
+        lightVolumeUniformMap.createUniform("spotLight.attenuation.constant");
+        lightVolumeUniformMap.createUniform("spotLight.attenuation.linear");
+        lightVolumeUniformMap.createUniform("spotLight.attenuation.exponent");
+        lightVolumeUniformMap.createUniform("spotLight.coneDirection_view");
+        lightVolumeUniformMap.createUniform("spotLight.cutOff");
+    }
 
+    public void render(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int windowWidth, int windowHeight) {
         if(scene.getSceneLights() == null) {
             scene.setBypassLighting(true);
         }
 
-        shaderProgram.bind();
+        renderBaseLighting(scene, shadowRender, gBuffer);
 
+        if (!scene.isLightingDisabled()) {
+            renderLightVolumes(scene, gBuffer, windowWidth, windowHeight);
+        }
+    }
 
-        // Bind the G-Buffer textures
+    private void renderBaseLighting(Scene scene, ShadowRender shadowRender, GBuffer gBuffer) {
+        baseLightShaderProgram.bind();
+
         int[] textureIds = gBuffer.getTextureIds();
         int numTextures = textureIds != null ? textureIds.length : 0;
         for (int i = 0; i < numTextures; i++) {
@@ -105,154 +137,188 @@ public class LightsRender {
             glBindTexture(GL_TEXTURE_2D, textureIds[i]);
         }
 
-        uniformMap.setUniform("albedoSampler", 0);
-        uniformMap.setUniform("normalSampler", 1);
-        uniformMap.setUniform("specularSampler", 2);
-        uniformMap.setUniform("depthSampler", 3);
+        baseLightUniformMap.setUniform("albedoSampler", 0);
+        baseLightUniformMap.setUniform("normalSampler", 1);
+        baseLightUniformMap.setUniform("specularSampler", 2);
+        baseLightUniformMap.setUniform("depthSampler", 3);
 
-        uniformMap.setUniform("invProjectionMatrix", scene.getProjection().getInvProjMatrix());
-        uniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
+        baseLightUniformMap.setUniform("invProjectionMatrix", scene.getProjection().getInvProjMatrix());
+        baseLightUniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
 
-        uniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
+        baseLightUniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
 
-        if(scene.isLightingDisabled()) {
+        if (scene.isLightingDisabled()) {
             glBindVertexArray(quadMesh.getVaoId());
             glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-
+            baseLightShaderProgram.unbind();
             return;
         }
 
-        updateLights(scene);
+        updateBaseLights(scene);
 
         Fog fog = scene.getFog();
-        uniformMap.setUniform("fog.activeFog", fog.isActive() ? 1 : 0);
-        uniformMap.setUniform("fog.color", fog.getColor());
-        uniformMap.setUniform("fog.density", fog.getDensity());
+        baseLightUniformMap.setUniform("fog.activeFog", fog.isActive() ? 1 : 0);
+        baseLightUniformMap.setUniform("fog.color", fog.getColor());
+        baseLightUniformMap.setUniform("fog.density", fog.getDensity());
 
         int start = 4;
         List<CascadeShadow> cascadeShadows = shadowRender.getCascadeShadowList();
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
-            uniformMap.setUniform("shadowMap[" + i + "]", start + i);
+            baseLightUniformMap.setUniform("shadowMap[" + i + "]", start + i);
             CascadeShadow cascadeShadow = cascadeShadows.get(i);
-            uniformMap.setUniform("cascadeshadows[" + i + "]" + ".projViewMatrix"
+            baseLightUniformMap.setUniform("cascadeshadows[" + i + "]" + ".projViewMatrix"
                     , cascadeShadow.getProjViewMatrix());
-            uniformMap.setUniform("cascadeshadows[" + i + "]" + ".splitDistance"
+            baseLightUniformMap.setUniform("cascadeshadows[" + i + "]" + ".splitDistance"
                     , cascadeShadow.getSplitDistance());
         }
         shadowRender.getShadowBuffer().bindTextures(GL_TEXTURE0 + start);
 
-
         glBindVertexArray(quadMesh.getVaoId());
         glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
 
-        shaderProgram.unbind();
+        baseLightShaderProgram.unbind();
     }
 
-    private void updateLights(Scene scene) {
-        Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
+    private void renderLightVolumes(Scene scene, GBuffer gBuffer, int windowWidth, int windowHeight) {
+        if (sphereMesh == null) {
+            throw new IllegalStateException("Error: Sphere mesh not initialized for light volume rendering.");
+        }
 
+        lightVolumeShaderProgram.bind();
+
+        lightVolumeUniformMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
+        lightVolumeUniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
+        lightVolumeUniformMap.setUniform("invProjectionMatrix", scene.getProjection().getInvProjMatrix());
+        screenSizeVec.set(windowWidth, windowHeight);
+        lightVolumeUniformMap.setUniform("screenSize", screenSizeVec);
+
+        int[] textureIds = gBuffer.getTextureIds();
+        bindGBufferTextures(textureIds);
+        lightVolumeUniformMap.setUniform("albedoSampler", 0);
+        lightVolumeUniformMap.setUniform("normalSampler", 1);
+        lightVolumeUniformMap.setUniform("specularSampler", 2);
+        lightVolumeUniformMap.setUniform("depthSampler", 3);
+
+        glEnable(GL_BLEND);
+        glBlendEquation(GL_FUNC_ADD);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        glDepthMask(false);
+        glDepthFunc(GL_GEQUAL);
+
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+
+        Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
+        SceneLights sceneLights = scene.getSceneLights();
+
+        lightVolumeUniformMap.setUniform("lightType", 0);
+        glBindVertexArray(sphereMesh.getVaoId());
+        for (PointLight pointLight : sceneLights.getPointLightList()) {
+            if (pointLight.getIntensity() <= 0 || pointLight.getRadius() <= 0) {
+                continue;
+            }
+
+            updateLightVolumePointLightUniforms(pointLight, viewMatrix);
+
+            modelMatrix.identity()
+                       .translate(pointLight.getPosition())
+                       .scale(pointLight.getRadius());
+            lightVolumeUniformMap.setUniform("modelMatrix", modelMatrix);
+
+            glDrawElements(GL_TRIANGLES, sphereMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+        }
+
+        lightVolumeUniformMap.setUniform("lightType", 1);
+        for (SpotLight spotLight : sceneLights.getSpotLightList()) {
+            if (spotLight.getIntensity() <= 0 || spotLight.getRadius() <= 0) {
+                continue;
+            }
+
+            updateLightVolumeSpotLightUniforms(spotLight, viewMatrix);
+
+            modelMatrix.identity()
+                       .translate(spotLight.getPosition())
+                       .scale(spotLight.getRadius());
+            lightVolumeUniformMap.setUniform("modelMatrix", modelMatrix);
+
+            glDrawElements(GL_TRIANGLES, sphereMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+        }
+        glBindVertexArray(0);
+
+        glDisable(GL_BLEND);
+        glDepthMask(true);
+        glDepthFunc(GL_LESS);
+        glDisable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
+        lightVolumeShaderProgram.unbind();
+    }
+
+    private void bindGBufferTextures(int[] textureIds) {
+        int numTextures = textureIds != null ? textureIds.length : 0;
+        for (int i = 0; i < numTextures; i++) {
+            glActiveTexture(GL_TEXTURE0 + i);
+            glBindTexture(GL_TEXTURE_2D, textureIds[i]);
+        }
+        if (numTextures == 0) {
+             glActiveTexture(GL_TEXTURE0);
+        }
+    }
+
+    private void updateBaseLights(Scene scene) {
+        Matrix4f viewMatrix = scene.getCamera().getViewMatrix();
         SceneLights sceneLights = scene.getSceneLights();
 
         AmbientLight ambientLight = sceneLights.getAmbientLight();
-        uniformMap.setUniform("ambientLight.color", ambientLight.getColor());
-        uniformMap.setUniform("ambientLight.intensity", ambientLight.getIntensity());
+        baseLightUniformMap.setUniform("ambientLight.color", ambientLight.getColor());
+        baseLightUniformMap.setUniform("ambientLight.intensity", ambientLight.getIntensity());
 
         DirectionalLight directionalLight = sceneLights.getDirectionalLight();
-        Vector4f auxDirection = new Vector4f(directionalLight.getDirection(), 0);
-        auxDirection.mul(viewMatrix);
-        Vector3f direction = new Vector3f(auxDirection.x, auxDirection.y, auxDirection.z);
-        uniformMap.setUniform("directionalLight.color", directionalLight.getColor());
-        uniformMap.setUniform("directionalLight.intensity", directionalLight.getIntensity());
-        uniformMap.setUniform("directionalLight.direction", direction);
+        auxVec4.set(directionalLight.getDirection(), 0).mul(viewMatrix);
+        auxVec3.set(auxVec4.x, auxVec4.y, auxVec4.z);
+        baseLightUniformMap.setUniform("directionalLight.color", directionalLight.getColor());
+        baseLightUniformMap.setUniform("directionalLight.intensity", directionalLight.getIntensity());
+        baseLightUniformMap.setUniform("directionalLight.direction", auxVec3);
 
-        List<PointLight> pointLightList = sceneLights.getPointLightList();
-        int numOfPointLights = pointLightList.size();
-        PointLight pointLight;
-        for(int i = 0; i < MAX_POINT_LIGHTS; i++) {
-            if(i < numOfPointLights) {
-                pointLight = pointLightList.get(i);
-            } else {
-                pointLight = null;
-            }
-            String name = "pointLights[" + i + "]";
-            updatePointLight(pointLight, name, viewMatrix);
-        }
-
-        List<SpotLight> spotLightList = sceneLights.getSpotLightList();
-        int numOfSpotLights = spotLightList.size();
-        SpotLight spotLight;
-        for(int i = 0; i < MAX_SPOT_LIGHTS; i++) {
-            if(i < numOfSpotLights) {
-                spotLight = spotLightList.get(i);
-            } else {
-                spotLight = null;
-            }
-            String name = "spotLights[" + i + "]";
-            updateSpotLight(spotLight, name, viewMatrix);
-        }
+        Fog fog = scene.getFog();
+        baseLightUniformMap.setUniform("fog.activeFog", fog.isActive() ? 1 : 0);
+        baseLightUniformMap.setUniform("fog.color", fog.getColor());
+        baseLightUniformMap.setUniform("fog.density", fog.getDensity());
     }
 
-    private void updatePointLight(PointLight pointLight, String name, Matrix4f viewMatrix) {
-        Vector4f auxPosition = new Vector4f();
-        Vector3f color = new Vector3f();
-        Vector3f position = new Vector3f();
-        float intensity = 0.0f;
-        float constant = 0.0f;
-        float linear = 0.0f;
-        float exponent = 0.0f;
+    private void updateLightVolumePointLightUniforms(PointLight pointLight, Matrix4f viewMatrix) {
+        auxVec4.set(pointLight.getPosition(), 1).mul(viewMatrix);
+        auxVec3.set(auxVec4.x, auxVec4.y, auxVec4.z);
 
-        if(pointLight != null) {
-            auxPosition.set(pointLight.getPosition(), 1);
-            auxPosition.mul(viewMatrix);
-            position.set(auxPosition.x, auxPosition.y, auxPosition.z);
-            color.set(pointLight.getColor());
-            intensity = pointLight.getIntensity();
-            PointLight.Attenuation attenuation = pointLight.getAttenuation();
-            constant = attenuation.getConstant();
-            linear = attenuation.getLinear();
-            exponent = attenuation.getExponent();
-        }
+        lightVolumeUniformMap.setUniform("pointLight.position_view", auxVec3);
 
-        uniformMap.setUniform(name + ".color", color);
-        uniformMap.setUniform(name + ".intensity", intensity);
-        uniformMap.setUniform(name + ".position", position);
-        uniformMap.setUniform(name + ".attenuation.constant", constant);
-        uniformMap.setUniform(name + ".attenuation.linear", linear);
-        uniformMap.setUniform(name + ".attenuation.exponent", exponent);
+        lightVolumeUniformMap.setUniform("pointLight.color", pointLight.getColor());
+        lightVolumeUniformMap.setUniform("pointLight.intensity", pointLight.getIntensity());
+
+        PointLight.Attenuation attenuation = pointLight.getAttenuation();
+        lightVolumeUniformMap.setUniform("pointLight.attenuation.constant", attenuation.getConstant());
+        lightVolumeUniformMap.setUniform("pointLight.attenuation.linear", attenuation.getLinear());
+        lightVolumeUniformMap.setUniform("pointLight.attenuation.exponent", attenuation.getExponent());
     }
 
-    private void updateSpotLight(SpotLight spotLight, String name, Matrix4f viewMatrix) {
-        Vector4f auxPosition = new Vector4f();
-        Vector3f color = new Vector3f();
-        Vector3f position = new Vector3f();
-        Vector3f coneDirection = new Vector3f();
-        float intensity = 0.0f;
-        float constant = 0.0f;
-        float linear = 0.0f;
-        float exponent = 0.0f;
-        float cutOff = 0.0f;
+    private void updateLightVolumeSpotLightUniforms(SpotLight spotLight, Matrix4f viewMatrix) {
+        auxVec4.set(spotLight.getPosition(), 1).mul(viewMatrix);
+        auxVec3.set(auxVec4.x, auxVec4.y, auxVec4.z);
 
-        if(spotLight != null) {
-            auxPosition.set(spotLight.getPosition(), 1);
-            auxPosition.mul(viewMatrix);
-            position.set(auxPosition.x, auxPosition.y, auxPosition.z);
-            color.set(spotLight.getColor());
-            intensity = spotLight.getIntensity();
-            PointLight.Attenuation attenuation = spotLight.getAttenuation();
-            constant = attenuation.getConstant();
-            linear = attenuation.getLinear();
-            exponent = attenuation.getExponent();
-            coneDirection = spotLight.getConeDirection();
-            cutOff = spotLight.getCutOff();
-        }
+        lightVolumeUniformMap.setUniform("spotLight.position_view", auxVec3);
 
-        uniformMap.setUniform(name + ".color", color);
-        uniformMap.setUniform(name + ".intensity", intensity);
-        uniformMap.setUniform(name + ".position", position);
-        uniformMap.setUniform(name + ".attenuation.constant", constant);
-        uniformMap.setUniform(name + ".attenuation.linear", linear);
-        uniformMap.setUniform(name + ".attenuation.exponent", exponent);
-        uniformMap.setUniform(name + ".coneDirection", coneDirection);
-        uniformMap.setUniform(name + ".cutOff", cutOff);
+        auxVec4.set(spotLight.getConeDirection(), 0).mul(viewMatrix);
+        Vector3f coneDirectionView = auxVec3.set(auxVec4.x, auxVec4.y, auxVec4.z).normalize();
+        lightVolumeUniformMap.setUniform("spotLight.coneDirection_view", coneDirectionView);
+
+        lightVolumeUniformMap.setUniform("spotLight.color", spotLight.getColor());
+        lightVolumeUniformMap.setUniform("spotLight.intensity", spotLight.getIntensity());
+        lightVolumeUniformMap.setUniform("spotLight.cutOff", spotLight.getCutOff());
+
+        PointLight.Attenuation attenuation = spotLight.getAttenuation();
+        lightVolumeUniformMap.setUniform("spotLight.attenuation.constant", attenuation.getConstant());
+        lightVolumeUniformMap.setUniform("spotLight.attenuation.linear", attenuation.getLinear());
+        lightVolumeUniformMap.setUniform("spotLight.attenuation.exponent", attenuation.getExponent());
     }
 }

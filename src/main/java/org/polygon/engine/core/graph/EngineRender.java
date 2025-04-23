@@ -63,9 +63,10 @@ public class EngineRender {
         Scene scene = window.getCurrentScene();
 
         shadowRender.render(scene);
+        glEnable(GL_CULL_FACE);
         sceneRender.render(scene, gBuffer);
         lightRenderStart(window);
-        lightsRender.render(scene, shadowRender, gBuffer);
+        lightsRender.render(scene, shadowRender, gBuffer, window.getWidth(), window.getHeight());
         skyBoxRender.render(scene);
         lightRenderFinish();
         guiRender.render(window);
