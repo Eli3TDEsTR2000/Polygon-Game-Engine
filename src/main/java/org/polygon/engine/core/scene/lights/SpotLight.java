@@ -2,7 +2,7 @@ package org.polygon.engine.core.scene.lights;
 
 import org.joml.Vector3f;
 
-public class SpotLight extends PointLight{
+public class SpotLight extends PointLight implements ILightHasRadius {
     private Vector3f coneDirection;
     private float cutOffAngle;
     private float cutOff;
