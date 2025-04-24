@@ -14,6 +14,9 @@ public class EngineRender {
     private LightsRender lightsRender;
     private GuiRender guiRender;
     private SkyBoxRender skyBoxRender;
+    private SceneFBO sceneFBO;
+    private FXAARender fxaaRender;
+
     public EngineRender(Window window) {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -21,54 +24,79 @@ public class EngineRender {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
-        glEnable(GL_MULTISAMPLE);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
         shadowRender = new ShadowRender();
         gBuffer = new GBuffer(window);
+        sceneFBO = new SceneFBO(window);
         sceneRender = new SceneRender();
         lightsRender = new LightsRender();
         guiRender = new GuiRender(window);
         skyBoxRender = new SkyBoxRender();
+        fxaaRender = new FXAARender();
     }
 
     public void cleanup() {
         shadowRender.cleanup();
         gBuffer.cleanup();
+        sceneFBO.cleanup();
         sceneRender.cleanup();
         lightsRender.cleanup();
         guiRender.cleanup();
         skyBoxRender.cleanup();
-    }
-
-    private void lightRenderFinish() {
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    }
-
-    private void lightRenderStart(Window window) {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glViewport(0, 0, window.getWidth(), window.getHeight());
-
-        glEnable(GL_BLEND);
-        glBlendEquation(GL_FUNC_ADD);
-        glBlendFunc(GL_ONE, GL_ONE);
-
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer.getGBufferId());
+        fxaaRender.cleanup();
     }
 
     public void render(Window window) {
+        assertDefaultGL();
+
         Scene scene = window.getCurrentScene();
 
+        // Shadow Pass
         shadowRender.render(scene);
-        glEnable(GL_CULL_FACE);
+
+        // Geometry Pass, draws to the G-Buffer FBO.
         sceneRender.render(scene, gBuffer);
-        lightRenderStart(window);
-        lightsRender.render(scene, shadowRender, gBuffer, window.getWidth(), window.getHeight());
+
+        bindIntermediateFBO();
+
+        // Base Lighting Pass, draws to the SceneFBO.
+        lightsRender.render(scene, shadowRender, gBuffer, sceneFBO.getWidth(), sceneFBO.getHeight());
+
+        // Skybox Pass
         skyBoxRender.render(scene);
-        lightRenderFinish();
+
+        unbindIntermediateFBO(window);
+        // Post Processing: FXAA Pass, draws to the screen.
+        fxaaRender.render(sceneFBO.getTextureId(), window.getWidth(), window.getHeight());
+
+        // GUI Pass draws to the screen.
         guiRender.render(window);
+    }
+
+    // Binds an intermediateFBO to draw into. used for final Image post-processing.
+    private void bindIntermediateFBO() {
+        // Intermediate FBO used for final image post-processing.
+        sceneFBO.bind();
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glViewport(0, 0, sceneFBO.getWidth(), sceneFBO.getHeight());
+    }
+
+    private void unbindIntermediateFBO(Window window) {
+        sceneFBO.unbind();
+        glViewport(0, 0, window.getWidth(), window.getHeight());
+    }
+
+    private void assertDefaultGL() {
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glDepthFunc(GL_LESS);
+        glDepthMask(true);
+        glDisable(GL_BLEND);
     }
 }

@@ -128,6 +128,8 @@ public class LightsRender {
     }
 
     private void renderBaseLighting(Scene scene, ShadowRender shadowRender, GBuffer gBuffer) {
+        glDisable(GL_BLEND);
+
         baseLightShaderProgram.bind();
 
         int[] textureIds = gBuffer.getTextureIds();

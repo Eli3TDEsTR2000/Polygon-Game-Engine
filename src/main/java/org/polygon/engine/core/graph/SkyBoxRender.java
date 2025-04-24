@@ -47,7 +47,11 @@ public class SkyBoxRender {
             return;
         }
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glDepthMask(false);
         glDisable(GL_CULL_FACE);
+
         shaderProgram.bind();
 
         // disable transformation for the skybox to stay in the center and
@@ -87,5 +91,7 @@ public class SkyBoxRender {
         glBindVertexArray(0);
         shaderProgram.unbind();
         glEnable(GL_CULL_FACE);
+        glDepthFunc(GL_LESS);
+        glDepthMask(true);
     }
 }
