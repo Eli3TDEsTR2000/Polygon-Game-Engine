@@ -1,4 +1,4 @@
-#version 410
+#version 410 core
 
 in vec4 outViewPosition;
 in vec4 outWorldPosition;

@@ -1,4 +1,4 @@
-#version 410
+#version 410 core
 
 const float SPECULAR_POWER = 10;
 
