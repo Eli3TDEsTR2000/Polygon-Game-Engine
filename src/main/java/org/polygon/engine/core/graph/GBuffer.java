@@ -9,7 +9,12 @@ import java.nio.IntBuffer;
 import static org.lwjgl.opengl.GL40.*;
 
 public class GBuffer {
-    private final static int TOTAL_TEXTURES = 4;
+    public static final int GBUFFER_IDX_ALBEDO = 0;
+    public static final int GBUFFER_IDX_NORMAL = 1;
+    public static final int GBUFFER_IDX_MATERIAL = 2;
+    public static final int GBUFFER_IDX_EMISSIVE = 3;
+    public static final int GBUFFER_IDX_DEPTH = 4;
+    private final static int TOTAL_TEXTURES = 5;
 
     private int gBufferId = -1;
     private int[] textureIds = null;
@@ -44,12 +49,28 @@ public class GBuffer {
     private void setupTextures(int newWidth, int newHeight) {
          for(int i = 0; i < TOTAL_TEXTURES; i++) {
             glBindTexture(GL_TEXTURE_2D, textureIds[i]);
-            if(i == TOTAL_TEXTURES - 1) { // Depth Texture
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, newWidth, newHeight,
-                             0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
-            } else { // Color Textures
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, newWidth, newHeight,
-                             0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
+
+            switch (i) {
+                case GBUFFER_IDX_ALBEDO:
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, newWidth, newHeight, 0
+                            , GL_RGBA, GL_FLOAT, (ByteBuffer) null);
+                    break;
+                case GBUFFER_IDX_NORMAL:
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, newWidth, newHeight, 0
+                            , GL_RGBA, GL_FLOAT, (ByteBuffer) null);
+                    break;
+                case GBUFFER_IDX_MATERIAL:
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, newWidth, newHeight
+                            , 0, GL_RGB, GL_FLOAT, (ByteBuffer) null);
+                    break;
+                case GBUFFER_IDX_EMISSIVE:
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, newWidth, newHeight
+                            , 0, GL_RGB, GL_FLOAT, (ByteBuffer) null);
+                    break;
+                case GBUFFER_IDX_DEPTH:
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, newWidth, newHeight
+                            , 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+                    break;
             }
 
              glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -61,7 +82,12 @@ public class GBuffer {
 
     private void attachAndConfigure() {
          for(int i = 0; i < TOTAL_TEXTURES; i++) {
-            int attachmentType = (i == TOTAL_TEXTURES - 1) ? GL_DEPTH_ATTACHMENT : (GL_COLOR_ATTACHMENT0 + i);
+            int attachmentType;
+            if (i == GBUFFER_IDX_DEPTH) {
+                attachmentType = GL_DEPTH_ATTACHMENT;
+            } else {
+                attachmentType = GL_COLOR_ATTACHMENT0 + i;
+            }
             glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D, textureIds[i], 0);
          }
 

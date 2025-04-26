@@ -42,7 +42,7 @@ public class SkeletalMeshTestScene extends BasicScene {
         sceneLights.getAmbientLight().setIntensity(0.3f);
         sceneLights.getPointLightList().add(new PointLight());
         PointLight pointLight = sceneLights.getPointLightList().get(0);
-        pointLight.setIntensity(1);
+        pointLight.setIntensity(5);
         sceneLights.getSpotLightList().add(new SpotLight());
         sceneLights.getSpotLightList().get(0).setIntensity(0);
 

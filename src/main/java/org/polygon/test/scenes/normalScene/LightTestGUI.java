@@ -18,6 +18,7 @@ public class LightTestGUI implements IGuiInstance {
     private static class LightGuiState {
         float[] color = {1.0f, 1.0f, 1.0f};
         float[] intensity = {1.0f};
+        float[] radius = {2.0f};
         float[] position = {0.0f, 0.0f, 0.0f};
         float[] coneDirection = {0.0f, -1.0f, 0.0f};
         float[] cutOffAngle = {15.0f};
@@ -28,6 +29,7 @@ public class LightTestGUI implements IGuiInstance {
             Vector3f c = light.getColor();
             this.color[0] = c.x; this.color[1] = c.y; this.color[2] = c.z;
             this.intensity[0] = light.getIntensity();
+            this.radius[0] = light.getRadius();
             Vector3f p = light.getPosition();
             this.position[0] = p.x; this.position[1] = p.y; this.position[2] = p.z;
 
@@ -144,7 +146,8 @@ public class LightTestGUI implements IGuiInstance {
                 }
                 ImGui.colorEdit3("##plColor", state.color);
                 ImGui.sameLine(); ImGui.text("Color");
-                ImGui.sliderFloat("##plIntensity", state.intensity, 0.0f, 10.0f, "%.2f Intensity");
+                ImGui.sliderFloat("##plIntensity", state.intensity, 0.0f, 1000.0f, "%.2f Intensity");
+                ImGui.sliderFloat("##plRadius", state.radius, 0.0f, 50.0f, "%.2f radius");
                 ImGui.text("Position:");
                 ImGui.sliderFloat3("##plPos", state.position, -10.0f, 10.0f, "%.2f");
                 ImGui.separator();
@@ -152,7 +155,7 @@ public class LightTestGUI implements IGuiInstance {
             }
         }
 
-        // --- Spot Lights --- 
+        // --- Spot Lights ---
         if (ImGui.collapsingHeader("Spot Lights")) {
             if (ImGui.button("Add Spot Light")) {
                 addSpotLightFlag = true;
@@ -169,7 +172,8 @@ public class LightTestGUI implements IGuiInstance {
                 }
                 ImGui.colorEdit3("##slColor", state.color);
                 ImGui.sameLine(); ImGui.text("Color");
-                ImGui.sliderFloat("##slIntensity", state.intensity, 0.0f, 10.0f, "%.2f Intensity");
+                ImGui.sliderFloat("##slIntensity", state.intensity, 0.0f, 1000.0f, "%.2f Intensity");
+                ImGui.sliderFloat("##slRadius", state.radius, 0.0f, 50.0f, "%.2f radius");
                 ImGui.text("Position:");
                 ImGui.sliderFloat3("##slPos", state.position, -10.0f, 10.0f, "%.2f");
                 ImGui.text("Cone Dir:");
@@ -186,7 +190,7 @@ public class LightTestGUI implements IGuiInstance {
     @Override
     public boolean handleGuiInput(Window window) {
         ImGuiIO imGuiIO = ImGui.getIO();
-        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard()) && isWindowHovered;
+        boolean consumed = (imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard());
 
         if (consumed) {
             Scene currentScene = window.getCurrentScene();
@@ -205,7 +209,7 @@ public class LightTestGUI implements IGuiInstance {
                 float b = random.nextFloat();
                 newPl.setColor(r, g, b);
 
-                // Generate random position covering the backpack grid area
+                // Generate random position covering the grid area
                 float x = random.nextFloat(-6.0f, 6.0f);
                 float y = random.nextFloat(0.5f, 4.0f);
                 float z = random.nextFloat(-21.0f, -1.0f);
@@ -265,6 +269,7 @@ public class LightTestGUI implements IGuiInstance {
                     state.lightRef = pl;
                     pl.setColor(state.color[0], state.color[1], state.color[2]);
                     pl.setIntensity(state.intensity[0]);
+                    pl.setRadius(state.radius[0]);
                     pl.setPosition(state.position[0], state.position[1], state.position[2]);
                 } else {
                     state.lightRef = null;
@@ -279,6 +284,7 @@ public class LightTestGUI implements IGuiInstance {
                     state.lightRef = sl;
                     sl.setColor(state.color[0], state.color[1], state.color[2]);
                     sl.setIntensity(state.intensity[0]);
+                    sl.setRadius(state.radius[0]);
                     sl.setPosition(state.position[0], state.position[1], state.position[2]);
                     sl.setConeDirection(state.coneDirection[0], state.coneDirection[1], state.coneDirection[2]);
                     sl.setCutOffAngle(state.cutOffAngle[0]);

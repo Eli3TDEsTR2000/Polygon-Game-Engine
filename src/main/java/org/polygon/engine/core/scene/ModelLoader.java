@@ -155,52 +155,103 @@ public class ModelLoader {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             AIColor4D aiColor4D = AIColor4D.create();
 
-            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT
-                    , aiTextureType_NONE, 0, aiColor4D);
+            int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, aiColor4D);
             if(result == aiReturn_SUCCESS) {
-                material.setAmbientColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
+                 material.setAmbientColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
             }
 
-            // Get the diffuse color of the texture and assign it to the material by default
-            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE
-                    , aiTextureType_NONE, 0, aiColor4D);
+            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, aiColor4D);
             if (result == aiReturn_SUCCESS) {
                 material.setDiffuseColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
             }
 
-            result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR, aiTextureType_NONE, 0, aiColor4D);
-            if(result == aiReturn_SUCCESS) {
-                material.setSpecularColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
-            }
-
-            float reflectance = 0.0f;
-            float[] shininessFactor = new float[] {0.0f};
-            int[] pMax = new int[] {1};
-            result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_SHININESS_STRENGTH, aiTextureType_NONE
-                    , 0, shininessFactor, pMax);
-            if(result != aiReturn_SUCCESS) {
-                reflectance = shininessFactor[0];
-            }
-            material.setReflectance(reflectance);
-
-            // If there is a texture path defined, assign the texture to the material and
-            //      set the diffuse color to the default color.
             AIString aiTexturePath = AIString.calloc(stack);
-            aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath, (IntBuffer) null
-                    , null, null, null, null, null);
+            aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE, 0, aiTexturePath
+                    , (IntBuffer) null, null, null, null, null, null);
             String texturePath = aiTexturePath.dataString();
             if (texturePath != null && texturePath.length() > 0) {
                 material.setTexturePath(modelDir + File.separator + new File(texturePath).getName());
                 textureCache.createTexture(material.getTexturePath());
+                material.setDiffuseColor(Material.DEFAULT_COLOR);
             }
 
             AIString aiNormalMapPath = AIString.calloc(stack);
-            aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, aiNormalMapPath, (IntBuffer) null
-                    , null, null, null, null, null);
+            aiGetMaterialTexture(aiMaterial, aiTextureType_NORMALS, 0, aiNormalMapPath
+                    , (IntBuffer) null, null, null, null, null, null);
             String normalMapPath = aiNormalMapPath.dataString();
             if(normalMapPath != null && normalMapPath.length() > 0) {
                 material.setNormalMapPath(modelDir + File.separator + new File(normalMapPath).getName());
                 textureCache.createTexture(material.getNormalMapPath());
+            }
+
+            float[] metallicFactor = { 0.0f };
+            int[] pMax = { 1 };
+            result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_METALLIC_FACTOR, aiTextureType_NONE
+                    , 0, metallicFactor, pMax);
+            if (result == aiReturn_SUCCESS) {
+                material.setMetallic(metallicFactor[0]);
+            }
+
+            AIString aiMetallicMapPath = AIString.calloc(stack);
+            aiGetMaterialTexture(aiMaterial, aiTextureType_METALNESS, 0, aiMetallicMapPath
+                    , (IntBuffer) null, null, null, null, null, null);
+            String metallicMapPath = aiMetallicMapPath.dataString();
+            if (metallicMapPath != null && metallicMapPath.length() > 0) {
+                material.setMetallicMapPath(modelDir + File.separator + new File(metallicMapPath).getName());
+                textureCache.createTexture(material.getMetallicMapPath());
+            }
+
+            float[] roughnessFactor = { 0.5f };
+            pMax[0] = 1;
+            result = aiGetMaterialFloatArray(aiMaterial, AI_MATKEY_ROUGHNESS_FACTOR, aiTextureType_NONE
+                    , 0, roughnessFactor, pMax);
+            if (result == aiReturn_SUCCESS) {
+                material.setRoughness(roughnessFactor[0]);
+            }
+
+            AIString aiRoughnessMapPath = AIString.calloc(stack);
+            int resultRoughness = aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE_ROUGHNESS, 0
+                    , aiRoughnessMapPath, (IntBuffer) null, null, null, null, null, null);
+            if (resultRoughness != aiReturn_SUCCESS) {
+                 aiGetMaterialTexture(aiMaterial, aiTextureType_UNKNOWN, 0, aiRoughnessMapPath
+                         , (IntBuffer) null, null, null, null, null, null);
+            }
+            String roughnessMapPath = aiRoughnessMapPath.dataString();
+            if (roughnessMapPath != null && roughnessMapPath.length() > 0 && !roughnessMapPath.equals(metallicMapPath)) {
+                material.setRoughnessMapPath(modelDir + File.separator + new File(roughnessMapPath).getName());
+                textureCache.createTexture(material.getRoughnessMapPath());
+            } else if (metallicMapPath != null && metallicMapPath.length() > 0) {
+                // If we found a metallic map path via UNKNOWN, assume it's a combined MetallicRoughness texture
+                // Point roughness path to the same texture. Shader will need logic to sample correct channels.
+                if (roughnessMapPath != null && roughnessMapPath.equals(metallicMapPath)) {
+                   material.setRoughnessMapPath(material.getMetallicMapPath());
+                }
+            }
+
+            AIString aiAoMapPath = AIString.calloc(stack);
+            int resultAO = aiGetMaterialTexture(aiMaterial, aiTextureType_AMBIENT_OCCLUSION, 0
+                    , aiAoMapPath, (IntBuffer) null, null, null, null, null, null);
+            if (resultAO != aiReturn_SUCCESS) {
+                resultAO = aiGetMaterialTexture(aiMaterial, aiTextureType_LIGHTMAP, 0
+                        , aiAoMapPath, (IntBuffer) null, null, null, null, null, null);
+            }
+            if (resultAO != aiReturn_SUCCESS) {
+                 aiGetMaterialTexture(aiMaterial, aiTextureType_AMBIENT, 0, aiAoMapPath
+                         , (IntBuffer) null, null, null, null, null, null);
+            }
+            String aoMapPath = aiAoMapPath.dataString();
+            if (aoMapPath != null && aoMapPath.length() > 0 && !aoMapPath.equals(texturePath)) {
+                material.setAoMapPath(modelDir + File.separator + new File(aoMapPath).getName());
+                textureCache.createTexture(material.getAoMapPath());
+            }
+
+            AIString aiEmissiveMapPath = AIString.calloc(stack);
+            aiGetMaterialTexture(aiMaterial, aiTextureType_EMISSIVE, 0, aiEmissiveMapPath
+                    , (IntBuffer) null, null, null, null, null, null);
+            String emissiveMapPath = aiEmissiveMapPath.dataString();
+            if(emissiveMapPath != null && emissiveMapPath.length() > 0) {
+                material.setEmissiveMapPath(modelDir + File.separator + new File(emissiveMapPath).getName());
+                textureCache.createTexture(material.getEmissiveMapPath());
             }
 
             return material;

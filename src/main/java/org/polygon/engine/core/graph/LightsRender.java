@@ -68,7 +68,8 @@ public class LightsRender {
         baseLightUniformMap.createUniform("bypassLighting");
         baseLightUniformMap.createUniform("albedoSampler");
         baseLightUniformMap.createUniform("normalSampler");
-        baseLightUniformMap.createUniform("specularSampler");
+        baseLightUniformMap.createUniform("materialSampler");
+        baseLightUniformMap.createUniform("emissiveSampler");
         baseLightUniformMap.createUniform("depthSampler");
         baseLightUniformMap.createUniform("invProjectionMatrix");
         baseLightUniformMap.createUniform("invViewMatrix");
@@ -94,7 +95,7 @@ public class LightsRender {
         lightVolumeUniformMap.createUniform("modelMatrix");
         lightVolumeUniformMap.createUniform("albedoSampler");
         lightVolumeUniformMap.createUniform("normalSampler");
-        lightVolumeUniformMap.createUniform("specularSampler");
+        lightVolumeUniformMap.createUniform("materialSampler");
         lightVolumeUniformMap.createUniform("depthSampler");
         lightVolumeUniformMap.createUniform("screenSize");
         lightVolumeUniformMap.createUniform("invProjectionMatrix");
@@ -141,8 +142,9 @@ public class LightsRender {
 
         baseLightUniformMap.setUniform("albedoSampler", 0);
         baseLightUniformMap.setUniform("normalSampler", 1);
-        baseLightUniformMap.setUniform("specularSampler", 2);
-        baseLightUniformMap.setUniform("depthSampler", 3);
+        baseLightUniformMap.setUniform("materialSampler", 2);
+        baseLightUniformMap.setUniform("emissiveSampler", 3);
+        baseLightUniformMap.setUniform("depthSampler", 4);
 
         baseLightUniformMap.setUniform("invProjectionMatrix", scene.getProjection().getInvProjMatrix());
         baseLightUniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
@@ -163,7 +165,7 @@ public class LightsRender {
         baseLightUniformMap.setUniform("fog.color", fog.getColor());
         baseLightUniformMap.setUniform("fog.density", fog.getDensity());
 
-        int start = 4;
+        int start = 5;
         List<CascadeShadow> cascadeShadows = shadowRender.getCascadeShadowList();
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
             baseLightUniformMap.setUniform("shadowMap[" + i + "]", start + i);
@@ -198,8 +200,8 @@ public class LightsRender {
         bindGBufferTextures(textureIds);
         lightVolumeUniformMap.setUniform("albedoSampler", 0);
         lightVolumeUniformMap.setUniform("normalSampler", 1);
-        lightVolumeUniformMap.setUniform("specularSampler", 2);
-        lightVolumeUniformMap.setUniform("depthSampler", 3);
+        lightVolumeUniformMap.setUniform("materialSampler", 2);
+        lightVolumeUniformMap.setUniform("depthSampler", 4);
 
         glEnable(GL_BLEND);
         glBlendEquation(GL_FUNC_ADD);
