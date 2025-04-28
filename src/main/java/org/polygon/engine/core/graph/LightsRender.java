@@ -8,6 +8,8 @@ import org.polygon.engine.core.scene.Fog;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.engine.core.scene.lights.*;
 import org.polygon.engine.core.utils.ShapeGenerator;
+import org.polygon.engine.core.scene.SkyBox;
+import org.polygon.engine.core.scene.IBLData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ public class LightsRender {
     private final Vector4f auxVec4;
     private final Vector3f auxVec3;
     private final Vector2f screenSizeVec;
+
+    private static final int IRRADIANCE_MAP_TEXTURE_UNIT = 8;
 
     public LightsRender() {
         List<ShaderProgram.ShaderModuleData> baseShaderModules = new ArrayList<>();
@@ -81,6 +85,8 @@ public class LightsRender {
         baseLightUniformMap.createUniform("fog.activeFog");
         baseLightUniformMap.createUniform("fog.color");
         baseLightUniformMap.createUniform("fog.density");
+        baseLightUniformMap.createUniform("irradianceMap");
+        baseLightUniformMap.createUniform("hasIBL");
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
             baseLightUniformMap.createUniform("shadowMap[" + i + "]");
             baseLightUniformMap.createUniform("cascadeshadows[" + i + "]" + ".projViewMatrix");
@@ -165,17 +171,29 @@ public class LightsRender {
         baseLightUniformMap.setUniform("fog.color", fog.getColor());
         baseLightUniformMap.setUniform("fog.density", fog.getDensity());
 
-        int start = 5;
+        SkyBox skyBox = scene.getSkyBox();
+        IBLData iblData = (skyBox != null) ? skyBox.getIBLData() : null;
+        
+        if (iblData != null && iblData.getIrradianceMapTextureId() != -1) {
+            baseLightUniformMap.setUniform("hasIBL", true);
+            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT); 
+            glBindTexture(GL_TEXTURE_CUBE_MAP, iblData.getIrradianceMapTextureId());
+            baseLightUniformMap.setUniform("irradianceMap", IRRADIANCE_MAP_TEXTURE_UNIT); 
+        } else {
+            baseLightUniformMap.setUniform("hasIBL", false);
+        }
+
+        int shadowMapStartUnit = 5;
         List<CascadeShadow> cascadeShadows = shadowRender.getCascadeShadowList();
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
-            baseLightUniformMap.setUniform("shadowMap[" + i + "]", start + i);
+            baseLightUniformMap.setUniform("shadowMap[" + i + "]", shadowMapStartUnit + i);
             CascadeShadow cascadeShadow = cascadeShadows.get(i);
             baseLightUniformMap.setUniform("cascadeshadows[" + i + "]" + ".projViewMatrix"
                     , cascadeShadow.getProjViewMatrix());
             baseLightUniformMap.setUniform("cascadeshadows[" + i + "]" + ".splitDistance"
                     , cascadeShadow.getSplitDistance());
         }
-        shadowRender.getShadowBuffer().bindTextures(GL_TEXTURE0 + start);
+        shadowRender.getShadowBuffer().bindTextures(GL_TEXTURE0 + shadowMapStartUnit);
 
         glBindVertexArray(quadMesh.getVaoId());
         glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);

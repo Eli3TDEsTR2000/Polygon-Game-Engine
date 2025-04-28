@@ -1,8 +1,9 @@
 package org.polygon.engine.core.scene;
 
 public class IBLData {
-    private String environmentMapPath;
-    // Add fields for irradiance map, prefilter map, brdfLUT later
+    private final String environmentMapPath;
+    private int irradianceMapTextureId = -1; // Store generated ID
+    // TODO: Add prefilterMapTextureId, brdfLUTTextureId later
 
     public IBLData(String environmentMapPath) {
         this.environmentMapPath = environmentMapPath;
@@ -11,6 +12,15 @@ public class IBLData {
 
     public String getEnvironmentMapPath() {
         return environmentMapPath;
+    }
+
+    // Setter for irradiance map ID (called after generation)
+    public void setIrradianceMapTextureId(int irradianceMapTextureId) {
+        this.irradianceMapTextureId = irradianceMapTextureId;
+    }
+
+    public int getIrradianceMapTextureId() {
+        return irradianceMapTextureId;
     }
 
     // Add getters for other maps later

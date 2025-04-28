@@ -16,9 +16,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL40.*;
 import static org.lwjgl.stb.STBImage.stbi_loadf;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 
@@ -30,8 +28,11 @@ public class SkyBox {
     private IBLData iblData;
     private int environmentMapTextureId = -1;
     private static final int CUBEMAP_RESOLUTION = 1024;
+    private static final int IRRADIANCE_MAP_RESOLUTION = 32;
     private static ShaderProgram equirectangularToCubemapShader;
-    private static UniformMap uniformMap;
+    private static ShaderProgram irradianceConvolutionShader;
+    private static UniformMap equirectangularToCubemapUniformMap;
+    private static UniformMap irradianceConvolutionUniformMap;
     private static Mesh cubeMesh;
     private static int captureFBO = -1, captureRBO = -1;
     private static Matrix4f captureProjection = new Matrix4f().perspective((float) Math.toRadians(90.0f), 1.0f, 0.1f, 10.0f);
@@ -53,20 +54,41 @@ public class SkyBox {
 
     // if the user called SkyBox(String environmentMapPath) then they want to set up an HDR for IBL
     public SkyBox(String environmentMapPath, int envMapRes, int irradianceMapRes, int prefilterMapRes) {
+        // Create IBLData instance first
         this.iblData = new IBLData(environmentMapPath);
         this.skyBoxModel = null;
         this.skyBoxEntity = null;
+        int generatedIrradianceMapId = -1; // Local variable
 
-        // Load the HDR environment map into a cubemap texture
         try {
+            // Load HDR into environment cubemap
             this.environmentMapTextureId = loadHDRTexture(environmentMapPath, envMapRes > 0 ? envMapRes : CUBEMAP_RESOLUTION);
+            
+            // Create Irradiance Map from environment map
+            if (this.environmentMapTextureId != -1) { 
+                generatedIrradianceMapId = createIrradianceMap(this.environmentMapTextureId, 
+                                                                 irradianceMapRes > 0 ? irradianceMapRes : IRRADIANCE_MAP_RESOLUTION);
+                // Store the generated ID in the IBLData object
+                this.iblData.setIrradianceMapTextureId(generatedIrradianceMapId); 
+            } else {
+                 this.iblData.setIrradianceMapTextureId(-1); 
+            }
+
         } catch (Exception e) {
-            System.err.println("Failed to load HDR environment map: " + environmentMapPath);
+            System.err.println("Failed during IBL map generation for: " + environmentMapPath);
             e.printStackTrace();
+            // Clean up partially created resources
+            if(this.environmentMapTextureId != -1) glDeleteTextures(this.environmentMapTextureId);
+            if(generatedIrradianceMapId != -1) glDeleteTextures(generatedIrradianceMapId); // Use local var for cleanup
             this.environmentMapTextureId = -1;
-            this.iblData = null;
+            // Ensure IBLData reflects failure
+            if (this.iblData != null) {
+                this.iblData.setIrradianceMapTextureId(-1);
+            } 
+            // Maybe set iblData to null entirely on failure? Your choice.
+            // this.iblData = null; 
         }
-        // TODO: Use irradianceMapRes, prefilterMapRes later for pre-computing other IBL maps
+        // TODO: Create prefilter map later
     }
 
     public IBLData getIBLData() {
@@ -89,24 +111,34 @@ public class SkyBox {
         return skyBoxEntity;
     }
 
-    // Static method to initialize shared resources for HDR loading
-    public static void setupHDRLoading() {
+    // Static method to initialize shared resources
+    public static void setupIBLResources() {
+        // Equirectangular to Cubemap Shader
         if (equirectangularToCubemapShader == null) {
             List<ShaderProgram.ShaderModuleData> shaderModules = new ArrayList<>();
-            // TODO: Create these shader files
-            shaderModules.add(new ShaderProgram.ShaderModuleData(
-                    "resources/shaders/equirectangular_to_cubemap.vert", GL_VERTEX_SHADER));
-            shaderModules.add(new ShaderProgram.ShaderModuleData(
-                    "resources/shaders/equirectangular_to_cubemap.frag", GL_FRAGMENT_SHADER));
+            shaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/equirectangular_to_cubemap.vert", GL_VERTEX_SHADER));
+            shaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/equirectangular_to_cubemap.frag", GL_FRAGMENT_SHADER));
             equirectangularToCubemapShader = new ShaderProgram(shaderModules);
-            // Create UniformMap AFTER shader program is created
-            uniformMap = new UniformMap(equirectangularToCubemapShader.getProgramId());
-            uniformMap.createUniform("equirectangularMap");
-            uniformMap.createUniform("projection");
-            uniformMap.createUniform("view");
+            equirectangularToCubemapUniformMap = new UniformMap(equirectangularToCubemapShader.getProgramId());
+            equirectangularToCubemapUniformMap.createUniform("equirectangularMap");
+            equirectangularToCubemapUniformMap.createUniform("projection");
+            equirectangularToCubemapUniformMap.createUniform("view");
         }
+        // Irradiance Convolution Shader
+        if (irradianceConvolutionShader == null) {
+            List<ShaderProgram.ShaderModuleData> shaderModules = new ArrayList<>();
+            // TODO: Create these shader files
+            shaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/irradiance_convolution.vert", GL_VERTEX_SHADER));
+            shaderModules.add(new ShaderProgram.ShaderModuleData("resources/shaders/irradiance_convolution.frag", GL_FRAGMENT_SHADER));
+            irradianceConvolutionShader = new ShaderProgram(shaderModules);
+            irradianceConvolutionUniformMap = new UniformMap(irradianceConvolutionShader.getProgramId());
+            irradianceConvolutionUniformMap.createUniform("environmentMap");
+            irradianceConvolutionUniformMap.createUniform("projection");
+            irradianceConvolutionUniformMap.createUniform("view");
+        }
+        // Shared Mesh and FBO/RBO
         if (cubeMesh == null) {
-            cubeMesh = ShapeGenerator.generateCube();
+            cubeMesh = ShapeGenerator.generateCube(); 
         }
         if (captureFBO == -1) {
             captureFBO = glGenFramebuffers();
@@ -118,6 +150,10 @@ public class SkyBox {
         if (equirectangularToCubemapShader != null) {
             equirectangularToCubemapShader.cleanup();
             equirectangularToCubemapShader = null;
+        }
+        if (irradianceConvolutionShader != null) {
+            irradianceConvolutionShader.cleanup();
+            irradianceConvolutionShader = null;
         }
         if (cubeMesh != null) {
             cubeMesh.cleanup();
@@ -132,7 +168,7 @@ public class SkyBox {
     }
 
     private int loadHDRTexture(String path, int resolution) throws Exception {
-        setupHDRLoading(); // Ensure shared resources are ready
+        setupIBLResources(); // Ensure shared resources are ready
 
         int hdrTexture;
 
@@ -185,8 +221,8 @@ public class SkyBox {
 
             // Render each face of the cubemap
             equirectangularToCubemapShader.bind();
-            uniformMap.setUniform("equirectangularMap", 0);
-            uniformMap.setUniform("projection", captureProjection);
+            equirectangularToCubemapUniformMap.setUniform("equirectangularMap", 0);
+            equirectangularToCubemapUniformMap.setUniform("projection", captureProjection);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, hdrTexture2D); 
 
@@ -195,7 +231,7 @@ public class SkyBox {
 
 
             for (int i = 0; i < 6; ++i) {
-                uniformMap.setUniform("view", captureViews[i]);
+                equirectangularToCubemapUniformMap.setUniform("view", captureViews[i]);
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, hdrTexture, 0);
 
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
@@ -216,5 +252,57 @@ public class SkyBox {
         }
 
         return hdrTexture;
+    }
+
+    // Method to create the irradiance map
+    private int createIrradianceMap(int environmentMapId, int resolution) throws Exception {
+        setupIBLResources(); 
+
+        int irradianceMap = glGenTextures();
+        glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+        for (int i = 0; i < 6; ++i) {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, resolution, resolution, 0, GL_RGB, GL_FLOAT, (ByteBuffer) null);
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR); 
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+        glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, resolution, resolution);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+             throw new Exception("Irradiance Framebuffer is not complete!");
+        }
+        
+        irradianceConvolutionShader.bind();
+        irradianceConvolutionUniformMap.setUniform("environmentMap", 0);
+        irradianceConvolutionUniformMap.setUniform("projection", captureProjection);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, environmentMapId); 
+
+        glViewport(0, 0, resolution, resolution); 
+        glBindVertexArray(cubeMesh.getVaoId());
+
+        glDisable(GL_DEPTH_TEST); 
+
+        for (int i = 0; i < 6; ++i) {
+            irradianceConvolutionUniformMap.setUniform("view", captureViews[i]);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceMap, 0);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+            glDrawElements(GL_TRIANGLES, cubeMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+        }
+
+        glEnable(GL_DEPTH_TEST); 
+
+        glBindVertexArray(0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        irradianceConvolutionShader.unbind();
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+        
+        return irradianceMap;
     }
 }

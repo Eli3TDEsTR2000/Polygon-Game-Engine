@@ -52,6 +52,9 @@ uniform Fog fog;
 uniform CascadeShadow cascadeshadows[NUM_CASCADES];
 uniform sampler2D shadowMap[NUM_CASCADES];
 
+uniform samplerCube irradianceMap;
+uniform int hasIBL;
+
 float textureProj(vec4 shadowCoord, vec2 offset, int idx) {
     float shadow = 1.0;
 
@@ -153,7 +156,7 @@ void main() {
     // Decode G-Buffer data
     vec3 albedo = albedoColor.rgb;
     float alpha = albedoColor.a;
-    vec3 N = normalize(normal_encoded * 2.0 - 1.0); // Decode view-space normal
+    vec3 N = normalize(normal_encoded * 2.0 - 1.0);
     float metallic = materialProps.r;
     float roughness = materialProps.g;
     float ao = materialProps.b;
@@ -178,10 +181,25 @@ void main() {
     // Lo represents the final light (outgoing radiance).
     vec3 Lo = vec3(0.0);
 
-    // Ambient Light (simple approximation, replace with IBL later if possible)
-    // Use ambient light color * intensity, modulated by albedo and AO
-    vec3 ambient = ambientLight.color * ambientLight.intensity * albedo * ao;
-    Lo += ambient;
+    // Diffuse IBL
+    vec3 ambient; 
+    if (hasIBL == 1) {
+        // Calculate world-space normal
+        mat3 normalMatrix = transpose(inverse(mat3(invViewMatrix))); 
+        vec3 N_world = normalize(normalMatrix * N);
+
+        // Sample irradiance map
+        vec3 irradiance = texture(irradianceMap, N_world).rgb; 
+        
+        // Calculate ambient term
+        ambient = irradiance * albedo * ao / PI; 
+        Lo += ambient; // Add IBL ambient
+
+    } else {
+        // Fallback to simple ambient light if IBL is not active
+        ambient = ambientLight.color * ambientLight.intensity * albedo * ao;
+        Lo += ambient; // Add fallback ambient
+    }
 
     // bypass base light rendering.
     if (bypassLighting > 0) {
@@ -191,7 +209,7 @@ void main() {
 
     // calculating the L vector and the H half-way vector between the view vector and the light vector.
     vec3 L = normalize(directionalLight.direction);
-    vec3 H = normalize(V + L); // Halfway vector
+    vec3 H = normalize(V + L);
     vec3 radiance = directionalLight.color * directionalLight.intensity;
 
     // Pre-calculated the dot products of the needed vectors because of their frequent usage.
@@ -203,7 +221,7 @@ void main() {
     // Calculate Cook-Torrence terms
     float D = DistributionGGX(N, H, roughness);
     float G = GeometrySmith(NdotV, NdotL, roughness);
-    vec3 F = fresnelSchlick(HdotV, F0); // Use HdotV for Fresnel approx
+    vec3 F = fresnelSchlick(HdotV, F0);
 
     // Specular BRDF component (Cook-Torrance)
     // Cook-Torrance equation (specular) = D*G*F / 4(V.N)(L.N)
@@ -211,7 +229,6 @@ void main() {
     // G represents the Geometry Shadowing function
     // F represents the Fresnel Function
     vec3 numerator = D * G * F;
-    // add 0.001 to prevent by zero divisions
     float denominator = 4.0 * NdotV * NdotL + 0.001;
     vec3 specular = numerator / denominator;
 
@@ -223,8 +240,8 @@ void main() {
     // kS's only usage is to calculate the kD since we are using the Frensel function in the Cook-Torrance function.
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
-    kD *= (1.0 - metallic); // Metals have no diffuse reflection
-
+    // Metals have no diffuse reflection
+    kD *= (1.0 - metallic);
     // diffuse color is the kD factor * fLambert (Lambertian model for diffuse)
     // fLambert = color / PI * (L dot N)
     // (L dot N) when the light angle is perpendicular to the normal of the surface, the diffuse color is at max.
@@ -252,6 +269,5 @@ void main() {
         finalColor = calcFog(Vpos, finalColor, fog);
     }
 
-    // Output final HDR color (including ambient, directional, shadows, emissive, fog)
     fragColor = finalColor;
 }
