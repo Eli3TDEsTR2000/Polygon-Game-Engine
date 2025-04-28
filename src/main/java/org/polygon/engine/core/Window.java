@@ -254,10 +254,13 @@ public class Window {
 
     public static class WindowOptions {
         public boolean compatibleProfile;
+        public boolean enableToneGamma = true;
         public int fps;
         public int ups = Engine.TARGET_UPS;
         public int width;
         public int height;
+        public float gamma = 2.2f;
+        public float exposure = 1.0f;
     }
 
     public interface KeyCallback {

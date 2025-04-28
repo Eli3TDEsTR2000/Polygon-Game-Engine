@@ -79,6 +79,70 @@ public class ShapeGenerator {
                 , weights, aabbMin, aabbMax);
     }
 
+    public static Mesh generateCube() {
+        float[] positions = {
+            -1.0f,  1.0f, -1.0f,
+            -1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+
+            -1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
+
+             1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+
+            -1.0f, -1.0f,  1.0f,
+            -1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
+
+            -1.0f,  1.0f, -1.0f,
+             1.0f,  1.0f, -1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+            -1.0f,  1.0f,  1.0f,
+            -1.0f,  1.0f, -1.0f,
+
+            -1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f,  1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f,  1.0f,
+             1.0f, -1.0f,  1.0f
+        };
+        int numVertices = 36;
+        int[] indices = new int[numVertices];
+        for (int i = 0; i < numVertices; i++) {
+            indices[i] = i;
+        }
+
+        float[] normals = new float[numVertices * 3]; 
+        float[] texCoords = new float[numVertices * 2];
+        float[] tangents = new float[numVertices * 3];
+        float[] bitangents = new float[numVertices * 3];
+        int[] boneIndices = new int[numVertices * 4];
+        float[] weights = new float[numVertices * 4];
+
+        Vector3f aabbMin = new Vector3f(-1.0f, -1.0f, -1.0f);
+        Vector3f aabbMax = new Vector3f(1.0f, 1.0f, 1.0f);
+
+        return new Mesh(positions, normals, tangents, bitangents, texCoords
+                , indices, boneIndices, weights, aabbMin, aabbMax);
+    }
+
     private static float[] toFloatArray(List<Float> list) {
         float[] array = new float[list.size()];
         for (int i = 0; i < list.size(); i++) {

@@ -1,6 +1,7 @@
 package org.polygon.engine.core.graph;
 
 import org.joml.Vector2f;
+import org.polygon.engine.core.Window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,15 @@ public class FXAARender {
         uniformMap = new UniformMap(shaderProgram.getProgramId());
         uniformMap.createUniform("sceneSampler");
         uniformMap.createUniform("inverseScreenSize");
+        uniformMap.createUniform("gamma");
+        uniformMap.createUniform("exposure");
+        uniformMap.createUniform("enableToneGamma");
     }
 
-    public void render(int sceneTextureId, int width, int height) {
+    public void render(int sceneTextureId, Window window) {
+        int width = window.getWidth();
+        int height = window.getHeight();
+        Window.WindowOptions options = window.getWindowOptions();
         shaderProgram.bind();
 
         glDisable(GL_DEPTH_TEST);
@@ -47,6 +54,9 @@ public class FXAARender {
         uniformMap.setUniform("sceneSampler", 0); // Texture unit 0
         inverseScreenSize.set(1.0f / width, 1.0f / height);
         uniformMap.setUniform("inverseScreenSize", inverseScreenSize);
+        uniformMap.setUniform("gamma", options.gamma);
+        uniformMap.setUniform("exposure", options.exposure);
+        uniformMap.setUniform("enableToneGamma", options.enableToneGamma);
 
         // Bind input texture
         glActiveTexture(GL_TEXTURE0);

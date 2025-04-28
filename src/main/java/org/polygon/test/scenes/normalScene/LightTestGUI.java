@@ -155,7 +155,7 @@ public class LightTestGUI implements IGuiInstance {
             }
         }
 
-        // --- Spot Lights ---
+        // Spot Lights
         if (ImGui.collapsingHeader("Spot Lights")) {
             if (ImGui.button("Add Spot Light")) {
                 addSpotLightFlag = true;

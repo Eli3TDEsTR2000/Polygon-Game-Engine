@@ -53,6 +53,9 @@ public class Scene {
         modelMap.values().forEach(Model::cleanup);
         textureCache.cleanup();
         sceneLights = null;
+        if(skyBox != null) {
+            skyBox.cleanup();
+        }
     }
 
     public void reset() {

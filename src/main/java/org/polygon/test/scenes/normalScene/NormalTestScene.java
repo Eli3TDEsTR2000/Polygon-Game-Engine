@@ -1,11 +1,9 @@
 package org.polygon.test.scenes.normalScene;
 
+import org.joml.Vector3f;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.Model;
-import org.polygon.engine.core.scene.Camera;
-import org.polygon.engine.core.scene.Entity;
-import org.polygon.engine.core.scene.ModelLoader;
-import org.polygon.engine.core.scene.SkyBox;
+import org.polygon.engine.core.scene.*;
 import org.polygon.engine.core.scene.lights.PointLight;
 import org.polygon.engine.core.scene.lights.SceneLights;
 import org.polygon.engine.core.scene.lights.SpotLight;
@@ -70,11 +68,18 @@ public class NormalTestScene extends BasicScene {
 //        scene.getTextureCache().createTexture("resources/models/skybox/sky_water_landscape.jpg");
 //        skyBox.getSkyBoxModel().getMaterialList().get(0).setTexturePath("resources/models/skybox/sky_water_landscape.jpg");
 //        scene.setSkyBox(skyBox);
+
+        SkyBox skyBox = new SkyBox("resources/models/skybox/kloppenheim_06_puresky_4k.hdr"
+                , 1024, 32, 128);
+        scene.setSkyBox(skyBox);
+
+//        scene.setFog(new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.02f));
     }
 
     @Override
     public void input(Window window, long diffTimeMS) {
-        float incrementMovement = diffTimeMS * MOVEMENT_SPEED;
+        int factor = window.isKeyPressed(GLFW_KEY_LEFT_SHIFT) ? 3 : 1;
+        float incrementMovement = diffTimeMS * MOVEMENT_SPEED * factor;
         Camera camera = window.getCurrentScene().getCamera();
         if(window.isKeyPressed(GLFW_KEY_W)) {
             camera.moveForward(incrementMovement);

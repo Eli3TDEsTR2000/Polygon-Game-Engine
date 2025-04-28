@@ -3,16 +3,20 @@ package org.polygon.engine.core.graph;
 import org.joml.Matrix4f;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.engine.core.scene.SkyBox;
+import org.polygon.engine.core.utils.ShapeGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL40.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
+
 public class SkyBoxRender {
     private ShaderProgram shaderProgram;
     private UniformMap uniformMap;
     // Holds the viewMatrix to modify it and disable transformation before sending the data to the shader.
     private Matrix4f viewMatrix;
+    private Mesh cubeMesh;
 
     public SkyBoxRender() {
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
@@ -23,11 +27,15 @@ public class SkyBoxRender {
 
         shaderProgram = new ShaderProgram(shaderModuleDataList);
         viewMatrix = new Matrix4f();
+        cubeMesh = ShapeGenerator.generateCube();
         createUniforms();
     }
 
     public void cleanup() {
         shaderProgram.cleanup();
+        if (cubeMesh != null) {
+            cubeMesh.cleanup();
+        }
     }
 
     private void createUniforms() {
@@ -36,8 +44,10 @@ public class SkyBoxRender {
         uniformMap.createUniform("viewMatrix");
         uniformMap.createUniform("modelMatrix");
         uniformMap.createUniform("textSampler");
+        uniformMap.createUniform("environmentMapSampler");
         uniformMap.createUniform("diffuse");
         uniformMap.createUniform("hasTexture");
+        uniformMap.createUniform("hasIBLData");
     }
 
     public void render(Scene scene) {
@@ -63,28 +73,44 @@ public class SkyBoxRender {
 
         uniformMap.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
         uniformMap.setUniform("viewMatrix", viewMatrix);
-        uniformMap.setUniform("textSampler", 0);
 
-        TextureCache textureCache = scene.getTextureCache();
+        final int SKYBOX_TEXTURE_UNIT = 5;
 
-        // draw skybox
-        for(Material material : skyBox.getSkyBoxModel().getMaterialList()) {
-            Texture texture = textureCache.getTexture(material.getTexturePath());
-            glActiveTexture(GL_TEXTURE0);
-            texture.bind();
+        if (skyBox.getIBLData() != null && skyBox.getEnvironmentMapTextureId() != -1) {
+            uniformMap.setUniform("hasIBLData", true);
+            uniformMap.setUniform("environmentMapSampler", SKYBOX_TEXTURE_UNIT);
 
-            uniformMap.setUniform("diffuse", material.getDiffuseColor());
-            if(texture.getTexturePath().equals(TextureCache.DEFAULT_TEXTURE)) {
-                uniformMap.setUniform("hasTexture", 0);
-            } else {
-                uniformMap.setUniform("hasTexture", 1);
+            int textureId = skyBox.getEnvironmentMapTextureId();
+            if (textureId <= 0) {
+                 System.err.println("Error: Invalid cubemap texture ID!");
             }
 
-            for(Mesh mesh : material.getMeshList()) {
-                glBindVertexArray(mesh.getVaoId());
+            glActiveTexture(GL_TEXTURE0 + SKYBOX_TEXTURE_UNIT);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 
-                uniformMap.setUniform("modelMatrix", skyBox.getSkyBoxEntity().getModelMatrix());
-                glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+            glBindVertexArray(cubeMesh.getVaoId());
+            glDrawElements(GL_TRIANGLES, cubeMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+
+        } else if (skyBox.getSkyBoxModel() != null && skyBox.getSkyBoxEntity() != null) {
+            uniformMap.setUniform("hasIBLData", false);
+            uniformMap.setUniform("textSampler", SKYBOX_TEXTURE_UNIT);
+
+            TextureCache textureCache = scene.getTextureCache();
+
+            for(Material material : skyBox.getSkyBoxModel().getMaterialList()) {
+                Texture texture = textureCache.getTexture(material.getTexturePath());
+                glActiveTexture(GL_TEXTURE0 + SKYBOX_TEXTURE_UNIT);
+                texture.bind();
+
+                uniformMap.setUniform("diffuse", material.getDiffuseColor());
+                uniformMap.setUniform("hasTexture", !texture.getTexturePath().equals(TextureCache.DEFAULT_TEXTURE));
+
+                for(Mesh mesh : material.getMeshList()) {
+                    glBindVertexArray(mesh.getVaoId());
+
+                    uniformMap.setUniform("modelMatrix", skyBox.getSkyBoxEntity().getModelMatrix());
+                    glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+                }
             }
         }
 
