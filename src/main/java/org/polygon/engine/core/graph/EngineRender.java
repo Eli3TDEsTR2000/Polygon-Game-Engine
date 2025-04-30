@@ -98,5 +98,6 @@ public class EngineRender {
         glDepthFunc(GL_LESS);
         glDepthMask(true);
         glDisable(GL_BLEND);
+        glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
     }
 }

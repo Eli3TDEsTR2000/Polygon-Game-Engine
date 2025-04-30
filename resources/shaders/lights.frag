@@ -52,7 +52,9 @@ uniform Fog fog;
 uniform CascadeShadow cascadeshadows[NUM_CASCADES];
 uniform sampler2D shadowMap[NUM_CASCADES];
 
+uniform sampler2D brdfLUT;
 uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
 uniform int hasIBL;
 
 float textureProj(vec4 shadowCoord, vec2 offset, int idx) {
@@ -140,6 +142,11 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0) {
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
+// Fresnel function using Schlick's approximation but using roughness
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+}
+
 void main() {
     // Sample G-Buffer
     vec4 albedoColor = texture(albedoSampler, outTextCoord);
@@ -178,22 +185,44 @@ void main() {
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
+    float NdotV = max(dot(N, V), 0.0);
+
+    // Diffuse BRDF component (Lambertian)
+    // BRDF = kD.fdiffuse + kS.fspecular
+    // kS is the factor of specular contribution and kD is the factor of diffuse contribution for the light.
+    // PBR should conserve energy so kD + kS should add up to 1
+    // We get the specular factor from the Fresnel function
+    // kS's only usage is to calculate the kD since we are using the Frensel function in the Cook-Torrance function.
+    vec3 F_IBL = fresnelSchlickRoughness(NdotV, F0, roughness);
+    vec3 kS = F_IBL;
+    vec3 kD = vec3(1.0) - kS;
+    kD *= (1.0 - metallic); // Metals have no diffuse reflection
+
     // Lo represents the final light (outgoing radiance).
     vec3 Lo = vec3(0.0);
 
     // Diffuse IBL
-    vec3 ambient; 
+    vec3 ambient;
     if (hasIBL == 1) {
-        // Calculate world-space normal
-        mat3 normalMatrix = transpose(inverse(mat3(invViewMatrix))); 
+        mat3 normalMatrix = transpose(inverse(mat3(invViewMatrix)));
         vec3 N_world = normalize(normalMatrix * N);
+        N_world.g = -N_world.g; // Uncommented: Negate Y for sampling convention
 
         // Sample irradiance map
-        vec3 irradiance = texture(irradianceMap, N_world).rgb; 
-        
-        // Calculate ambient term
-        ambient = irradiance * albedo * ao / PI; 
-        Lo += ambient; // Add IBL ambient
+        vec3 irradiance = texture(irradianceMap, N_world).rgb;
+        vec3 diffuseIBL = irradiance * kD * albedo * ao; // Use kD here
+
+        vec3 R = reflect(-V, N); // View space reflection vector
+        vec3 R_world = normalize(normalMatrix * R);
+        R_world.g = -R_world.g; // Uncommented: Negate Y for sampling convention
+
+        // Sample prefilter map
+        const float MAX_REFLECTION_LOD = 4.0;
+        vec3 prefilteredColor = textureLod(prefilterMap, R_world,  roughness * MAX_REFLECTION_LOD).rgb;
+        vec2 brdf  = texture(brdfLUT, vec2(NdotV, roughness)).rg;
+        vec3 specularIBL = prefilteredColor * (F_IBL * brdf.r + brdf.g);
+
+        Lo += diffuseIBL + specularIBL;
 
     } else {
         // Fallback to simple ambient light if IBL is not active
@@ -215,7 +244,6 @@ void main() {
     // Pre-calculated the dot products of the needed vectors because of their frequent usage.
     // Avoid the negative dot products because they represents Vectors that are out of the BRDF hemisphere.
     float NdotL = max(dot(N, L), 0.0);
-    float NdotV = max(dot(N, V), 0.0);
     float HdotV = max(dot(H, V), 0.0);
 
     // Calculate Cook-Torrence terms
@@ -230,23 +258,13 @@ void main() {
     // F represents the Fresnel Function
     vec3 numerator = D * G * F;
     float denominator = 4.0 * NdotV * NdotL + 0.001;
-    vec3 specular = numerator / denominator;
+    vec3 specularDirect = numerator / denominator;
 
-    // Diffuse BRDF component (Lambertian)
-    // BRDF = kD.fdiffuse + kS.fspecular
-    // kS is the factor of specular contribution and kD is the factor of diffuse contribution for the light.
-    // PBR should conserve energy so kD + kS should add up to 1
-    // We get the specular factor from the Fresnel function
-    // kS's only usage is to calculate the kD since we are using the Frensel function in the Cook-Torrance function.
-    vec3 kS = F;
-    vec3 kD = vec3(1.0) - kS;
-    // Metals have no diffuse reflection
-    kD *= (1.0 - metallic);
     // diffuse color is the kD factor * fLambert (Lambertian model for diffuse)
     // fLambert = color / PI * (L dot N)
     // (L dot N) when the light angle is perpendicular to the normal of the surface, the diffuse color is at max.
     // but since (L dot N) is calculated in the final Lo, it's removed from the lambertian equation.
-    vec3 diffuse = kD * albedo / PI;
+    vec3 diffuseDirect = kD * albedo / PI;
 
     // Calculate Shadow Factor
     int cascadeIndex = 0;
@@ -258,7 +276,7 @@ void main() {
     float shadow = calcShadow(world_pos, cascadeIndex);
 
     // Add directional light contribution with shadow.
-    Lo += (diffuse + specular) * radiance * NdotL * shadow;
+    Lo += (diffuseDirect + specularDirect) * radiance * NdotL * shadow;
 
     // Add Emissive component
     Lo += emissiveColor;

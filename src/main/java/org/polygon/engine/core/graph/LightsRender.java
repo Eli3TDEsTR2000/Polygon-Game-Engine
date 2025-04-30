@@ -85,7 +85,9 @@ public class LightsRender {
         baseLightUniformMap.createUniform("fog.activeFog");
         baseLightUniformMap.createUniform("fog.color");
         baseLightUniformMap.createUniform("fog.density");
+        baseLightUniformMap.createUniform("brdfLUT");
         baseLightUniformMap.createUniform("irradianceMap");
+        baseLightUniformMap.createUniform("prefilterMap");
         baseLightUniformMap.createUniform("hasIBL");
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
             baseLightUniformMap.createUniform("shadowMap[" + i + "]");
@@ -173,12 +175,20 @@ public class LightsRender {
 
         SkyBox skyBox = scene.getSkyBox();
         IBLData iblData = (skyBox != null) ? skyBox.getIBLData() : null;
-        
-        if (iblData != null && iblData.getIrradianceMapTextureId() != -1) {
+
+        if (iblData != null && iblData.getIrradianceMapTextureId() != -1 && iblData.getPrefilterMapTextureId() != -1) {
             baseLightUniformMap.setUniform("hasIBL", true);
-            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT); 
+            glActiveTexture(GL_TEXTURE20);
+            Texture.BRDF_LUT.bind();
+            baseLightUniformMap.setUniform("brdfLUT", 20);
+
+            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT);
             glBindTexture(GL_TEXTURE_CUBE_MAP, iblData.getIrradianceMapTextureId());
-            baseLightUniformMap.setUniform("irradianceMap", IRRADIANCE_MAP_TEXTURE_UNIT); 
+            baseLightUniformMap.setUniform("irradianceMap", IRRADIANCE_MAP_TEXTURE_UNIT);
+
+            glActiveTexture(GL_TEXTURE25);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, iblData.getPrefilterMapTextureId());
+            baseLightUniformMap.setUniform("prefilterMap", 25);
         } else {
             baseLightUniformMap.setUniform("hasIBL", false);
         }
