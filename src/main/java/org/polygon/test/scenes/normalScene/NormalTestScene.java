@@ -1,9 +1,7 @@
 package org.polygon.test.scenes.normalScene;
 
-import org.joml.*;
+import org.joml.Vector3f;
 import org.polygon.engine.core.Window;
-import org.polygon.engine.core.graph.Material;
-import org.polygon.engine.core.graph.Mesh;
 import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.scene.*;
 import org.polygon.engine.core.scene.lights.PointLight;
@@ -11,15 +9,11 @@ import org.polygon.engine.core.scene.lights.SceneLights;
 import org.polygon.engine.core.scene.lights.SpotLight;
 import org.polygon.test.scenes.BasicScene;
 
-import java.lang.Math;
-import java.util.Collection;
-import java.util.List;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class NormalTestScene extends BasicScene {
     private final float MOUSE_SENSITIVITY = 0.1f;
-    private final float MOVEMENT_SPEED = 0.009f;
+    private final float MOVEMENT_SPEED = 0.005f;
 
     public NormalTestScene(Window window) {
         super(window);
@@ -27,37 +21,40 @@ public class NormalTestScene extends BasicScene {
 
     @Override
     public void init() {
+        Model damagedHelmet = ModelLoader.loadModel("damagedHelmet-model"
+                , "resources/models/test/DamagedHelmet.gltf"
+                , scene.getTextureCache(), false);
+        scene.addModel(damagedHelmet);
 
-        float spacingY = 2.5f;
-        float spacingX = 2.3f;
-        float startY = -(5 - 1) * spacingY / 2.0f;
-        float startX = 10.0f;
-        float posZ = -10f;
+        damagedHelmet.getMaterialList().get(0).setMetallicMapPath("resources/models/test/Default_metallic.jpg");
+        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getMetallicMapPath());
+
+        damagedHelmet.getMaterialList().get(0).setRoughnessMapPath("resources/models/test/Default_roughness.jpg");
+        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getRoughnessMapPath());
+
+
+        float spacingX = 2.5f;
+        float spacingZ = 2.0f;
+        float startX = -(5 - 1) * spacingX / 2.0f;
+        float startZ = -2.0f;
+        float posY = 0.71f;
         float scale = 1f;
 
         for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
-                Model backpack = ModelLoader.loadModel("backpack-model" + row + "-" + col
-                        , "resources/models/sphere/sphere.fbx"
-                        , scene.getTextureCache(), false);
-                scene.addModel(backpack);
-
-                backpack.getMaterialList().get(0).setDiffuseColor(new Vector4f(0, 1, 1, 1));
-                backpack.getMaterialList().get(0).setMetallic(row / 10.0f);
-                backpack.getMaterialList().get(0).setRoughness(col / 10.0f);
-
-                String entityId = "backpack-" + row + "-" + col;
-                Entity backpackEntity = new Entity(entityId, backpack.getModelId());
-                float posY = startY + col * spacingY;
-                float posX = startX - row * spacingX;
-                backpackEntity.setPosition(posX, posY, posZ);
-                backpackEntity.setScale(scale);
-                scene.addEntity(backpackEntity);
+            for (int col = 0; col < 5; col++) {
+                String entityId = "damagedHelmet-" + row + "-" + col;
+                Entity damagedHelmetEntity = new Entity(entityId, damagedHelmet.getModelId());
+                float posX = startX + col * spacingX;
+                float posZ = startZ - row * spacingZ;
+                damagedHelmetEntity.setPosition(posX, posY, posZ);
+                damagedHelmetEntity.setScale(scale);
+//                damagedHelmetEntity.setRotation(1, 1, 1, (float)Math.toRadians(180.0));
+                scene.addEntity(damagedHelmetEntity);
             }
         }
 
         SceneLights sceneLights = new SceneLights();
-        sceneLights.getAmbientLight().setIntensity(0.1f);
+        sceneLights.getAmbientLight().setIntensity(0.0f);
         sceneLights.getPointLightList().add(new PointLight());
         PointLight pointLight = sceneLights.getPointLightList().get(0);
         pointLight.setIntensity(1);
@@ -72,9 +69,9 @@ public class NormalTestScene extends BasicScene {
 //        skyBox.getSkyBoxModel().getMaterialList().get(0).setTexturePath("resources/models/skybox/sky_water_landscape.jpg");
 //        scene.setSkyBox(skyBox);
 
-        SkyBox skyBox = new SkyBox("resources/models/skybox/newport_loft.hdr"
-                , 1024, 32, 128);
-        scene.setSkyBox(skyBox);
+//        SkyBox skyBox = new SkyBox("resources/models/skybox/kloppenheim_06_puresky_4k.hdr"
+//                , 1024, 32, 128);
+//        scene.setSkyBox(skyBox);
 
 //        scene.setFog(new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.02f));
     }
@@ -108,71 +105,6 @@ public class NormalTestScene extends BasicScene {
                     (float) Math.toRadians(window.getMouseInputHandler().getDisplacement().x * MOUSE_SENSITIVITY),
                     (float) Math.toRadians(window.getMouseInputHandler().getDisplacement().y * MOUSE_SENSITIVITY));
         }
-        if(window.getMouseInputHandler().isLeftButtonPressed()) {
-            selectEntity(window);
-            if(scene.getSelectedEntity() != null) {
-                String modelId = scene.getSelectedEntity().getModelId();
-                System.out.println("Metallic: "
-                        + scene.getModelMap().get(modelId).getMaterialList().get(0).getMetallic());
-                System.out.println("Roughness: "
-                        + scene.getModelMap().get(modelId).getMaterialList().get(0).getRoughness());
-            }
-        }
-    }
-
-    public void selectEntity(Window window) {
-        int windowWidth = window.getWidth();
-        int windowHeight = window.getHeight();
-
-        Vector2f mousePos = window.getMouseInputHandler().getCurrentPosition();
-
-        float x = (2 * mousePos.x) / windowWidth - 1.0f;
-        float y = 1.0f - (2 * mousePos.y) / windowHeight;
-        float z = -1.0f;
-
-        Matrix4f invProjMatrix = window.getCurrentScene().getProjection().getInvProjMatrix();
-        Vector4f mouseDir = new Vector4f(x, y, z, 1.0f);
-        mouseDir.mul(invProjMatrix);
-        mouseDir.z = -1.0f;
-        mouseDir.w = 0.0f;
-
-        Matrix4f invViewMatrix = window.getCurrentScene().getCamera().getInvViewMatrix();;
-        mouseDir.mul(invViewMatrix);
-
-        Vector4f min = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
-        Vector4f max = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
-        Vector2f nearFar = new Vector2f();
-
-        Entity selectedEntity = null;
-        float closestDistance = Float.POSITIVE_INFINITY;
-        Vector3f center = scene.getCamera().getPosition();
-
-        Collection<Model> models = scene.getModelMap().values();
-        Matrix4f modelMatrix = new Matrix4f();
-        for (Model model : models) {
-            List<Entity> entities = model.getEntityList();
-            for (Entity entity : entities) {
-                modelMatrix.translate(entity.getPosition()).scale(entity.getScale());
-                for (Material material : model.getMaterialList()) {
-                    for (Mesh mesh : material.getMeshList()) {
-                        Vector3f aabbMin = mesh.getAabbMinCorner();
-                        min.set(aabbMin.x, aabbMin.y, aabbMin.z, 1.0f);
-                        min.mul(modelMatrix);
-                        Vector3f aabMax = mesh.getAabbMaxCorner();
-                        max.set(aabMax.x, aabMax.y, aabMax.z, 1.0f);
-                        max.mul(modelMatrix);
-                        if (Intersectionf.intersectRayAab(center.x, center.y, center.z, mouseDir.x, mouseDir.y, mouseDir.z,
-                                min.x, min.y, min.z, max.x, max.y, max.z, nearFar) && nearFar.x < closestDistance) {
-                            closestDistance = nearFar.x;
-                            selectedEntity = entity;
-                        }
-                    }
-                }
-                modelMatrix.identity();
-            }
-        }
-
-        window.getCurrentScene().setSelectedEntity(selectedEntity);
     }
 
     @Override

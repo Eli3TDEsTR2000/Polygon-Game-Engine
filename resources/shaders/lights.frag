@@ -43,6 +43,7 @@ uniform sampler2D depthSampler;
 
 uniform mat4 invProjectionMatrix;
 uniform mat4 invViewMatrix;
+uniform mat4 viewMatrix;
 
 uniform AmbientLight ambientLight;
 uniform DirectionalLight directionalLight;
@@ -204,17 +205,17 @@ void main() {
     // Diffuse IBL
     vec3 ambient;
     if (hasIBL == 1) {
-        mat3 normalMatrix = transpose(inverse(mat3(invViewMatrix)));
+        mat3 normalMatrix = transpose(mat3(viewMatrix));
         vec3 N_world = normalize(normalMatrix * N);
-        N_world.g = -N_world.g; // Uncommented: Negate Y for sampling convention
+        N_world.g = -N_world.g;
 
         // Sample irradiance map
         vec3 irradiance = texture(irradianceMap, N_world).rgb;
-        vec3 diffuseIBL = irradiance * kD * albedo * ao; // Use kD here
+        vec3 diffuseIBL = irradiance * kD * albedo * ao;
 
         vec3 R = reflect(-V, N); // View space reflection vector
         vec3 R_world = normalize(normalMatrix * R);
-        R_world.g = -R_world.g; // Uncommented: Negate Y for sampling convention
+        R_world.g = -R_world.g;
 
         // Sample prefilter map
         const float MAX_REFLECTION_LOD = 4.0;

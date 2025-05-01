@@ -346,13 +346,11 @@ public class SkyBox {
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // be sure to set minification filter to mip_linear
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // generate mipmaps for the cubemap so OpenGL automatically allocates the required memory.
+        // generate mipmaps for the cubemap
         glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
-        // pbr: run a quasi monte-carlo simulation on the environment lighting to create a prefilter (cube)map.
-        // ----------------------------------------------------------------------------------------------------
         prefilterShader.bind();
         prefilterUniformMap.setUniform("environmentMap", 0);
         prefilterUniformMap.setUniform("projection", captureProjection);
@@ -363,7 +361,7 @@ public class SkyBox {
         int maxMipLevels = 5;
         for (int mip = 0; mip < maxMipLevels; ++mip)
         {
-            // reisze framebuffer according to mip-level size.
+            // resize framebuffer according to mip-level size.
             int mipWidth = (int)(resolution * Math.pow(0.5, mip));
             int mipHeight = (int)(resolution * Math.pow(0.5, mip));
             glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);

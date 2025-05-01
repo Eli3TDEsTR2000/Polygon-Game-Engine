@@ -10,7 +10,7 @@ public class Main {
         options.width = 1280;
         options.height = 720;
         options.enableToneGamma = false;
-        options.gamma = 1.40f;
+        options.gamma = 2.13f;
         options.ups = 50;
         Engine engine = new Engine("Polygon Game Engine", options, script);
         engine.start();

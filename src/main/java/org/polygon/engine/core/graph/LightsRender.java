@@ -77,6 +77,7 @@ public class LightsRender {
         baseLightUniformMap.createUniform("depthSampler");
         baseLightUniformMap.createUniform("invProjectionMatrix");
         baseLightUniformMap.createUniform("invViewMatrix");
+        baseLightUniformMap.createUniform("viewMatrix");
         baseLightUniformMap.createUniform("ambientLight.color");
         baseLightUniformMap.createUniform("ambientLight.intensity");
         baseLightUniformMap.createUniform("directionalLight.color");
@@ -156,6 +157,7 @@ public class LightsRender {
 
         baseLightUniformMap.setUniform("invProjectionMatrix", scene.getProjection().getInvProjMatrix());
         baseLightUniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
+        baseLightUniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
 
         baseLightUniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
 
@@ -177,18 +179,18 @@ public class LightsRender {
         IBLData iblData = (skyBox != null) ? skyBox.getIBLData() : null;
 
         if (iblData != null && iblData.getIrradianceMapTextureId() != -1 && iblData.getPrefilterMapTextureId() != -1) {
-            baseLightUniformMap.setUniform("hasIBL", true);
-            glActiveTexture(GL_TEXTURE20);
-            Texture.BRDF_LUT.bind();
-            baseLightUniformMap.setUniform("brdfLUT", 20);
-
             glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT);
             glBindTexture(GL_TEXTURE_CUBE_MAP, iblData.getIrradianceMapTextureId());
             baseLightUniformMap.setUniform("irradianceMap", IRRADIANCE_MAP_TEXTURE_UNIT);
 
-            glActiveTexture(GL_TEXTURE25);
+            baseLightUniformMap.setUniform("hasIBL", true);
+            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT + 1);
+            Texture.BRDF_LUT.bind();
+            baseLightUniformMap.setUniform("brdfLUT", IRRADIANCE_MAP_TEXTURE_UNIT + 1);
+
+            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT + 2);
             glBindTexture(GL_TEXTURE_CUBE_MAP, iblData.getPrefilterMapTextureId());
-            baseLightUniformMap.setUniform("prefilterMap", 25);
+            baseLightUniformMap.setUniform("prefilterMap", IRRADIANCE_MAP_TEXTURE_UNIT + 2);
         } else {
             baseLightUniformMap.setUniform("hasIBL", false);
         }
