@@ -8,6 +8,8 @@ import org.polygon.engine.core.scene.Fog;
 import org.polygon.engine.core.scene.Scene;
 import org.polygon.engine.core.scene.lights.*;
 import org.polygon.engine.core.utils.ShapeGenerator;
+import org.polygon.engine.core.scene.SkyBox;
+import org.polygon.engine.core.scene.IBLData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ public class LightsRender {
     private final Vector4f auxVec4;
     private final Vector3f auxVec3;
     private final Vector2f screenSizeVec;
+
+    private static final int IRRADIANCE_MAP_TEXTURE_UNIT = 8;
 
     public LightsRender() {
         List<ShaderProgram.ShaderModuleData> baseShaderModules = new ArrayList<>();
@@ -68,10 +72,12 @@ public class LightsRender {
         baseLightUniformMap.createUniform("bypassLighting");
         baseLightUniformMap.createUniform("albedoSampler");
         baseLightUniformMap.createUniform("normalSampler");
-        baseLightUniformMap.createUniform("specularSampler");
+        baseLightUniformMap.createUniform("materialSampler");
+        baseLightUniformMap.createUniform("emissiveSampler");
         baseLightUniformMap.createUniform("depthSampler");
         baseLightUniformMap.createUniform("invProjectionMatrix");
         baseLightUniformMap.createUniform("invViewMatrix");
+        baseLightUniformMap.createUniform("viewMatrix");
         baseLightUniformMap.createUniform("ambientLight.color");
         baseLightUniformMap.createUniform("ambientLight.intensity");
         baseLightUniformMap.createUniform("directionalLight.color");
@@ -80,6 +86,10 @@ public class LightsRender {
         baseLightUniformMap.createUniform("fog.activeFog");
         baseLightUniformMap.createUniform("fog.color");
         baseLightUniformMap.createUniform("fog.density");
+        baseLightUniformMap.createUniform("brdfLUT");
+        baseLightUniformMap.createUniform("irradianceMap");
+        baseLightUniformMap.createUniform("prefilterMap");
+        baseLightUniformMap.createUniform("hasIBL");
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
             baseLightUniformMap.createUniform("shadowMap[" + i + "]");
             baseLightUniformMap.createUniform("cascadeshadows[" + i + "]" + ".projViewMatrix");
@@ -94,7 +104,7 @@ public class LightsRender {
         lightVolumeUniformMap.createUniform("modelMatrix");
         lightVolumeUniformMap.createUniform("albedoSampler");
         lightVolumeUniformMap.createUniform("normalSampler");
-        lightVolumeUniformMap.createUniform("specularSampler");
+        lightVolumeUniformMap.createUniform("materialSampler");
         lightVolumeUniformMap.createUniform("depthSampler");
         lightVolumeUniformMap.createUniform("screenSize");
         lightVolumeUniformMap.createUniform("invProjectionMatrix");
@@ -141,11 +151,13 @@ public class LightsRender {
 
         baseLightUniformMap.setUniform("albedoSampler", 0);
         baseLightUniformMap.setUniform("normalSampler", 1);
-        baseLightUniformMap.setUniform("specularSampler", 2);
-        baseLightUniformMap.setUniform("depthSampler", 3);
+        baseLightUniformMap.setUniform("materialSampler", 2);
+        baseLightUniformMap.setUniform("emissiveSampler", 3);
+        baseLightUniformMap.setUniform("depthSampler", 4);
 
         baseLightUniformMap.setUniform("invProjectionMatrix", scene.getProjection().getInvProjMatrix());
         baseLightUniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
+        baseLightUniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
 
         baseLightUniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
 
@@ -163,17 +175,37 @@ public class LightsRender {
         baseLightUniformMap.setUniform("fog.color", fog.getColor());
         baseLightUniformMap.setUniform("fog.density", fog.getDensity());
 
-        int start = 4;
+        SkyBox skyBox = scene.getSkyBox();
+        IBLData iblData = (skyBox != null) ? skyBox.getIBLData() : null;
+
+        if (iblData != null && iblData.getIrradianceMapTextureId() != -1 && iblData.getPrefilterMapTextureId() != -1) {
+            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, iblData.getIrradianceMapTextureId());
+            baseLightUniformMap.setUniform("irradianceMap", IRRADIANCE_MAP_TEXTURE_UNIT);
+
+            baseLightUniformMap.setUniform("hasIBL", true);
+            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT + 1);
+            Texture.BRDF_LUT.bind();
+            baseLightUniformMap.setUniform("brdfLUT", IRRADIANCE_MAP_TEXTURE_UNIT + 1);
+
+            glActiveTexture(GL_TEXTURE0 + IRRADIANCE_MAP_TEXTURE_UNIT + 2);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, iblData.getPrefilterMapTextureId());
+            baseLightUniformMap.setUniform("prefilterMap", IRRADIANCE_MAP_TEXTURE_UNIT + 2);
+        } else {
+            baseLightUniformMap.setUniform("hasIBL", false);
+        }
+
+        int shadowMapStartUnit = 5;
         List<CascadeShadow> cascadeShadows = shadowRender.getCascadeShadowList();
         for (int i = 0; i < CascadeShadow.SHADOW_MAP_CASCADE_COUNT; i++) {
-            baseLightUniformMap.setUniform("shadowMap[" + i + "]", start + i);
+            baseLightUniformMap.setUniform("shadowMap[" + i + "]", shadowMapStartUnit + i);
             CascadeShadow cascadeShadow = cascadeShadows.get(i);
             baseLightUniformMap.setUniform("cascadeshadows[" + i + "]" + ".projViewMatrix"
                     , cascadeShadow.getProjViewMatrix());
             baseLightUniformMap.setUniform("cascadeshadows[" + i + "]" + ".splitDistance"
                     , cascadeShadow.getSplitDistance());
         }
-        shadowRender.getShadowBuffer().bindTextures(GL_TEXTURE0 + start);
+        shadowRender.getShadowBuffer().bindTextures(GL_TEXTURE0 + shadowMapStartUnit);
 
         glBindVertexArray(quadMesh.getVaoId());
         glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
@@ -198,8 +230,8 @@ public class LightsRender {
         bindGBufferTextures(textureIds);
         lightVolumeUniformMap.setUniform("albedoSampler", 0);
         lightVolumeUniformMap.setUniform("normalSampler", 1);
-        lightVolumeUniformMap.setUniform("specularSampler", 2);
-        lightVolumeUniformMap.setUniform("depthSampler", 3);
+        lightVolumeUniformMap.setUniform("materialSampler", 2);
+        lightVolumeUniformMap.setUniform("depthSampler", 4);
 
         glEnable(GL_BLEND);
         glBlendEquation(GL_FUNC_ADD);

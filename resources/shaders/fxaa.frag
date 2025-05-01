@@ -8,6 +8,11 @@ uniform sampler2D sceneSampler;
 // Inverse of screen resolution (1.0 / width, 1.0 / height)
 uniform vec2 inverseScreenSize;
 
+// Controls for tone-mapping / gamma correction.
+uniform float exposure = 1.0;
+uniform float gamma = 2.2;
+uniform int enableToneGamma;
+
 // Input from vertex shader
 in vec2 vTexCoord;
 
@@ -61,7 +66,72 @@ vec3 FxaaPixelShader(vec2 posPos, sampler2D tex, vec2 rcpFrame) {
     return rgbB;
 }
 
+// ACES Filmic Tone Mapping Curve (Stephen Hill Fit)
+// taken from https://github.com/TheRealMJP/BakingLab/blob/master/BakingLab/ACES.hlsl
+
+// sRGB => XYZ => D65_2_D60 => AP1 => RRT_SAT
+const mat3 ACESInputMat = mat3(
+    vec3(0.59719, 0.07600, 0.02840),
+    vec3(0.35458, 0.90834, 0.13383),
+    vec3(0.04823, 0.01566, 0.83777)
+);
+
+// ODT_SAT => XYZ => D60_2_D65 => sRGB
+const mat3 ACESOutputMat = mat3(
+    vec3( 1.60475, -0.10208, -0.00327),
+    vec3(-0.53108,  1.10813, -0.07276),
+    vec3(-0.07367, -0.00605,  1.07602)
+);
+
+vec3 RRTAndODTFit(vec3 v)
+{
+    vec3 a = v * (v + 0.0245786f) - 0.000090537f;
+    vec3 b = v * (0.983729f * v + 0.4329510f) + 0.238081f;
+    return a / b;
+}
+
+// ACES Tone Mapping function
+vec3 toneMapACESFitted(vec3 color)
+{
+    // Linear sRGB input needs conversion for ACES
+    color = ACESInputMat * color; 
+    
+    // Apply RRT and ODT curve
+    color = RRTAndODTFit(color);
+
+    // Convert back to sRGB linear
+    color = ACESOutputMat * color;
+
+    // Clamp to [0, 1]
+    color = clamp(color, 0.0, 1.0); 
+    
+    return color;
+}
+
+// Gamma Correction
+vec3 gammaCorrect(vec3 color) {
+    color = max(color, vec3(0.0)); 
+    return pow(color, vec3(1.0/gamma));
+}
+
 void main() {
-    vec3 result = FxaaPixelShader(vTexCoord, sceneSampler, inverseScreenSize);
-    FragColor = vec4(result, 1.0);
+    vec3 finalResult;
+
+    if(enableToneGamma == 1) {
+        // Apply FXAA to the HDR scene texture
+        vec3 hdrResult = FxaaPixelShader(vTexCoord, sceneSampler, inverseScreenSize);
+
+        // Apply exposure control
+        hdrResult *= exposure;
+
+        // Apply ACES Fitted Tone Mapping 
+        vec3 mappedResult = toneMapACESFitted(hdrResult);
+
+        // Apply Gamma Correction for display
+        finalResult = gammaCorrect(mappedResult);
+    } else {
+        finalResult = FxaaPixelShader(vTexCoord, sceneSampler, inverseScreenSize);
+    }
+
+    FragColor = vec4(finalResult, 1.0);
 } 

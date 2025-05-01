@@ -1,10 +1,9 @@
 package org.polygon.test.scenes.normalScene;
 
+import org.joml.Vector3f;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.Model;
-import org.polygon.engine.core.scene.Camera;
-import org.polygon.engine.core.scene.Entity;
-import org.polygon.engine.core.scene.ModelLoader;
+import org.polygon.engine.core.scene.*;
 import org.polygon.engine.core.scene.lights.PointLight;
 import org.polygon.engine.core.scene.lights.SceneLights;
 import org.polygon.engine.core.scene.lights.SpotLight;
@@ -22,39 +21,40 @@ public class NormalTestScene extends BasicScene {
 
     @Override
     public void init() {
-        Model backpack = ModelLoader.loadModel("backpack-model"
-                , "resources/models/backpack/Survival_BackPack_2.fbx"
+        Model damagedHelmet = ModelLoader.loadModel("damagedHelmet-model"
+                , "resources/models/test/DamagedHelmet.gltf"
                 , scene.getTextureCache(), false);
-        scene.addModel(backpack);
+        scene.addModel(damagedHelmet);
 
-        scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_albedo.jpg");
-        backpack.getMaterialList().get(0).setTexturePath("resources/models/backpack/textures/1001_albedo.jpg");
+        damagedHelmet.getMaterialList().get(0).setMetallicMapPath("resources/models/test/Default_metallic.jpg");
+        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getMetallicMapPath());
 
-        scene.getTextureCache().createTexture("resources/models/backpack/textures/1001_normal.png");
-        backpack.getMaterialList().get(0).setNormalMapPath("resources/models/backpack/textures/1001_normal.png");
+        damagedHelmet.getMaterialList().get(0).setRoughnessMapPath("resources/models/test/Default_roughness.jpg");
+        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getRoughnessMapPath());
+
 
         float spacingX = 2.5f;
         float spacingZ = 2.0f;
         float startX = -(5 - 1) * spacingX / 2.0f;
         float startZ = -2.0f;
         float posY = 0.71f;
-        float scale = 0.005f;
+        float scale = 1f;
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 5; col++) {
-                String entityId = "backpack-" + row + "-" + col;
-                Entity backpackEntity = new Entity(entityId, backpack.getModelId());
+                String entityId = "damagedHelmet-" + row + "-" + col;
+                Entity damagedHelmetEntity = new Entity(entityId, damagedHelmet.getModelId());
                 float posX = startX + col * spacingX;
                 float posZ = startZ - row * spacingZ;
-                backpackEntity.setPosition(posX, posY, posZ);
-                backpackEntity.setScale(scale);
-                backpackEntity.setRotation(1, 1, 1, (float)Math.toRadians(180.0));
-                scene.addEntity(backpackEntity);
+                damagedHelmetEntity.setPosition(posX, posY, posZ);
+                damagedHelmetEntity.setScale(scale);
+//                damagedHelmetEntity.setRotation(1, 1, 1, (float)Math.toRadians(180.0));
+                scene.addEntity(damagedHelmetEntity);
             }
         }
 
         SceneLights sceneLights = new SceneLights();
-        sceneLights.getAmbientLight().setIntensity(0.3f);
+        sceneLights.getAmbientLight().setIntensity(0.0f);
         sceneLights.getPointLightList().add(new PointLight());
         PointLight pointLight = sceneLights.getPointLightList().get(0);
         pointLight.setIntensity(1);
@@ -63,11 +63,23 @@ public class NormalTestScene extends BasicScene {
 
         scene.setSceneLights(sceneLights);
         scene.setGuiInstance(new LightTestGUI(scene, "Light Test Scene - light controls"));
+
+//        SkyBox skyBox = new SkyBox("resources/models/skybox/Sphere.fbx", scene.getTextureCache());
+//        scene.getTextureCache().createTexture("resources/models/skybox/sky_water_landscape.jpg");
+//        skyBox.getSkyBoxModel().getMaterialList().get(0).setTexturePath("resources/models/skybox/sky_water_landscape.jpg");
+//        scene.setSkyBox(skyBox);
+
+//        SkyBox skyBox = new SkyBox("resources/models/skybox/kloppenheim_06_puresky_4k.hdr"
+//                , 1024, 32, 128);
+//        scene.setSkyBox(skyBox);
+
+//        scene.setFog(new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.02f));
     }
 
     @Override
     public void input(Window window, long diffTimeMS) {
-        float incrementMovement = diffTimeMS * MOVEMENT_SPEED;
+        int factor = window.isKeyPressed(GLFW_KEY_LEFT_SHIFT) ? 3 : 1;
+        float incrementMovement = diffTimeMS * MOVEMENT_SPEED * factor;
         Camera camera = window.getCurrentScene().getCamera();
         if(window.isKeyPressed(GLFW_KEY_W)) {
             camera.moveForward(incrementMovement);

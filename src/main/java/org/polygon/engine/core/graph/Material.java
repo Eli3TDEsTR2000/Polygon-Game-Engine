@@ -12,11 +12,18 @@ public class Material {
     //      and the Material object will hold a String reference to it called the texturePath.
     private String texturePath;
     private String normalMapPath;
-    public static final Vector4f DEFAULT_COLOR = new Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
+    private String metallicMapPath;
+    private String roughnessMapPath;
+    private String aoMapPath;
+    private String emissiveMapPath;
+    public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
     private Vector4f diffuseColor;
     private Vector4f ambientColor;
     private Vector4f specularColor;
     private float reflectance;
+    private float metallic;
+    private float roughness;
+    private float aoStrength;
 
     public Material() {
         // Initialize the meshList that will hold meshes assigned to the Material object.
@@ -24,6 +31,21 @@ public class Material {
         ambientColor = DEFAULT_COLOR;
         diffuseColor = DEFAULT_COLOR;
         specularColor = DEFAULT_COLOR;
+        reflectance = 0.0f;
+
+        metallic = 0.0f;
+        roughness = 0.5f;
+        aoStrength = 1.0f;
+    }
+
+    public Material(Vector4f albedoColor, float metallic, float roughness, float aoStrength) {
+        this.diffuseColor = albedoColor;
+        this.specularColor = DEFAULT_COLOR;
+        this.reflectance = 0.0f;
+        this.metallic = metallic;
+        this.roughness = roughness;
+        this.aoStrength = aoStrength;
+        meshList = new ArrayList<>();
     }
 
     public void cleanup() {
@@ -37,8 +59,25 @@ public class Material {
     public String getTexturePath() {
         return texturePath;
     }
+
     public String getNormalMapPath() {
         return normalMapPath;
+    }
+
+    public String getMetallicMapPath() {
+        return metallicMapPath;
+    }
+
+    public String getRoughnessMapPath() {
+        return roughnessMapPath;
+    }
+
+    public String getAoMapPath() {
+        return aoMapPath;
+    }
+
+    public String getEmissiveMapPath() {
+        return emissiveMapPath;
     }
 
     public Vector4f getDiffuseColor() {
@@ -57,12 +96,41 @@ public class Material {
         return reflectance;
     }
 
+    public float getMetallic() {
+        return metallic;
+    }
+
+    public float getRoughness() {
+        return roughness;
+    }
+
+    public float getAoStrength() {
+        return aoStrength;
+    }
+
     public void setTexturePath(String texturePath) {
         this.texturePath = texturePath;
         diffuseColor = DEFAULT_COLOR;
     }
+
     public void setNormalMapPath(String normalMapPath) {
         this.normalMapPath = normalMapPath;
+    }
+
+    public void setMetallicMapPath(String metallicMapPath) {
+        this.metallicMapPath = metallicMapPath;
+    }
+
+    public void setRoughnessMapPath(String roughnessMapPath) {
+        this.roughnessMapPath = roughnessMapPath;
+    }
+
+    public void setAoMapPath(String aoMapPath) {
+        this.aoMapPath = aoMapPath;
+    }
+
+    public void setEmissiveMapPath(String emissiveMapPath) {
+        this.emissiveMapPath = emissiveMapPath;
     }
 
     public void setDiffuseColor(Vector4f diffuseColor) {
@@ -79,5 +147,17 @@ public class Material {
 
     public void setReflectance(float reflectance) {
         this.reflectance = reflectance;
+    }
+
+    public void setMetallic(float metallic) {
+        this.metallic = metallic;
+    }
+
+    public void setRoughness(float roughness) {
+        this.roughness = roughness;
+    }
+
+    public void setAoStrength(float aoStrength) {
+        this.aoStrength = aoStrength;
     }
 }

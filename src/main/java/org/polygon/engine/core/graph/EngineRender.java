@@ -70,7 +70,7 @@ public class EngineRender {
 
         unbindIntermediateFBO(window);
         // Post Processing: FXAA Pass, draws to the screen.
-        fxaaRender.render(sceneFBO.getTextureId(), window.getWidth(), window.getHeight());
+        fxaaRender.render(sceneFBO.getTextureId(), window);
 
         // GUI Pass draws to the screen.
         guiRender.render(window);
@@ -98,5 +98,6 @@ public class EngineRender {
         glDepthFunc(GL_LESS);
         glDepthMask(true);
         glDisable(GL_BLEND);
+        glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
     }
 }

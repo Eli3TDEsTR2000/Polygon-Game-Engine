@@ -12,6 +12,8 @@ public class Texture {
     private int textureId;
     private String texturePath;
 
+    public static final Texture BRDF_LUT = new Texture("resources/textures/brdf.png");
+
     public Texture(int width, int height, ByteBuffer bfr) {
         texturePath = "";
         generateTexture(width, height, bfr);
