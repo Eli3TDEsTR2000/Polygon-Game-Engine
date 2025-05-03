@@ -1,10 +1,9 @@
 package org.polygon.engine.core.graph;
 
-import org.joml.*;
+import org.polygon.engine.core.IRender;
 import org.polygon.engine.core.scene.AnimationData;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.Scene;
-import org.polygon.engine.core.scene.lights.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +14,9 @@ import static org.lwjgl.opengl.GL40.*;
 public class SceneRender {
     private ShaderProgram shaderProgram;
     private UniformMap uniformMap;
+    private List<IRender> preRenders;
     public SceneRender() {
+        preRenders = new ArrayList<>();
         // This will hold shader modules
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
         shaderModuleDataList.add(new ShaderProgram.ShaderModuleData(
@@ -61,6 +62,10 @@ public class SceneRender {
         shaderProgram.cleanup();
     }
 
+    public List<IRender> getPreRenders() {
+        return preRenders;
+    }
+
     public void render(Scene scene, GBuffer gBuffer) {
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gBuffer.getGBufferId());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -72,6 +77,12 @@ public class SceneRender {
         glDisable(GL_BLEND);
         glEnable(GL_CULL_FACE); // Standard back-face culling
         glCullFace(GL_BACK);
+
+        if(!preRenders.isEmpty()) {
+            for(IRender render : preRenders) {
+                render.render(scene);
+            }
+        }
 
         shaderProgram.bind();
 

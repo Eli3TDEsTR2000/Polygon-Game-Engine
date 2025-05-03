@@ -1,9 +1,12 @@
 package org.polygon.engine.core.graph;
 
 import org.lwjgl.opengl.GL;
+import org.polygon.engine.core.IRender;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.gui.GuiRender;
 import org.polygon.engine.core.scene.Scene;
+
+import java.util.List;
 
 import static org.lwjgl.opengl.GL40.*;
 
@@ -99,5 +102,9 @@ public class EngineRender {
         glDepthMask(true);
         glDisable(GL_BLEND);
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    }
+
+    public List<IRender> getPreRenders() {
+        return sceneRender.getPreRenders();
     }
 }

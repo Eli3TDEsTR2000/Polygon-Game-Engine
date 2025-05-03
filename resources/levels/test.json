@@ -1,16 +1,16 @@
 {
   "cameraData": {
-    "posX": 7.5858946,
-    "posY": 2.832973,
-    "posZ": -0.9142427,
-    "rotX": 0.26878074,
-    "rotY": -0.25656337
+    "posX": 9.078319,
+    "posY": 4.337751,
+    "posZ": 0.39727628,
+    "rotX": 0.23387404,
+    "rotY": -0.42760596
   },
   "texturePaths": [
     "resources\\models\\test\\Default_emissive.jpg",
     "resources/models/test/Default_roughness.jpg",
-    "resources\\models\\test\\Default_metalRoughness.jpg",
     "resources/models/test/Default_metallic.jpg",
+    "resources\\models\\test\\Default_metalRoughness.jpg",
     "resources\\models\\test\\Default_AO.jpg",
     "resources/models/default/default_texture.png",
     "resources\\models\\test\\Default_normal.jpg",
