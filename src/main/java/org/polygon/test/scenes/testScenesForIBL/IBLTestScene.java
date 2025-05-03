@@ -12,6 +12,7 @@ import org.polygon.engine.core.scene.lights.SpotLight;
 import org.polygon.test.scenes.BasicScene;
 import org.polygon.test.scenes.normalScene.LightTestGUI;
 
+import java.io.IOException;
 import java.lang.Math;
 import java.util.Collection;
 import java.util.List;
@@ -145,6 +146,24 @@ public class IBLTestScene extends BasicScene {
             SkyBox skyBox = new SkyBox("resources/models/skybox/rogland_clear_night_4k.hdr"
                     , 1024, 32, 128);
             scene.setSkyBox(skyBox);
+        }
+
+        if(window.isKeyPressed(GLFW_KEY_L)) {
+            try {
+                SceneSerialization.saveToFile("resources/levels/test.json", scene);
+            } catch(IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+        if(window.isKeyPressed(GLFW_KEY_P)) {
+            try {
+                scene.cleanup();
+                scene = SceneSerialization.loadFromFile("resources/levels/test.json", window.getWidth(), window.getHeight());
+                window.setCurrentScene(scene);
+            } catch(IOException e) {
+                System.err.println(e.getMessage());
+            }
         }
 
         if(window.getMouseInputHandler().isRightButtonPressed()) {

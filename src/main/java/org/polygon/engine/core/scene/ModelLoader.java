@@ -42,7 +42,7 @@ public class ModelLoader {
                 , aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices
                         | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace
                         | aiProcess_LimitBoneWeights | aiProcess_GenBoundingBoxes
-                        | (importAnimations ? 0 : aiProcess_PreTransformVertices));
+                        | (importAnimations ? 0 : aiProcess_PreTransformVertices), importAnimations);
     }
 
     public static Model loadAnimation(String modelId, String modelPath, TextureCache textureCache) {
@@ -52,7 +52,7 @@ public class ModelLoader {
                         | aiProcess_LimitBoneWeights | aiProcess_GenBoundingBoxes);
     }
 
-    private static Model loadModel(String modelId, String modelPath, TextureCache textureCache, int flags) {
+    private static Model loadModel(String modelId, String modelPath, TextureCache textureCache, int flags, boolean hasAnimation) {
         // check if the model path exists
         File file = new File(modelPath);
         if (!file.exists()) {
@@ -115,7 +115,7 @@ public class ModelLoader {
 
         aiReleaseImport(aiScene);
 
-        return new Model(modelId, materialList, animationList);
+        return new Model(modelId, modelPath, materialList, animationList, hasAnimation);
     }
 
     private static Model loadAnimation(String modelId, String modelPath, int flags) {
@@ -147,7 +147,7 @@ public class ModelLoader {
 
         aiReleaseImport(aiScene);
 
-        return new Model(modelId, null, animationList);
+        return new Model(modelId, modelPath, null, animationList, true);
     }
 
     private static Material processMaterial(AIMaterial aiMaterial, String modelDir, TextureCache textureCache) {

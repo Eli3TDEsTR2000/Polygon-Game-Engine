@@ -42,6 +42,10 @@ public class Camera {
         return invViewMatrix;
     }
 
+    public Vector2f getRotation() {
+        return rotation;
+    }
+
     // Recalculate the view matrix with new rotation and position values
     private void applyViewCalculation() {
         viewMatrix.identity()

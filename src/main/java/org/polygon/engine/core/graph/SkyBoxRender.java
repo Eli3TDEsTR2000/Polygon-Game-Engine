@@ -42,12 +42,7 @@ public class SkyBoxRender {
         uniformMap = new UniformMap(shaderProgram.getProgramId());
         uniformMap.createUniform("projectionMatrix");
         uniformMap.createUniform("viewMatrix");
-        uniformMap.createUniform("modelMatrix");
-        uniformMap.createUniform("textSampler");
         uniformMap.createUniform("environmentMapSampler");
-        uniformMap.createUniform("diffuse");
-        uniformMap.createUniform("hasTexture");
-        uniformMap.createUniform("hasIBLData");
     }
 
     public void render(Scene scene) {
@@ -77,7 +72,6 @@ public class SkyBoxRender {
         final int SKYBOX_TEXTURE_UNIT = 5;
 
         if (skyBox.getIBLData() != null && skyBox.getEnvironmentMapTextureId() != -1) {
-            uniformMap.setUniform("hasIBLData", true);
             uniformMap.setUniform("environmentMapSampler", SKYBOX_TEXTURE_UNIT);
 
             int textureId = skyBox.getEnvironmentMapTextureId();
@@ -90,28 +84,6 @@ public class SkyBoxRender {
 
             glBindVertexArray(cubeMesh.getVaoId());
             glDrawElements(GL_TRIANGLES, cubeMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-
-        } else if (skyBox.getSkyBoxModel() != null && skyBox.getSkyBoxEntity() != null) {
-            uniformMap.setUniform("hasIBLData", false);
-            uniformMap.setUniform("textSampler", SKYBOX_TEXTURE_UNIT);
-
-            TextureCache textureCache = scene.getTextureCache();
-
-            for(Material material : skyBox.getSkyBoxModel().getMaterialList()) {
-                Texture texture = textureCache.getTexture(material.getTexturePath());
-                glActiveTexture(GL_TEXTURE0 + SKYBOX_TEXTURE_UNIT);
-                texture.bind();
-
-                uniformMap.setUniform("diffuse", material.getDiffuseColor());
-                uniformMap.setUniform("hasTexture", !texture.getTexturePath().equals(TextureCache.DEFAULT_TEXTURE));
-
-                for(Mesh mesh : material.getMeshList()) {
-                    glBindVertexArray(mesh.getVaoId());
-
-                    uniformMap.setUniform("modelMatrix", skyBox.getSkyBoxEntity().getModelMatrix());
-                    glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-                }
-            }
         }
 
         glBindVertexArray(0);

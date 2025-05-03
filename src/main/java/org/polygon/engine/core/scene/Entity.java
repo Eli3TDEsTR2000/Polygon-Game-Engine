@@ -65,6 +65,11 @@ public class Entity {
         updateModelMatrix();
     }
 
+    public void setRotation(Quaternionf q) {
+        this.rotation.set(q);
+        updateModelMatrix();
+    }
+
     public void setScale(float scale) {
         this.scale = scale;
 

@@ -9,9 +9,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <built.by>Destr2000</built.by>
+        <built.by>AliAhmedZayed</built.by>
         <main.class>org.polygon.test.Main</main.class>
         <imgui-java.version>1.89.0</imgui-java.version>
+        <gson.version>2.13.1</gson.version>
         <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
         <java.version>18</java.version>
         <joml.version>1.10.8</joml.version>
@@ -195,6 +196,11 @@
             <groupId>io.github.spair</groupId>
             <artifactId>imgui-java-binding</artifactId>
             <version>${imgui-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
         </dependency>
 
         <!-- Natives -->

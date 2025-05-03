@@ -2,6 +2,7 @@ package org.polygon.engine.core.graph;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 // This class handles loaded textures to load each texture just once
 public class TextureCache {
@@ -35,5 +36,9 @@ public class TextureCache {
         }
 
         return texture;
+    }
+
+    public Set<String> getTexturePaths() {
+        return textureMap.keySet();
     }
 }

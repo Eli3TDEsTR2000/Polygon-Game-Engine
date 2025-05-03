@@ -13,6 +13,8 @@ public class Scene {
     Projection projection;
     // Holds all Models that are going to be rendered
     private Map<String, Model> modelMap;
+    // The entityMap stores scene entities and is solely used for SceneSerialization and retrieving entities used in the scene.
+    private Map<String, Entity>entityMap;
     // Scene objects can hold a reference to a selectedEntity used for game interactions.
     private Entity selectedEntity;
     // Holds textures used in the scene
@@ -37,6 +39,7 @@ public class Scene {
     public Scene(int width, int height) {
         // Initialize the scene with empty Model map and a projection matrix
         modelMap = new HashMap<>();
+        entityMap = new HashMap<>();
         projection = new Projection(width, height);
         // Initialize the textureCache
         textureCache = new TextureCache();
@@ -51,10 +54,12 @@ public class Scene {
     public void cleanup() {
         // Removes VAO and VBO for each mesh
         modelMap.values().forEach(Model::cleanup);
+        entityMap = null;
         textureCache.cleanup();
         sceneLights = null;
         if(skyBox != null) {
-            skyBox.cleanup();
+            SkyBox.cleanup();
+            skyBox = null;
         }
     }
 
@@ -63,6 +68,7 @@ public class Scene {
         // Ideal for level resets.
         cleanup();
         modelMap = new HashMap<>();
+        entityMap =new HashMap<>();
         textureCache = new TextureCache();
         camera = new Camera();
         bypassLighting = false;
@@ -76,12 +82,16 @@ public class Scene {
                     + entity.getEntityId() + "]");
         }
         model.getEntityList().add(entity);
+        entityMap.put(entity.getEntityId(), entity);
     }
 
     public Map<String, Model> getModelMap() {
         return modelMap;
     }
 
+    public Map<String, Entity> getEntityMap() {
+        return entityMap;
+    }
     public Entity getSelectedEntity() {
         return selectedEntity;
     }

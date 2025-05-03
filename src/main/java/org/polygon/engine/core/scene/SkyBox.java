@@ -21,10 +21,6 @@ import static org.lwjgl.stb.STBImage.stbi_loadf;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 
 public class SkyBox {
-    // The class loads the skybox model and hold an entity reference of the model to be rendered.
-    private Model skyBoxModel;
-    private Entity skyBoxEntity;
-    // placeholder for IBL integration
     private IBLData iblData;
     private int environmentMapTextureId = -1;
     private static final int CUBEMAP_RESOLUTION = 1024;
@@ -48,10 +44,8 @@ public class SkyBox {
             new Matrix4f().lookAt(0.0f, 0.0f, 0.0f,  0.0f,  0.0f, -1.0f, 0.0f, -1.0f,  0.0f)
     };
 
-    public SkyBox(String skyBoxModelPath, TextureCache textureCache) {
-        this.skyBoxModel = ModelLoader.loadModel("skybox-model", skyBoxModelPath, textureCache, false);
-        this.skyBoxEntity = new Entity("skybox-entity", this.skyBoxModel.getModelId());
-        this.iblData = null;
+    public SkyBox(String environmentMapPath) {
+        this(environmentMapPath, CUBEMAP_RESOLUTION, IRRADIANCE_MAP_RESOLUTION, PREFILTER_MAP_RESOLUTION);
     }
 
 
@@ -59,8 +53,6 @@ public class SkyBox {
     public SkyBox(String environmentMapPath, int envMapRes, int irradianceMapRes, int prefilterMapRes) {
         // Create IBLData instance first
         this.iblData = new IBLData(environmentMapPath);
-        this.skyBoxModel = null;
-        this.skyBoxEntity = null;
         int generatedIrradianceMapId = -1;
         int generatedPrefilterMapId = -1;
 
@@ -114,14 +106,6 @@ public class SkyBox {
 
     public int getEnvironmentMapTextureId() {
         return environmentMapTextureId;
-    }
-
-    public Model getSkyBoxModel() {
-        return skyBoxModel;
-    }
-
-    public Entity getSkyBoxEntity() {
-        return skyBoxEntity;
     }
 
     // Static method to initialize shared resources
