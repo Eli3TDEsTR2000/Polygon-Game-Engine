@@ -1,1834 +1,451 @@
 {
   "cameraData": {
-    "posX": 9.078319,
-    "posY": 4.337751,
-    "posZ": 0.39727628,
-    "rotX": 0.23387404,
-    "rotY": -0.42760596
+    "posX": 3.7366138,
+    "posY": 3.223818,
+    "posZ": 0.23873167,
+    "rotX": 0.4555322,
+    "rotY": -1.5952314
   },
   "texturePaths": [
-    "resources\\models\\test\\Default_emissive.jpg",
-    "resources/models/test/Default_roughness.jpg",
-    "resources/models/test/Default_metallic.jpg",
-    "resources\\models\\test\\Default_metalRoughness.jpg",
-    "resources\\models\\test\\Default_AO.jpg",
+    "resources\\models\\sponza\\glTF\\7056944414013900257.jpg",
+    "resources\\models\\sponza\\glTF\\3628158980083700836.jpg",
+    "resources\\models\\sponza\\glTF\\5823059166183034438.jpg",
+    "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
+    "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
+    "resources\\models\\sponza\\glTF\\5061699253647017043.png",
+    "resources\\models\\sponza\\glTF\\10381718147657362067.jpg",
+    "resources\\models\\sponza\\glTF\\10388182081421875623.jpg",
+    "resources\\models\\sponza\\glTF\\3455394979645218238.jpg",
     "resources/models/default/default_texture.png",
-    "resources\\models\\test\\Default_normal.jpg",
-    "resources\\models\\test\\Default_albedo.jpg"
+    "resources\\models\\sponza\\glTF\\2374361008830720677.jpg",
+    "resources\\models\\sponza\\glTF\\2775690330959970771.jpg",
+    "resources\\models\\sponza\\glTF\\4975155472559461469.jpg",
+    "resources\\models\\sponza\\glTF\\white.png",
+    "resources\\models\\sponza\\glTF\\8503262930880235456.jpg",
+    "resources\\models\\sponza\\glTF\\13824894030729245199.jpg",
+    "resources\\models\\sponza\\glTF\\8051790464816141987.jpg",
+    "resources\\models\\sponza\\glTF\\3827035219084910048.jpg",
+    "resources\\models\\sponza\\glTF\\14118779221266351425.jpg",
+    "resources\\models\\sponza\\glTF\\9288698199695299068.jpg",
+    "resources\\models\\sponza\\glTF\\4601176305987539675.jpg",
+    "resources\\models\\sponza\\glTF\\8783994986360286082.jpg",
+    "resources\\models\\sponza\\glTF\\6667038893015345571.jpg",
+    "resources\\models\\sponza\\glTF\\4675343432951571524.jpg",
+    "resources\\models\\sponza\\glTF\\16299174074766089871.jpg",
+    "resources\\models\\sponza\\glTF\\4910669866631290573.jpg",
+    "resources\\models\\sponza\\glTF\\8773302468495022225.jpg",
+    "resources\\models\\sponza\\glTF\\8006627369776289000.png",
+    "resources\\models\\sponza\\glTF\\12501374198249454378.jpg",
+    "resources\\models\\sponza\\glTF\\15295713303328085182.jpg",
+    "resources\\models\\sponza\\glTF\\8114461559286000061.jpg",
+    "resources\\models\\sponza\\glTF\\2411100444841994089.jpg",
+    "resources\\models\\sponza\\glTF\\2185409758123873465.jpg",
+    "resources\\models\\sponza\\glTF\\14267839433702832875.jpg",
+    "resources\\models\\sponza\\glTF\\8750083169368950601.jpg",
+    "resources\\models\\sponza\\glTF\\11968150294050148237.jpg",
+    "resources\\models\\sponza\\glTF\\8481240838833932244.jpg",
+    "resources\\models\\sponza\\glTF\\1219024358953944284.jpg",
+    "resources\\models\\sponza\\glTF\\7268504077753552595.jpg",
+    "resources\\models\\sponza\\glTF\\759203620573749278.jpg",
+    "resources\\models\\sponza\\glTF\\13196865903111448057.jpg",
+    "resources\\models\\sponza\\glTF\\7441062115984513793.jpg",
+    "resources\\models\\sponza\\glTF\\17876391417123941155.jpg",
+    "resources\\models\\sponza\\glTF\\14650633544276105767.jpg",
+    "resources\\models\\sponza\\glTF\\5792855332885324923.jpg",
+    "resources\\models\\sponza\\glTF\\11872827283454512094.jpg",
+    "resources\\models\\sponza\\glTF\\16885566240357350108.jpg",
+    "resources\\models\\sponza\\glTF\\3371964815757888145.jpg",
+    "resources\\models\\sponza\\glTF\\755318871556304029.jpg",
+    "resources\\models\\sponza\\glTF\\11474523244911310074.jpg",
+    "resources\\models\\sponza\\glTF\\2051777328469649772.jpg",
+    "resources\\models\\sponza\\glTF\\6772804448157695701.jpg",
+    "resources\\models\\sponza\\glTF\\7645212358685992005.jpg",
+    "resources\\models\\sponza\\glTF\\2969916736137545357.jpg",
+    "resources\\models\\sponza\\glTF\\15722799267630235092.jpg",
+    "resources\\models\\sponza\\glTF\\16275776544635328252.png",
+    "resources\\models\\sponza\\glTF\\6593109234861095314.jpg",
+    "resources\\models\\sponza\\glTF\\6151467286084645207.jpg",
+    "resources\\models\\sponza\\glTF\\332936164838540657.jpg",
+    "resources\\models\\sponza\\glTF\\6047387724914829168.jpg",
+    "resources\\models\\sponza\\glTF\\17556969131407844942.jpg",
+    "resources\\models\\sponza\\glTF\\8747919177698443163.jpg",
+    "resources\\models\\sponza\\glTF\\14170708867020035030.jpg",
+    "resources\\models\\sponza\\glTF\\9916269861720640319.jpg",
+    "resources\\models\\sponza\\glTF\\11490520546946913238.jpg",
+    "resources\\models\\sponza\\glTF\\2299742237651021498.jpg",
+    "resources\\models\\sponza\\glTF\\715093869573992647.jpg",
+    "resources\\models\\sponza\\glTF\\4871783166746854860.jpg",
+    "resources\\models\\sponza\\glTF\\4477655471536070370.jpg",
+    "resources\\models\\sponza\\glTF\\13982482287905699490.jpg"
   ],
   "modelDataList": [
     {
-      "modelId": "sphere-model9-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
+      "modelId": "sponza",
+      "modelPath": "resources/models/sponza/glTF/Sponza.gltf",
       "hasAnimation": false,
       "materials": [
         {
-          "metallic": 0.9,
-          "roughness": 0.9,
+          "texturePath": "resources\\models\\sponza\\glTF\\5061699253647017043.png",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\8773302468495022225.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\11872827283454512094.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\11872827283454512094.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
             1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.9,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.6,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.8,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.9,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.1,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.6,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.2,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.3,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.8,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.1,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.6,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.2,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.3,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.8,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model9-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.9,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.1,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.2,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.3,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model5-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.5,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model1-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.1,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.8,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.9,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.8,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.9,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.6,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.1,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.6,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.2,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model6-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.6,
-          "roughness": 0.3,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.1,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.2,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model2-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.2,
-          "roughness": 0.3,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.7,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.7,
-          "roughness": 0.8,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.7,
-          "roughness": 0.9,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.7,
-          "roughness": 0.3,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.8,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.7,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.9,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.7,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.7,
-          "roughness": 0.6,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.3,
-          "roughness": 0.3,
+          "texturePath": "resources\\models\\sponza\\glTF\\8006627369776289000.png",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\12501374198249454378.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\715093869573992647.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\715093869573992647.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.7,
-          "roughness": 0.0,
+          "texturePath": "resources\\models\\sponza\\glTF\\7268504077753552595.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\4477655471536070370.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\8503262930880235456.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\8503262930880235456.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.7,
-          "roughness": 0.1,
+          "texturePath": "resources\\models\\sponza\\glTF\\8750083169368950601.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\13982482287905699490.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\16885566240357350108.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\16885566240357350108.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.6,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model7-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.7,
-          "roughness": 0.2,
+          "texturePath": "resources\\models\\sponza\\glTF\\5792855332885324923.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\16299174074766089871.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\11968150294050148237.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\11968150294050148237.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.3,
-          "roughness": 0.1,
+          "texturePath": "resources\\models\\sponza\\glTF\\14650633544276105767.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\2051777328469649772.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\4871783166746854860.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\4871783166746854860.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model3-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.3,
-          "roughness": 0.2,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.8,
-          "roughness": 0.6,
+          "texturePath": "resources\\models\\sponza\\glTF\\15295713303328085182.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\10388182081421875623.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\9916269861720640319.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\9916269861720640319.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.8,
-          "roughness": 0.7,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.8,
-          "roughness": 0.8,
+          "texturePath": "resources\\models\\sponza\\glTF\\6047387724914829168.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\15722799267630235092.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\8051790464816141987.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\8051790464816141987.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.8,
-          "roughness": 0.9,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.6,
+          "texturePath": "resources\\models\\sponza\\glTF\\5823059166183034438.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\14267839433702832875.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\13824894030729245199.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\13824894030729245199.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.8,
-          "roughness": 0.2,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.7,
+          "texturePath": "resources\\models\\sponza\\glTF\\7441062115984513793.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\6667038893015345571.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\8114461559286000061.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\8114461559286000061.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.8,
-          "roughness": 0.3,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.8,
+          "texturePath": "resources\\models\\sponza\\glTF\\11490520546946913238.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\3628158980083700836.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\3455394979645218238.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\3455394979645218238.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.8,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.9,
+          "texturePath": "resources\\models\\sponza\\glTF\\6151467286084645207.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\7645212358685992005.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\8783994986360286082.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\8783994986360286082.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
-            1.0,
             1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.8,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-6",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
+          "texturePath": "resources\\models\\sponza\\glTF\\white.png",
           "metallic": 0.0,
-          "roughness": 0.6,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.2,
+          "texturePath": "resources\\models\\sponza\\glTF\\4975155472559461469.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\2299742237651021498.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\3371964815757888145.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\3371964815757888145.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-7",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.0,
-          "roughness": 0.7,
+          "texturePath": "resources\\models\\sponza\\glTF\\4675343432951571524.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\7056944414013900257.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.3,
+          "texturePath": "resources\\models\\sponza\\glTF\\2775690330959970771.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\2374361008830720677.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-8",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.0,
-          "roughness": 0.8,
+          "texturePath": "resources\\models\\sponza\\glTF\\2185409758123873465.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\332936164838540657.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.4,
+          "texturePath": "resources\\models\\sponza\\glTF\\17876391417123941155.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\6593109234861095314.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.8,
-          "roughness": 0.0,
+          "texturePath": "resources\\models\\sponza\\glTF\\11474523244911310074.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\4601176305987539675.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-9",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.0,
-          "roughness": 0.9,
+          "texturePath": "resources\\models\\sponza\\glTF\\9288698199695299068.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\4910669866631290573.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.4,
-          "roughness": 0.5,
+          "texturePath": "resources\\models\\sponza\\glTF\\16275776544635328252.png",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\14170708867020035030.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\1219024358953944284.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\1219024358953944284.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model8-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.8,
-          "roughness": 0.1,
+          "texturePath": "resources\\models\\sponza\\glTF\\755318871556304029.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\3827035219084910048.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\2411100444841994089.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\2411100444841994089.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-2",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.0,
-          "roughness": 0.2,
+          "texturePath": "resources\\models\\sponza\\glTF\\8481240838833932244.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\10381718147657362067.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\17556969131407844942.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\17556969131407844942.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-3",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.0,
-          "roughness": 0.3,
+          "texturePath": "resources\\models\\sponza\\glTF\\6772804448157695701.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\759203620573749278.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\13196865903111448057.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\13196865903111448057.jpg",
+          "metallic": 1.0,
+          "roughness": 1.0,
           "aoStrength": 1.0,
           "diffuseColor": [
-            0.0,
+            1.0,
             1.0,
             1.0,
             1.0
           ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-4",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
+        },
         {
-          "metallic": 0.0,
-          "roughness": 0.4,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.4,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-5",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.0,
-          "roughness": 0.5,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model4-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.4,
-          "roughness": 0.1,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-0",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.0,
-          "roughness": 0.0,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "sphere-model0-1",
-      "modelPath": "resources/models/sphere/sphere.fbx",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "metallic": 0.0,
-          "roughness": 0.1,
-          "aoStrength": 1.0,
-          "diffuseColor": [
-            0.0,
-            1.0,
-            1.0,
-            1.0
-          ]
-        }
-      ]
-    },
-    {
-      "modelId": "damagedHelmet-model",
-      "modelPath": "resources/models/test/DamagedHelmet.gltf",
-      "hasAnimation": false,
-      "materials": [
-        {
-          "texturePath": "resources\\models\\test\\Default_albedo.jpg",
-          "normalMapPath": "resources\\models\\test\\Default_normal.jpg",
-          "metallicMapPath": "resources/models/test/Default_metallic.jpg",
-          "roughnessMapPath": "resources/models/test/Default_roughness.jpg",
-          "aoMapPath": "resources\\models\\test\\Default_AO.jpg",
-          "emissiveMapPath": "resources\\models\\test\\Default_emissive.jpg",
+          "texturePath": "resources\\models\\sponza\\glTF\\2969916736137545357.jpg",
+          "normalMapPath": "resources\\models\\sponza\\glTF\\14118779221266351425.jpg",
+          "metallicMapPath": "resources\\models\\sponza\\glTF\\8747919177698443163.jpg",
+          "roughnessMapPath": "resources\\models\\sponza\\glTF\\8747919177698443163.jpg",
           "metallic": 1.0,
           "roughness": 1.0,
           "aoStrength": 1.0,
@@ -1855,1612 +472,12 @@
   ],
   "entityDataList": [
     {
-      "entityId": "sphere-6-9",
-      "modelId": "sphere-model6-9",
+      "entityId": "sponza-main",
+      "modelId": "sponza",
       "position": [
-        -3.7999992,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
         0.0,
         0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-7",
-      "modelId": "sphere-model6-7",
-      "position": [
-        -3.7999992,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-8",
-      "modelId": "sphere-model6-8",
-      "position": [
-        -3.7999992,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-5",
-      "modelId": "sphere-model2-5",
-      "position": [
-        5.4,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-1",
-      "modelId": "sphere-model6-1",
-      "position": [
-        -3.7999992,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-6",
-      "modelId": "sphere-model2-6",
-      "position": [
-        5.4,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-2",
-      "modelId": "sphere-model6-2",
-      "position": [
-        -3.7999992,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-3",
-      "modelId": "sphere-model2-3",
-      "position": [
-        5.4,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-4",
-      "modelId": "sphere-model2-4",
-      "position": [
-        5.4,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-0",
-      "modelId": "sphere-model6-0",
-      "position": [
-        -3.7999992,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-9",
-      "modelId": "sphere-model2-9",
-      "position": [
-        5.4,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-5",
-      "modelId": "sphere-model6-5",
-      "position": [
-        -3.7999992,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-6",
-      "modelId": "sphere-model6-6",
-      "position": [
-        -3.7999992,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-7",
-      "modelId": "sphere-model2-7",
-      "position": [
-        5.4,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-3",
-      "modelId": "sphere-model6-3",
-      "position": [
-        -3.7999992,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-8",
-      "modelId": "sphere-model2-8",
-      "position": [
-        5.4,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-6-4",
-      "modelId": "sphere-model6-4",
-      "position": [
-        -3.7999992,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-1",
-      "modelId": "sphere-model2-1",
-      "position": [
-        5.4,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-2",
-      "modelId": "sphere-model2-2",
-      "position": [
-        5.4,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-2-0",
-      "modelId": "sphere-model2-0",
-      "position": [
-        5.4,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-9",
-      "modelId": "sphere-model7-9",
-      "position": [
-        -6.1000004,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-8",
-      "modelId": "sphere-model7-8",
-      "position": [
-        -6.1000004,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-7",
-      "modelId": "sphere-model7-7",
-      "position": [
-        -6.1000004,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-6",
-      "modelId": "sphere-model7-6",
-      "position": [
-        -6.1000004,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-4",
-      "modelId": "sphere-model3-4",
-      "position": [
-        3.1000004,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-1",
-      "modelId": "sphere-model7-1",
-      "position": [
-        -6.1000004,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-5",
-      "modelId": "sphere-model3-5",
-      "position": [
-        3.1000004,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-0",
-      "modelId": "sphere-model7-0",
-      "position": [
-        -6.1000004,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-2",
-      "modelId": "sphere-model3-2",
-      "position": [
-        3.1000004,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-3",
-      "modelId": "sphere-model3-3",
-      "position": [
-        3.1000004,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-8",
-      "modelId": "sphere-model3-8",
-      "position": [
-        3.1000004,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-5",
-      "modelId": "sphere-model7-5",
-      "position": [
-        -6.1000004,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-9",
-      "modelId": "sphere-model3-9",
-      "position": [
-        3.1000004,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-4",
-      "modelId": "sphere-model7-4",
-      "position": [
-        -6.1000004,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-6",
-      "modelId": "sphere-model3-6",
-      "position": [
-        3.1000004,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-3",
-      "modelId": "sphere-model7-3",
-      "position": [
-        -6.1000004,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-7",
-      "modelId": "sphere-model3-7",
-      "position": [
-        3.1000004,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-7-2",
-      "modelId": "sphere-model7-2",
-      "position": [
-        -6.1000004,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-0",
-      "modelId": "sphere-model3-0",
-      "position": [
-        3.1000004,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-3-1",
-      "modelId": "sphere-model3-1",
-      "position": [
-        3.1000004,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-8",
-      "modelId": "sphere-model8-8",
-      "position": [
-        -8.4,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-7",
-      "modelId": "sphere-model8-7",
-      "position": [
-        -8.4,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-9",
-      "modelId": "sphere-model4-9",
-      "position": [
-        0.8000002,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-6",
-      "modelId": "sphere-model8-6",
-      "position": [
-        -8.4,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-5",
-      "modelId": "sphere-model8-5",
-      "position": [
-        -8.4,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-9",
-      "modelId": "sphere-model8-9",
-      "position": [
-        -8.4,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "damagedHelmet-01",
-      "modelId": "damagedHelmet-model",
-      "position": [
-        0.0,
-        0.0,
-        -5.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-7",
-      "modelId": "sphere-model0-7",
-      "position": [
-        10.0,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-3",
-      "modelId": "sphere-model4-3",
-      "position": [
-        0.8000002,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-0",
-      "modelId": "sphere-model8-0",
-      "position": [
-        -8.4,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-8",
-      "modelId": "sphere-model0-8",
-      "position": [
-        10.0,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-4",
-      "modelId": "sphere-model4-4",
-      "position": [
-        0.8000002,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-5",
-      "modelId": "sphere-model0-5",
-      "position": [
-        10.0,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-1",
-      "modelId": "sphere-model4-1",
-      "position": [
-        0.8000002,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-6",
-      "modelId": "sphere-model0-6",
-      "position": [
-        10.0,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-2",
-      "modelId": "sphere-model4-2",
-      "position": [
-        0.8000002,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-7",
-      "modelId": "sphere-model4-7",
-      "position": [
-        0.8000002,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-4",
-      "modelId": "sphere-model8-4",
-      "position": [
-        -8.4,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-8",
-      "modelId": "sphere-model4-8",
-      "position": [
-        0.8000002,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-3",
-      "modelId": "sphere-model8-3",
-      "position": [
-        -8.4,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-9",
-      "modelId": "sphere-model0-9",
-      "position": [
-        10.0,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-5",
-      "modelId": "sphere-model4-5",
-      "position": [
-        0.8000002,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-2",
-      "modelId": "sphere-model8-2",
-      "position": [
-        -8.4,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-6",
-      "modelId": "sphere-model4-6",
-      "position": [
-        0.8000002,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-8-1",
-      "modelId": "sphere-model8-1",
-      "position": [
-        -8.4,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-0",
-      "modelId": "sphere-model0-0",
-      "position": [
-        10.0,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-3",
-      "modelId": "sphere-model0-3",
-      "position": [
-        10.0,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-4",
-      "modelId": "sphere-model0-4",
-      "position": [
-        10.0,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-4-0",
-      "modelId": "sphere-model4-0",
-      "position": [
-        0.8000002,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-1",
-      "modelId": "sphere-model0-1",
-      "position": [
-        10.0,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-0-2",
-      "modelId": "sphere-model0-2",
-      "position": [
-        10.0,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-7",
-      "modelId": "sphere-model9-7",
-      "position": [
-        -10.699999,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-6",
-      "modelId": "sphere-model9-6",
-      "position": [
-        -10.699999,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-8",
-      "modelId": "sphere-model5-8",
-      "position": [
-        -1.5,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-5",
-      "modelId": "sphere-model9-5",
-      "position": [
-        -10.699999,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-9",
-      "modelId": "sphere-model5-9",
-      "position": [
-        -1.5,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-4",
-      "modelId": "sphere-model9-4",
-      "position": [
-        -10.699999,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-9",
-      "modelId": "sphere-model9-9",
-      "position": [
-        -10.699999,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-8",
-      "modelId": "sphere-model9-8",
-      "position": [
-        -10.699999,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-6",
-      "modelId": "sphere-model1-6",
-      "position": [
-        7.7,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-2",
-      "modelId": "sphere-model5-2",
-      "position": [
-        -1.5,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-7",
-      "modelId": "sphere-model1-7",
-      "position": [
-        7.7,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-3",
-      "modelId": "sphere-model5-3",
-      "position": [
-        -1.5,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-4",
-      "modelId": "sphere-model1-4",
-      "position": [
-        7.7,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-0",
-      "modelId": "sphere-model5-0",
-      "position": [
-        -1.5,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-5",
-      "modelId": "sphere-model1-5",
-      "position": [
-        7.7,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-1",
-      "modelId": "sphere-model5-1",
-      "position": [
-        -1.5,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-6",
-      "modelId": "sphere-model5-6",
-      "position": [
-        -1.5,
-        10.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-3",
-      "modelId": "sphere-model9-3",
-      "position": [
-        -10.699999,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-7",
-      "modelId": "sphere-model5-7",
-      "position": [
-        -1.5,
-        12.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-2",
-      "modelId": "sphere-model9-2",
-      "position": [
-        -10.699999,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-8",
-      "modelId": "sphere-model1-8",
-      "position": [
-        7.7,
-        15.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-4",
-      "modelId": "sphere-model5-4",
-      "position": [
-        -1.5,
-        5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-1",
-      "modelId": "sphere-model9-1",
-      "position": [
-        -10.699999,
-        -2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-9",
-      "modelId": "sphere-model1-9",
-      "position": [
-        7.7,
-        17.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-5-5",
-      "modelId": "sphere-model5-5",
-      "position": [
-        -1.5,
-        7.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-9-0",
-      "modelId": "sphere-model9-0",
-      "position": [
-        -10.699999,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-2",
-      "modelId": "sphere-model1-2",
-      "position": [
-        7.7,
-        0.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-3",
-      "modelId": "sphere-model1-3",
-      "position": [
-        7.7,
-        2.5,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-0",
-      "modelId": "sphere-model1-0",
-      "position": [
-        7.7,
-        -5.0,
-        -20.0
-      ],
-      "rotation": [
-        0.0,
-        0.0,
-        0.0,
-        1.0
-      ],
-      "scale": 1.0
-    },
-    {
-      "entityId": "sphere-1-1",
-      "modelId": "sphere-model1-1",
-      "position": [
-        7.7,
-        -2.5,
-        -20.0
+        0.0
       ],
       "rotation": [
         0.0,
@@ -3478,7 +495,7 @@
         1.0,
         1.0
       ],
-      "intensity": 0.1
+      "intensity": 0.07
     },
     "directionalLightData": {
       "color": [
@@ -3486,24 +503,24 @@
         1.0,
         1.0
       ],
-      "intensity": 1.0,
+      "intensity": 1.05,
       "direction": [
-        0.0,
-        1.0,
-        0.0
+        1.69,
+        2.65,
+        0.37
       ]
     },
     "pointLightDataList": [
       {
         "color": [
           1.0,
-          1.0,
-          1.0
+          0.0,
+          0.0
         ],
-        "intensity": 1.0,
+        "intensity": 15.97,
         "position": [
           0.0,
-          0.0,
+          1.0,
           0.0
         ],
         "attenuation": {
@@ -3511,36 +528,10 @@
           "linear": 0.0,
           "exponent": 1.0
         },
-        "radius": 7.1554174
+        "radius": 8.43
       }
     ],
-    "spotLightDataList": [
-      {
-        "color": [
-          1.0,
-          1.0,
-          1.0
-        ],
-        "intensity": 0.0,
-        "position": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "attenuation": {
-          "constant": 0.0,
-          "linear": 0.0,
-          "exponent": 1.0
-        },
-        "coneDirection": [
-          0.0,
-          0.0,
-          0.0
-        ],
-        "cutOff": 0.9659258,
-        "radius": 7.1554174
-      }
-    ]
+    "spotLightDataList": []
   },
   "fogData": {
     "active": false,
@@ -3550,6 +541,5 @@
       0.0
     ],
     "density": 0.0
-  },
-  "skyBoxEnvironmentMapPath": "resources/models/skybox/newport_loft.hdr"
+  }
 }

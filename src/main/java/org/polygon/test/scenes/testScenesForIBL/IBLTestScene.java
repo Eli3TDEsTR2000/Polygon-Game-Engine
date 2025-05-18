@@ -148,23 +148,23 @@ public class IBLTestScene extends BasicScene {
             scene.setSkyBox(skyBox);
         }
 
-//        if(window.isKeyPressed(GLFW_KEY_L)) {
-//            try {
-//                SceneSerialization.saveToFile("resources/levels/test.json", scene);
-//            } catch(IOException e) {
-//                System.err.println(e.getMessage());
-//            }
-//        }
-//
-//        if(window.isKeyPressed(GLFW_KEY_P)) {
-//            try {
-//                scene.cleanup();
-//                scene = SceneSerialization.loadFromFile("resources/levels/test.json", window.getWidth(), window.getHeight());
-//                window.setCurrentScene(scene);
-//            } catch(IOException e) {
-//                System.err.println(e.getMessage());
-//            }
-//        }
+        if(window.isKeyPressed(GLFW_KEY_L)) {
+            try {
+                SceneSerialization.saveToFile("resources/levels/test.json", scene);
+            } catch(IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+        if(window.isKeyPressed(GLFW_KEY_P)) {
+            try {
+                scene.cleanup();
+                scene = SceneSerialization.loadFromFile("resources/levels/test.json", window.getWidth(), window.getHeight());
+                window.setCurrentScene(scene);
+            } catch(IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
 
         if(window.getMouseInputHandler().isRightButtonPressed()) {
             camera.addRotation(
