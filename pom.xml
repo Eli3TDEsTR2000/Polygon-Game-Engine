@@ -18,6 +18,12 @@
         <joml.version>1.10.8</joml.version>
         <joml-primitives.version>1.10.4</joml-primitives.version>
         <lwjgl.version>3.3.6</lwjgl.version>
+        <libbulletjme.version>22.0.1</libbulletjme.version>
+        <!-- Sp, Dp for precision -->
+        <!-- Debug, Release for build type -->
+        <!-- add Mt for multithreading : SpMtDebug -->
+        <libbulletjme.mode>SpDebug</libbulletjme.mode>
+        <snaploader.version>1.0.0-stable</snaploader.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.8.0</maven-dependency-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
@@ -118,6 +124,7 @@
             </activation>
             <properties>
                 <native.target>natives-windows</native.target>
+                <native.target.libbulletjme>Windows64</native.target.libbulletjme>
             </properties>
         </profile>
         <profile>
@@ -129,6 +136,7 @@
             </activation>
             <properties>
                 <native.target>natives-linux</native.target>
+                <native.target.libbulletjme>Linux64</native.target.libbulletjme>
             </properties>
         </profile>
         <profile>
@@ -140,6 +148,7 @@
             </activation>
             <properties>
                 <native.target>natives-macos</native.target>
+                <native.target.libbulletjme>MacOSX64</native.target.libbulletjme>
             </properties>
         </profile>
     </profiles>
@@ -202,6 +211,16 @@
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.stephengold</groupId>
+            <artifactId>Libbulletjme-Windows64</artifactId>
+            <version>${libbulletjme.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.electrostat-lab</groupId>
+            <artifactId>snaploader</artifactId>
+            <version>${snaploader.version}</version>
+        </dependency>
 
         <!-- Natives -->
         <dependency>
@@ -250,6 +269,13 @@
             <groupId>io.github.spair</groupId>
             <artifactId>imgui-java-${native.target}</artifactId>
             <version>${imgui-java.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stephengold</groupId>
+            <artifactId>Libbulletjme-${native.target.libbulletjme}</artifactId>
+            <version>${libbulletjme.version}</version>
+            <classifier>${libbulletjme.mode}</classifier>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

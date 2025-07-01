@@ -1,36 +1,38 @@
 {
   "cameraData": {
-    "posX": 3.7366138,
-    "posY": 3.223818,
-    "posZ": 0.23873167,
-    "rotX": 0.4555322,
-    "rotY": -1.5952314
+    "posX": -6.6331534,
+    "posY": 49.481842,
+    "posZ": 110.41958,
+    "rotX": 0.24783707,
+    "rotY": 1.715656
   },
   "texturePaths": [
-    "resources\\models\\sponza\\glTF\\7056944414013900257.jpg",
+    "resources/models/backpack/1001_normal.png",
     "resources\\models\\sponza\\glTF\\3628158980083700836.jpg",
+    "resources\\models\\sponza\\glTF\\7056944414013900257.jpg",
     "resources\\models\\sponza\\glTF\\5823059166183034438.jpg",
     "resources\\models\\sponza\\glTF\\466164707995436622.jpg",
     "resources\\models\\sponza\\glTF\\7815564343179553343.jpg",
     "resources\\models\\sponza\\glTF\\5061699253647017043.png",
-    "resources\\models\\sponza\\glTF\\10381718147657362067.jpg",
     "resources\\models\\sponza\\glTF\\10388182081421875623.jpg",
+    "resources\\models\\sponza\\glTF\\10381718147657362067.jpg",
     "resources\\models\\sponza\\glTF\\3455394979645218238.jpg",
     "resources/models/default/default_texture.png",
     "resources\\models\\sponza\\glTF\\2374361008830720677.jpg",
-    "resources\\models\\sponza\\glTF\\2775690330959970771.jpg",
     "resources\\models\\sponza\\glTF\\4975155472559461469.jpg",
+    "resources\\models\\sponza\\glTF\\2775690330959970771.jpg",
     "resources\\models\\sponza\\glTF\\white.png",
     "resources\\models\\sponza\\glTF\\8503262930880235456.jpg",
     "resources\\models\\sponza\\glTF\\13824894030729245199.jpg",
     "resources\\models\\sponza\\glTF\\8051790464816141987.jpg",
     "resources\\models\\sponza\\glTF\\3827035219084910048.jpg",
     "resources\\models\\sponza\\glTF\\14118779221266351425.jpg",
-    "resources\\models\\sponza\\glTF\\9288698199695299068.jpg",
-    "resources\\models\\sponza\\glTF\\4601176305987539675.jpg",
     "resources\\models\\sponza\\glTF\\8783994986360286082.jpg",
+    "resources\\models\\sponza\\glTF\\4601176305987539675.jpg",
+    "resources\\models\\sponza\\glTF\\9288698199695299068.jpg",
     "resources\\models\\sponza\\glTF\\6667038893015345571.jpg",
     "resources\\models\\sponza\\glTF\\4675343432951571524.jpg",
+    "D:\\Polygon-Game-Engine\\resources\\models\\backpack\\1001_albedo.jpg",
     "resources\\models\\sponza\\glTF\\16299174074766089871.jpg",
     "resources\\models\\sponza\\glTF\\4910669866631290573.jpg",
     "resources\\models\\sponza\\glTF\\8773302468495022225.jpg",
@@ -39,8 +41,8 @@
     "resources\\models\\sponza\\glTF\\15295713303328085182.jpg",
     "resources\\models\\sponza\\glTF\\8114461559286000061.jpg",
     "resources\\models\\sponza\\glTF\\2411100444841994089.jpg",
-    "resources\\models\\sponza\\glTF\\2185409758123873465.jpg",
     "resources\\models\\sponza\\glTF\\14267839433702832875.jpg",
+    "resources\\models\\sponza\\glTF\\2185409758123873465.jpg",
     "resources\\models\\sponza\\glTF\\8750083169368950601.jpg",
     "resources\\models\\sponza\\glTF\\11968150294050148237.jpg",
     "resources\\models\\sponza\\glTF\\8481240838833932244.jpg",
@@ -50,18 +52,19 @@
     "resources\\models\\sponza\\glTF\\13196865903111448057.jpg",
     "resources\\models\\sponza\\glTF\\7441062115984513793.jpg",
     "resources\\models\\sponza\\glTF\\17876391417123941155.jpg",
-    "resources\\models\\sponza\\glTF\\14650633544276105767.jpg",
     "resources\\models\\sponza\\glTF\\5792855332885324923.jpg",
+    "resources\\models\\sponza\\glTF\\14650633544276105767.jpg",
     "resources\\models\\sponza\\glTF\\11872827283454512094.jpg",
     "resources\\models\\sponza\\glTF\\16885566240357350108.jpg",
     "resources\\models\\sponza\\glTF\\3371964815757888145.jpg",
     "resources\\models\\sponza\\glTF\\755318871556304029.jpg",
-    "resources\\models\\sponza\\glTF\\11474523244911310074.jpg",
     "resources\\models\\sponza\\glTF\\2051777328469649772.jpg",
+    "resources\\models\\sponza\\glTF\\11474523244911310074.jpg",
     "resources\\models\\sponza\\glTF\\6772804448157695701.jpg",
     "resources\\models\\sponza\\glTF\\7645212358685992005.jpg",
-    "resources\\models\\sponza\\glTF\\2969916736137545357.jpg",
     "resources\\models\\sponza\\glTF\\15722799267630235092.jpg",
+    "resources\\models\\sponza\\glTF\\2969916736137545357.jpg",
+    "resources/models/backpack/1001_metallic.jpg",
     "resources\\models\\sponza\\glTF\\16275776544635328252.png",
     "resources\\models\\sponza\\glTF\\6593109234861095314.jpg",
     "resources\\models\\sponza\\glTF\\6151467286084645207.jpg",
@@ -80,7 +83,28 @@
   ],
   "modelDataList": [
     {
-      "modelId": "sponza",
+      "modelId": "test2",
+      "modelPath": "resources/models/backpack/Survival_BackPack_2.fbx",
+      "hasAnimation": false,
+      "materials": [
+        {
+          "texturePath": "D:\\Polygon-Game-Engine\\resources\\models\\backpack\\1001_albedo.jpg",
+          "normalMapPath": "resources/models/backpack/1001_normal.png",
+          "metallicMapPath": "resources/models/backpack/1001_metallic.jpg",
+          "metallic": 0.0,
+          "roughness": 0.5,
+          "aoStrength": 1.0,
+          "diffuseColor": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      ]
+    },
+    {
+      "modelId": "testModel",
       "modelPath": "resources/models/sponza/glTF/Sponza.gltf",
       "hasAnimation": false,
       "materials": [
@@ -472,11 +496,43 @@
   ],
   "entityDataList": [
     {
-      "entityId": "sponza-main",
-      "modelId": "sponza",
+      "entityId": "test2",
+      "modelId": "testModel",
       "position": [
         0.0,
         0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": 1.0
+    },
+    {
+      "entityId": "test3",
+      "modelId": "test2",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "scale": 0.26
+    },
+    {
+      "entityId": "sponza",
+      "modelId": "testModel",
+      "position": [
+        56.7,
+        2.3,
         0.0
       ],
       "rotation": [
@@ -495,7 +551,7 @@
         1.0,
         1.0
       ],
-      "intensity": 0.07
+      "intensity": 0.11
     },
     "directionalLightData": {
       "color": [
@@ -503,34 +559,14 @@
         1.0,
         1.0
       ],
-      "intensity": 1.05,
+      "intensity": 1.51,
       "direction": [
-        1.69,
-        2.65,
-        0.37
+        0.55,
+        1.54,
+        6.81
       ]
     },
-    "pointLightDataList": [
-      {
-        "color": [
-          1.0,
-          0.0,
-          0.0
-        ],
-        "intensity": 15.97,
-        "position": [
-          0.0,
-          1.0,
-          0.0
-        ],
-        "attenuation": {
-          "constant": 0.0,
-          "linear": 0.0,
-          "exponent": 1.0
-        },
-        "radius": 8.43
-      }
-    ],
+    "pointLightDataList": [],
     "spotLightDataList": []
   },
   "fogData": {
@@ -541,5 +577,6 @@
       0.0
     ],
     "density": 0.0
-  }
+  },
+  "skyBoxEnvironmentMapPath": "resources/models/skybox/newport_loft.hdr"
 }

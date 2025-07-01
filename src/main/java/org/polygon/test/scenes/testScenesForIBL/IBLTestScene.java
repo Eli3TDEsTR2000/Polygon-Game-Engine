@@ -119,8 +119,7 @@ public class IBLTestScene extends BasicScene {
         }
 
         if(window.isKeyPressed(GLFW_KEY_1)) {
-            SkyBox skyBox = new SkyBox("resources/models/skybox/newport_loft.hdr"
-                    , 1024, 32, 128);
+            SkyBox skyBox = null;
             scene.setSkyBox(skyBox);
         }
 

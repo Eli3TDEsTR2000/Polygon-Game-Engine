@@ -22,7 +22,7 @@ public class GameScript implements IGameLogic {
 
     @Override
     public void init(Window window, EngineRender render) {
-        window.setGuiInstance(new performanceGUI(true));
+        window.setGuiInstance(new PerformanceGUI(true));
         scenes.add(new CubeScene(window));
         scenes.add(new NormalTestScene(window));
         scenes.add(new IBLTestScene(window));
