@@ -1,9 +1,14 @@
 package org.polygon.engine.core.graph;
 
 import org.lwjgl.opengl.GL;
+import org.polygon.engine.core.IRenderPass;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.gui.GuiRender;
 import org.polygon.engine.core.scene.Scene;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL40.*;
 
@@ -16,6 +21,14 @@ public class EngineRender {
     private SkyBoxRender skyBoxRender;
     private SceneFBO sceneFBO;
     private FXAARender fxaaRender;
+
+    public enum RenderStage {
+        PRE_SHADOW,
+        PRE_GEOMETRY,
+        POST_LIGHTING,
+    }
+
+    private Map <RenderStage, List<IRenderPass>> renderPasses;
 
     public EngineRender(Window window) {
         // This line is critical for LWJGL's interoperation with GLFW's
@@ -36,6 +49,7 @@ public class EngineRender {
         guiRender = new GuiRender(window);
         skyBoxRender = new SkyBoxRender();
         fxaaRender = new FXAARender();
+        renderPasses = new HashMap<>();
     }
 
     public void cleanup() {
@@ -54,8 +68,14 @@ public class EngineRender {
 
         Scene scene = window.getCurrentScene();
 
+        // PRE_SHADOW Pass
+        renderStage(RenderStage.PRE_SHADOW, scene);
+
         // Shadow Pass
         shadowRender.render(scene);
+
+        // PRE_GEOMETRY Pass
+        renderStage(RenderStage.PRE_GEOMETRY, scene);
 
         // Geometry Pass, draws to the G-Buffer FBO.
         sceneRender.render(scene, gBuffer);
@@ -69,6 +89,10 @@ public class EngineRender {
         skyBoxRender.render(scene);
 
         unbindIntermediateFBO(window);
+
+        // POST_LIGHTING Pass
+        renderStage(RenderStage.POST_LIGHTING, scene);
+
         // Post Processing: FXAA Pass, draws to the screen.
         fxaaRender.render(sceneFBO.getTextureId(), window);
 
@@ -99,5 +123,17 @@ public class EngineRender {
         glDepthMask(true);
         glDisable(GL_BLEND);
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    }
+
+    public void addRenderPass(RenderStage stage, IRenderPass renderPass) {
+        this.renderPasses.get(stage).add(renderPass);
+    }
+
+    private void renderStage (RenderStage stage, Scene scene) {
+        if(renderPasses.get(stage) != null) {
+            for(IRenderPass renderPass : renderPasses.get(stage)) {
+                renderPass.render(scene);
+            }
+        }
     }
 }
