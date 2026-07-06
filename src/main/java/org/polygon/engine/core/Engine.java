@@ -96,10 +96,21 @@ public class Engine {
             window.getMouseInputHandler().input();
 
             // Handle GUI inputs and decide if the GUI is in the focus of the mouse or keyboard
-            boolean inputConsumed = (window.getCurrentScene().getGuiInstance() != null
-                    && window.getCurrentScene().getGuiInstance().handleGuiInput(window))
-                    || (window.getGuiInstance() != null && window.getGuiInstance().handleGuiInput(window));
-            // Process game inputs and passing delta time taken between frames
+            boolean inputConsumed = false;
+
+            for(IGuiInstance instance : window.getGuiInstances()) {
+                if(inputConsumed) {
+                    break;
+                }
+                inputConsumed = instance.handleGuiInput(window);
+            }
+
+            for(IGuiInstance instance : window.getCurrentScene().getGuiInstances()) {
+                if(inputConsumed) {
+                    break;
+                }
+                inputConsumed = instance.handleGuiInput(window);
+            }
             gameLogic.input(window, nowMS - rbeforeMS, inputConsumed);
 
             // Caps updating according to targetUps

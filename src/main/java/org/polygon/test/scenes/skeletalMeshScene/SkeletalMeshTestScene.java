@@ -47,7 +47,7 @@ public class SkeletalMeshTestScene extends BasicScene {
         sceneLights.getSpotLightList().get(0).setIntensity(0);
 
         scene.setSceneLights(sceneLights);
-        scene.setGuiInstance(new AnimationTestGUI(animationData));
+        scene.addGuiInstance(new AnimationTestGUI(animationData));
 
         initSound(bobEntity.getPosition(), scene.getCamera());
     }

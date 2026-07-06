@@ -1,6 +1,5 @@
 package org.polygon.test.scenes.normalScene;
 
-import org.joml.Vector3f;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.scene.*;
@@ -62,7 +61,7 @@ public class NormalTestScene extends BasicScene {
         sceneLights.getSpotLightList().get(0).setIntensity(0);
 
         scene.setSceneLights(sceneLights);
-        scene.setGuiInstance(new LightTestGUI(scene, "Light Test Scene - light controls"));
+        scene.addGuiInstance(new LightTestGUI(scene, "Light Test Scene - light controls"));
 
 //        SkyBox skyBox = new SkyBox("resources/models/skybox/Sphere.fbx", scene.getTextureCache());
 //        scene.getTextureCache().createTexture("resources/models/skybox/sky_water_landscape.jpg");

@@ -31,7 +31,7 @@ public class CubeScene extends BasicScene {
         scene.addEntity(cubeEntity);
         rotation = 0;
 
-        scene.setGuiInstance(new UpdateFpsTestGUI(window));
+        scene.addGuiInstance(new UpdateFpsTestGUI(window));
     }
 
     @Override

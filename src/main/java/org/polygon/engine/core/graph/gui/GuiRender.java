@@ -9,6 +9,8 @@ import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.gui.backend.gl3.ImGuiImplGl3;
 import org.polygon.engine.core.graph.gui.backend.glfw.ImGuiImplGlfw;
 
+import java.util.List;
+
 public class GuiRender {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
@@ -42,22 +44,24 @@ public class GuiRender {
     }
 
     public void render(Window window) {
-        IGuiInstance sceneGuiInstance = window.getCurrentScene().getGuiInstance();
-        IGuiInstance windowGuiInstance = window.getGuiInstance();
+        List<IGuiInstance> sceneGuiInstances = window.getCurrentScene().getGuiInstances();
+        List<IGuiInstance> windowGuiInstances = window.getGuiInstances();
 
-        if(windowGuiInstance == null && sceneGuiInstance == null) {
+        if(windowGuiInstances.isEmpty() && sceneGuiInstances.isEmpty()) {
             return;
         }
 
         imGuiGl3.newFrame();
         imGuiGlfw.newFrame();
         ImGui.newFrame();
-        if(windowGuiInstance != null) {
-            windowGuiInstance.drawGui();
+
+        for(IGuiInstance instance: windowGuiInstances) {
+            instance.drawGui();
         }
-        if(sceneGuiInstance != null) {
-            sceneGuiInstance.drawGui();
+        for(IGuiInstance instance : sceneGuiInstances) {
+            instance.drawGui();
         }
+
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
         // Update and Render additional Platform Windows

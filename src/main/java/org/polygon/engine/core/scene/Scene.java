@@ -5,7 +5,9 @@ import org.polygon.engine.core.graph.Model;
 import org.polygon.engine.core.graph.TextureCache;
 import org.polygon.engine.core.scene.lights.SceneLights;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Scene {
@@ -23,7 +25,7 @@ public class Scene {
     // A more complex implementation of a camera system would need to extend this class, use the setCamera method.
     private Camera camera;
     // Holds the current GUI instance.
-    private IGuiInstance guiInstance;
+    private List<IGuiInstance> guiInstances;
     // Holds the SceneLights that contains all the scene's light casters.
     private SceneLights sceneLights;
     // Holds the scene's skybox.
@@ -46,6 +48,8 @@ public class Scene {
         fog = new Fog();
 
         bypassLighting = false;
+
+        guiInstances = new ArrayList<>();
     }
 
     public void cleanup() {
@@ -98,8 +102,8 @@ public class Scene {
         return camera;
     }
 
-    public IGuiInstance getGuiInstance() {
-        return guiInstance;
+    public List<IGuiInstance> getGuiInstances() {
+        return guiInstances;
     }
 
     public SceneLights getSceneLights() {
@@ -120,8 +124,8 @@ public class Scene {
         this.selectedEntity = selectedEntity;
     }
 
-    public void setGuiInstance(IGuiInstance guiInstance) {
-        this.guiInstance = guiInstance;
+    public void addGuiInstance(IGuiInstance guiInstance) {
+        this.guiInstances.add(guiInstance);
     }
 
     public void setCamera(Camera camera) {

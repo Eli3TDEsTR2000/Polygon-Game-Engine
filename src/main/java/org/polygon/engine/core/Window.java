@@ -22,7 +22,7 @@ public class Window {
     private int height;
     private WindowOptions opts;
     private Scene currentScene;
-    private IGuiInstance guiInstance;
+    private List<IGuiInstance> guiInstances;
     private MouseInputHandler mouseInputHandler;
     private List<KeyCallback> keyCallbacks;
     private GLFWKeyCallback prevKeyCallback;
@@ -124,6 +124,7 @@ public class Window {
 
         mouseInputHandler = new MouseInputHandler(windowHandle);
         keyCallbacks = new ArrayList<>();
+        guiInstances = new ArrayList<>();
     }
 
     public int getWidth() {
@@ -140,8 +141,8 @@ public class Window {
     public WindowOptions getWindowOptions() {
         return opts;
     }
-    public IGuiInstance getGuiInstance() {
-        return guiInstance;
+    public List<IGuiInstance> getGuiInstances() {
+        return guiInstances;
     }
 
     public MouseInputHandler getMouseInputHandler() {
@@ -161,8 +162,8 @@ public class Window {
     public void setCurrentScene(Scene scene) {
         currentScene = scene;
     }
-    public void setGuiInstance(IGuiInstance guiInstance) {
-        this.guiInstance = guiInstance;
+    public void addGuiInstance(IGuiInstance guiInstance) {
+        this.guiInstances.add(guiInstance);
     }
 
     public Scene createScene() {
