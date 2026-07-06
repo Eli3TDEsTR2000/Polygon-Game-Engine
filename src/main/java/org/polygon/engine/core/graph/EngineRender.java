@@ -83,13 +83,13 @@ public class EngineRender {
         // Base Lighting Pass, draws to the SceneFBO.
         lightsRender.render(scene, shadowRender, gBuffer, sceneFBO.getWidth(), sceneFBO.getHeight());
 
+        // POST_LIGHTING Pass
+        renderStage(RenderStage.POST_LIGHTING, scene);
+
         // Skybox Pass
         skyBoxRender.render(scene);
 
         unbindIntermediateFBO(window);
-
-        // POST_LIGHTING Pass
-        renderStage(RenderStage.POST_LIGHTING, scene);
 
         // Post Processing: FXAA Pass, draws to the screen.
         fxaaRender.render(sceneFBO.getTextureId(), window);
