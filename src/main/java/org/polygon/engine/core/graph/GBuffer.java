@@ -52,11 +52,11 @@ public class GBuffer {
 
             switch (i) {
                 case GBUFFER_IDX_ALBEDO:
-                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, newWidth, newHeight, 0
-                            , GL_RGBA, GL_FLOAT, (ByteBuffer) null);
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, newWidth, newHeight, 0
+                            , GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
                     break;
                 case GBUFFER_IDX_NORMAL:
-                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, newWidth, newHeight, 0
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, newWidth, newHeight, 0
                             , GL_RGBA, GL_FLOAT, (ByteBuffer) null);
                     break;
                 case GBUFFER_IDX_MATERIAL:
