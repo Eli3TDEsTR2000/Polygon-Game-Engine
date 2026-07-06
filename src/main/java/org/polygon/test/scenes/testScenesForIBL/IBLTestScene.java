@@ -80,7 +80,7 @@ public class IBLTestScene extends BasicScene {
         sceneLights.getSpotLightList().get(0).setIntensity(0);
 
         scene.setSceneLights(sceneLights);
-        scene.setGuiInstance(new LightTestGUI(scene, "Light Test Scene - light controls"));
+        scene.addGuiInstance(new LightTestGUI(scene, "Light Test Scene - light controls"));
 
 //        SkyBox skyBox = new SkyBox("resources/models/skybox/Sphere.fbx", scene.getTextureCache());
 //        scene.getTextureCache().createTexture("resources/models/skybox/sky_water_landscape.jpg");

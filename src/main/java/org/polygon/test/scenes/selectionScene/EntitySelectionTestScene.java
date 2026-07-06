@@ -9,7 +9,6 @@ import org.polygon.engine.core.scene.Camera;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.ModelLoader;
 import org.polygon.test.scenes.BasicScene;
-import org.polygon.test.scenes.cubeScene.UpdateFpsTestGUI;
 
 import java.lang.Math;
 import java.util.Collection;
@@ -45,7 +44,7 @@ public class EntitySelectionTestScene extends BasicScene {
 
         rotation = 0;
 
-        scene.setGuiInstance(new EntitySelectionGUI(scene));
+        scene.addGuiInstance(new EntitySelectionGUI(scene));
     }
 
     @Override
