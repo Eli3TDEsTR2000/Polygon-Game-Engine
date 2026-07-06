@@ -77,8 +77,11 @@ public class EngineRender {
         // POST_GEOMETRY Pass
         renderStage(RenderStage.POST_GEOMETRY, scene);
 
-        
+
         bindIntermediateFBO();
+
+        // Copy the real per-pixel scene depth from the GBuffer into the SceneFBO's depth buffer.
+        blitGBufferDepth();
 
         // Base Lighting Pass, draws to the SceneFBO.
         lightsRender.render(scene, shadowRender, gBuffer, sceneFBO.getWidth(), sceneFBO.getHeight());
@@ -104,8 +107,20 @@ public class EngineRender {
         sceneFBO.bind();
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
         glViewport(0, 0, sceneFBO.getWidth(), sceneFBO.getHeight());
+    }
+
+    private void blitGBufferDepth() {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer.getGBufferId());
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, sceneFBO.getFboId());
+        glBlitFramebuffer(
+                0, 0, gBuffer.getWidth(), gBuffer.getHeight(),
+                0, 0, sceneFBO.getWidth(), sceneFBO.getHeight(),
+                GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+        // Restore SceneFBO as both read and draw target for the passes that follow.
+        glBindFramebuffer(GL_FRAMEBUFFER, sceneFBO.getFboId());
     }
 
     private void unbindIntermediateFBO(Window window) {

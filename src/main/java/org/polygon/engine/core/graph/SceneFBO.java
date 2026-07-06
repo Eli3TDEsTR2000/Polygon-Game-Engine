@@ -41,7 +41,7 @@ public class SceneFBO {
         // Create Depth Renderbuffer Attachment
         depthRenderBufferId = glGenRenderbuffers();
         glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferId);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, width, height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderBufferId);
 
         // Set the list of draw buffers.
@@ -81,7 +81,7 @@ public class SceneFBO {
 
         // Resize Depth Renderbuffer
         glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferId);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, width, height);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
 
@@ -105,4 +105,4 @@ public class SceneFBO {
     public int getHeight() { return height; }
     public int getTextureId() { return textureId; }
     public int getFboId() { return fboId; }
-} 
+}
