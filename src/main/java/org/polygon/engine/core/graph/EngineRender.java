@@ -6,6 +6,7 @@ import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.gui.GuiRender;
 import org.polygon.engine.core.scene.Scene;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,7 @@ public class EngineRender {
     private FXAARender fxaaRender;
 
     public enum RenderStage {
-        PRE_SHADOW,
-        PRE_GEOMETRY,
+        POST_GEOMETRY,
         POST_LIGHTING,
     }
 
@@ -68,18 +68,16 @@ public class EngineRender {
 
         Scene scene = window.getCurrentScene();
 
-        // PRE_SHADOW Pass
-        renderStage(RenderStage.PRE_SHADOW, scene);
-
         // Shadow Pass
         shadowRender.render(scene);
-
-        // PRE_GEOMETRY Pass
-        renderStage(RenderStage.PRE_GEOMETRY, scene);
 
         // Geometry Pass, draws to the G-Buffer FBO.
         sceneRender.render(scene, gBuffer);
 
+        // POST_GEOMETRY Pass
+        renderStage(RenderStage.POST_GEOMETRY, scene);
+
+        
         bindIntermediateFBO();
 
         // Base Lighting Pass, draws to the SceneFBO.
@@ -126,7 +124,8 @@ public class EngineRender {
     }
 
     public void addRenderPass(RenderStage stage, IRenderPass renderPass) {
-        this.renderPasses.get(stage).add(renderPass);
+        renderPasses.computeIfAbsent(stage, renderPasses -> new ArrayList<>());
+        renderPasses.get(stage).add(renderPass);
     }
 
     private void renderStage (RenderStage stage, Scene scene) {
