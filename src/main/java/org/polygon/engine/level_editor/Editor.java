@@ -34,9 +34,9 @@ public class Editor implements IGameLogic {
         editorScene = window.createScene();
         editorScene.getCamera().moveUp(1);
         window.setCurrentScene(editorScene);
-        render.getPreRenders().add(new EndlessGridRender());
+        
         editorGui = new EditorGui(editorScene, this);
-        editorScene.setGuiInstance(editorGui);
+        editorScene.addGuiInstance(editorGui);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class Editor implements IGameLogic {
                 System.err.println(e.getMessage());
             }
             editorGui = new EditorGui(editorScene, this);
-            editorScene.setGuiInstance(editorGui);
+            editorScene.addGuiInstance(editorGui);
         }
 
         boolean guiConsumedInput = (editorGui != null && editorGui.handleGuiInput(window));

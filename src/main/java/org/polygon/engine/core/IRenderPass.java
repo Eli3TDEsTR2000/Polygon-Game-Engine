@@ -2,6 +2,6 @@ package org.polygon.engine.core;
 
 import org.polygon.engine.core.scene.Scene;
 
-public interface IRender {
+public interface IRenderPass {
     void render(Scene scene);
 }

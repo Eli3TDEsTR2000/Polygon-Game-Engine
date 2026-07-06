@@ -214,7 +214,7 @@ final class HelloLibbulletjme implements IGameLogic {
         sceneLights.getDirectionalLight().setDirection(0.54f, 1.0f, 0.22f);
         window.getCurrentScene().setSceneLights(sceneLights);
 
-        window.setGuiInstance(new PerformanceGUI(true));
+        window.addGuiInstance(new PerformanceGUI(true));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.polygon.engine.core.graph;
 
-import org.polygon.engine.core.IRender;
+import org.polygon.engine.core.IRenderPass;
 import org.polygon.engine.core.scene.AnimationData;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.Scene;
@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL40.*;
 public class SceneRender {
     private ShaderProgram shaderProgram;
     private UniformMap uniformMap;
-    private List<IRender> preRenders;
+    private List<IRenderPass> preRenders;
     public SceneRender() {
         preRenders = new ArrayList<>();
         // This will hold shader modules
@@ -62,7 +62,7 @@ public class SceneRender {
         shaderProgram.cleanup();
     }
 
-    public List<IRender> getPreRenders() {
+    public List<IRenderPass> getPreRenders() {
         return preRenders;
     }
 
@@ -77,12 +77,6 @@ public class SceneRender {
         glDisable(GL_BLEND);
         glEnable(GL_CULL_FACE); // Standard back-face culling
         glCullFace(GL_BACK);
-
-        if(!preRenders.isEmpty()) {
-            for(IRender render : preRenders) {
-                render.render(scene);
-            }
-        }
 
         shaderProgram.bind();
 

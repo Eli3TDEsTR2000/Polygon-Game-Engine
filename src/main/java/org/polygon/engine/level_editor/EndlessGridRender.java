@@ -1,7 +1,7 @@
 package org.polygon.engine.level_editor;
 
 import org.joml.Matrix4f;
-import org.polygon.engine.core.IRender;
+import org.polygon.engine.core.IRenderPass;
 import org.polygon.engine.core.graph.ShaderProgram;
 import org.polygon.engine.core.graph.UniformMap;
 import org.polygon.engine.core.scene.Scene;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL40.*;
 
-public class EndlessGridRender implements IRender {
+public class EndlessGridRender implements IRenderPass {
     private ShaderProgram shaderProgram;
     private UniformMap uniformMap;
     private int vaoId;
