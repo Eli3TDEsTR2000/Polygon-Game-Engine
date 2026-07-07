@@ -5,7 +5,7 @@ import org.lwjgl.system.MemoryStack;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import static org.lwjgl.opengl.GL40.*;
+import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
@@ -47,9 +47,10 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, textureId);
         // Since the channels for the image is one byte each, the param is 1 (RGBA).
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        // If there is no 1:1 association to a texture coords, just use the nearest point in the texture coords
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // TODO - HARDCODED MAX_ANISOTROPY for ANISOTROPIC FILTERING, rework when implementing graphics settings
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 16.0f);
         // Load the texture data
         // Loads the texture with a target 2D texture (GL_TEXTURE_2D)
         // Level of details is set to 0, base image level of detail

@@ -28,7 +28,7 @@ void main()
 
             // Sample the environment map, weight by cosine of angle (lambertian)
             // cos(theta) is the dot product N dot sampleVec in tangent space
-            irradiance += texture(environmentMap, normalize(sampleVec)).rgb * cos(theta);
+            irradiance += texture(environmentMap, normalize(sampleVec)).rgb * cos(theta) * sin(theta);
             nrSamples++;
         }
     }

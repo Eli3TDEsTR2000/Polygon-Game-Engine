@@ -34,7 +34,7 @@ public class Editor implements IGameLogic {
         editorScene = window.createScene();
         editorScene.getCamera().moveUp(1);
         window.setCurrentScene(editorScene);
-        render.addRenderPass(EngineRender.RenderStage.POST_GEOMETRY, new EndlessGridRender());
+        render.addRenderPass(EngineRender.RenderStage.POST_LIGHTING, new EndlessGridRender());
         editorGui = new EditorGui(editorScene, this);
         editorScene.addGuiInstance(editorGui);
     }

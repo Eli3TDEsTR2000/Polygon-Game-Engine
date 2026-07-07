@@ -140,6 +140,10 @@ public class LightsRender {
     private void renderBaseLighting(Scene scene, ShadowRender shadowRender, GBuffer gBuffer) {
         glDisable(GL_BLEND);
 
+        // Was made so the renderBaseLighting doesn't overwrite depth blitted from the G-Buffer
+        glDepthMask(false);
+        glDisable(GL_DEPTH_TEST);
+
         baseLightShaderProgram.bind();
 
         int[] textureIds = gBuffer.getTextureIds();
@@ -165,6 +169,9 @@ public class LightsRender {
             glBindVertexArray(quadMesh.getVaoId());
             glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
             baseLightShaderProgram.unbind();
+            // Restore depth state
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(true);
             return;
         }
 
@@ -211,6 +218,10 @@ public class LightsRender {
         glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
 
         baseLightShaderProgram.unbind();
+
+        // Restore depth state
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(true);
     }
 
     private void renderLightVolumes(Scene scene, GBuffer gBuffer, int windowWidth, int windowHeight) {
@@ -256,8 +267,8 @@ public class LightsRender {
             updateLightVolumePointLightUniforms(pointLight, viewMatrix);
 
             modelMatrix.identity()
-                       .translate(pointLight.getPosition())
-                       .scale(pointLight.getRadius());
+                    .translate(pointLight.getPosition())
+                    .scale(pointLight.getRadius());
             lightVolumeUniformMap.setUniform("modelMatrix", modelMatrix);
 
             glDrawElements(GL_TRIANGLES, sphereMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
@@ -272,8 +283,8 @@ public class LightsRender {
             updateLightVolumeSpotLightUniforms(spotLight, viewMatrix);
 
             modelMatrix.identity()
-                       .translate(spotLight.getPosition())
-                       .scale(spotLight.getRadius());
+                    .translate(spotLight.getPosition())
+                    .scale(spotLight.getRadius());
             lightVolumeUniformMap.setUniform("modelMatrix", modelMatrix);
 
             glDrawElements(GL_TRIANGLES, sphereMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
@@ -296,7 +307,7 @@ public class LightsRender {
             glBindTexture(GL_TEXTURE_2D, textureIds[i]);
         }
         if (numTextures == 0) {
-             glActiveTexture(GL_TEXTURE0);
+            glActiveTexture(GL_TEXTURE0);
         }
     }
 

@@ -65,6 +65,7 @@ public class Scene {
             SkyBox.cleanup();
             skyBox = null;
         }
+        guiInstances = null;
     }
 
     public void reset() {
@@ -76,6 +77,7 @@ public class Scene {
         textureCache = new TextureCache();
         camera = new Camera();
         bypassLighting = false;
+        guiInstances = new ArrayList<>();
     }
 
     public void addEntity(Entity entity) {
