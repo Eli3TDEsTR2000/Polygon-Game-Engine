@@ -34,6 +34,7 @@ public class EditorGui implements IGuiInstance {
     private boolean sceneLightsExist = false; // Track if SceneLights have been added
     private String title = "Editor Controls";
     private boolean isWindowHovered = false;
+    private boolean isMaterialWindowHovered = false;
     private float[] ambientColor = {0.0f, 0.0f, 0.0f};
     private float[] ambientIntensity = {0.0f};
     private float[] dirColor = {0.0f, 0.0f, 0.0f};
@@ -387,6 +388,8 @@ public class EditorGui implements IGuiInstance {
     private void drawMaterialEditorWindow() {
         ImGui.begin("Material Editor");
 
+        isMaterialWindowHovered = ImGui.isWindowFocused();
+
         if (selectedModelId == null || selectedModelId.isEmpty()) {
             ImGui.text("Select a model from the 'Models' list in 'Editor Controls' window.");
         } else {
@@ -514,7 +517,7 @@ public class EditorGui implements IGuiInstance {
         ImGui.setNextWindowSize(450, 400, ImGuiCond.Once);
 
         ImGui.begin(title);
-        isWindowHovered = ImGui.isWindowHovered() || ImGui.isWindowFocused();
+        isWindowHovered = ImGui.isWindowFocused();
 
         updateSceneLightsStatus(); // Refresh status
         updateSkyBoxStatus(); // Refresh Skybox status
@@ -759,17 +762,14 @@ public class EditorGui implements IGuiInstance {
 
     @Override
     public boolean handleGuiInput(Window window) {
-        boolean consumed = isWindowHovered;
         
         // Apply SkyBox changes first if flags are set
         if (importSkyBoxFlag || removeSkyBoxFlag) {
             applySkyBoxChanges();
-            // Setting consumed might be good if interaction happened
-            consumed = true; 
         }
         
         // Apply light changes if GUI is interacted with OR if light add/remove flags were set
-        if ((consumed && sceneLightsExist) || addPointLightFlag || addSpotLightFlag || !pointLightsToRemoveIndices.isEmpty() || !spotLightsToRemoveIndices.isEmpty()) {
+        if ((sceneLightsExist) || addPointLightFlag || addSpotLightFlag || !pointLightsToRemoveIndices.isEmpty() || !spotLightsToRemoveIndices.isEmpty()) {
            if (sceneLightsExist) {
                 applyStateToSceneLights();
            } else {
@@ -790,13 +790,11 @@ public class EditorGui implements IGuiInstance {
         if (importModelFlag) { // <--- THIS is the check that seems to be failing
             System.out.println("[DEBUG] handleGuiInput detected importModelFlag=true, calling applyModelChanges...");
             applyModelChanges();
-            consumed = true; // Assume button click consumed input
         }
 
         if (createEntityFlag) {
             System.out.println("[DEBUG] handleGuiInput detected createEntityFlag=true, calling applyEntityChanges...");
             applyEntityChanges();
-            consumed = true; // Assume button click consumed input
         }
 
         // Apply selected entity transform changes if GUI was interacted with
@@ -807,6 +805,6 @@ public class EditorGui implements IGuiInstance {
 
         // Determine final consumption based on ImGui state (after processing our inputs)
         // This ensures mouse clicks on buttons are captured correctly
-        return consumed || ImGui.getIO().getWantCaptureMouse() || ImGui.getIO().getWantCaptureKeyboard();
+        return (ImGui.getIO().getWantCaptureMouse() || ImGui.getIO().getWantCaptureKeyboard()) && (isWindowHovered || isMaterialWindowHovered);
     }
 }

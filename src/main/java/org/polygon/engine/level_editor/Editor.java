@@ -13,13 +13,16 @@ import org.joml.*;
 import java.io.IOException;
 import java.lang.Math;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 // Import Material and explicit Mesh
 import org.polygon.engine.core.graph.Material;
 import org.polygon.engine.core.graph.Mesh;
+import org.polygon.engine.core.scene.lights.PointLight;
 
 public class Editor implements IGameLogic {
     private final float MOUSE_SENSITIVITY = 0.1f;
@@ -35,12 +38,16 @@ public class Editor implements IGameLogic {
         editorScene.getCamera().moveUp(1);
         window.setCurrentScene(editorScene);
         render.addRenderPass(EngineRender.RenderStage.POST_LIGHTING, new EndlessGridRender());
+        render.addRenderPass(EngineRender.RenderStage.POST_LIGHTING, new PointLightSphereRender());
         editorGui = new EditorGui(editorScene, this);
         editorScene.addGuiInstance(editorGui);
     }
 
     @Override
     public void input(Window window, long diffTimeMS, boolean inputConsumed) {
+        if(inputConsumed) {
+            return;
+        }
         int factor = window.isKeyPressed(GLFW_KEY_LEFT_SHIFT) ? 3 : 1;
         float incrementMovement = diffTimeMS * MOVEMENT_SPEED * factor;
         Camera camera = window.getCurrentScene().getCamera();
@@ -84,24 +91,19 @@ public class Editor implements IGameLogic {
             editorGui = new EditorGui(editorScene, this);
             editorScene.addGuiInstance(editorGui);
         }
-
-        boolean guiConsumedInput = (editorGui != null && editorGui.handleGuiInput(window));
-
-        if (!guiConsumedInput) {
-            // Process camera rotation if right mouse button is pressed
-            if(window.getMouseInputHandler().isRightButtonPressed()) {
-                camera.addRotation(
-                        (float) Math.toRadians(window.getMouseInputHandler().getDisplacement().x * MOUSE_SENSITIVITY),
-                        (float) Math.toRadians(window.getMouseInputHandler().getDisplacement().y * MOUSE_SENSITIVITY));
-            }
-
-            // Process entity selection if left mouse button is clicked (use isLeftButtonReleased for click detection)
-            boolean leftPressed = window.getMouseInputHandler().isLeftButtonPressed();
-            if (leftPressed && !leftMouseButtonPressedLastFrame) { // Check for press event
-                selectEntityByRaycast(window);
-            }
-            leftMouseButtonPressedLastFrame = leftPressed; // Store current state for next frame
+        // Process camera rotation if right mouse button is pressed
+        if(window.getMouseInputHandler().isRightButtonPressed()) {
+            camera.addRotation(
+                    (float) Math.toRadians(window.getMouseInputHandler().getDisplacement().x * MOUSE_SENSITIVITY),
+                    (float) Math.toRadians(window.getMouseInputHandler().getDisplacement().y * MOUSE_SENSITIVITY));
         }
+
+        // Process entity selection if left mouse button is clicked (use isLeftButtonReleased for click detection)
+        boolean leftPressed = window.getMouseInputHandler().isLeftButtonPressed();
+        if (leftPressed && !leftMouseButtonPressedLastFrame) { // Check for press event
+            selectEntityByRaycast(window);
+        }
+        leftMouseButtonPressedLastFrame = leftPressed; // Store current state for next frame
     }
 
     @Override
