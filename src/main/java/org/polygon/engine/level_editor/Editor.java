@@ -39,7 +39,7 @@ public class Editor implements IGameLogic {
         window.setCurrentScene(editorScene);
         render.addRenderPass(EngineRender.RenderStage.POST_LIGHTING, new EndlessGridRender());
         render.addRenderPass(EngineRender.RenderStage.POST_LIGHTING, new PointLightSphereRender());
-        editorGui = new EditorGui(editorScene, this);
+        editorGui = new EditorGui(editorScene, this, window.getWindowOptions());
         editorScene.addGuiInstance(editorGui);
     }
 
@@ -88,7 +88,7 @@ public class Editor implements IGameLogic {
             } catch(IOException e) {
                 System.err.println(e.getMessage());
             }
-            editorGui = new EditorGui(editorScene, this);
+            editorGui = new EditorGui(editorScene, this, window.getWindowOptions());
             editorScene.addGuiInstance(editorGui);
         }
         // Process camera rotation if right mouse button is pressed

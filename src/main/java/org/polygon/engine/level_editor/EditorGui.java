@@ -31,6 +31,7 @@ public class EditorGui implements IGuiInstance {
 
     private final Scene scene;
     private final Editor editor;
+    private final Window.WindowOptions options;
     private boolean sceneLightsExist = false; // Track if SceneLights have been added
     private String title = "Editor Controls";
     private boolean isWindowHovered = false;
@@ -41,6 +42,7 @@ public class EditorGui implements IGuiInstance {
     private float[] dirIntensity = {0.0f};
     private float[] dirDirection = {0.0f, 0.0f, 0.0f};
     private ImBoolean bypassLightingActive = new ImBoolean(false);
+    private ImBoolean ssaoEnabled = new ImBoolean(true);
 
     // Flags for adding lights
     private boolean addPointLightFlag = false;
@@ -76,9 +78,10 @@ public class EditorGui implements IGuiInstance {
     private String lastSelectedEntityId = null; // Track changes
     private boolean transformChangedInGui = false;
 
-    public EditorGui(Scene scene, Editor editor) {
+    public EditorGui(Scene scene, Editor editor, Window.WindowOptions options) {
         this.scene = scene;
         this.editor = editor;
+        this.options = options;
         updateSceneLightsStatus(); // Check initial status
         if (sceneLightsExist) {
             loadStateFromSceneLights(); // Load initial state if lights already exist
@@ -91,6 +94,7 @@ public class EditorGui implements IGuiInstance {
     private void updateSceneLightsStatus() {
         sceneLightsExist = (scene.getSceneLights() != null);
         bypassLightingActive.set(scene.isLightingDisabled());
+        ssaoEnabled.set(options.ssaoEnabled);
     }
 
     // Method to update the displayed skybox path
@@ -208,6 +212,7 @@ public class EditorGui implements IGuiInstance {
 
 
         scene.setBypassLighting(bypassLightingActive.get());
+        options.ssaoEnabled = this.ssaoEnabled.get();
     }
 
      // Method to handle SkyBox changes (Keep the text input version)
@@ -539,6 +544,7 @@ public class EditorGui implements IGuiInstance {
                 // Collapsible header for all lighting controls
                 if (ImGui.collapsingHeader("Lighting Controls")) {
                     ImGui.checkbox("Bypass Lighting", bypassLightingActive);
+                    ImGui.checkbox("SSAO Enabled", ssaoEnabled);
                     ImGui.separator();
 
                     // Ambient Light Section

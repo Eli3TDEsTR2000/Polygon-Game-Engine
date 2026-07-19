@@ -22,6 +22,8 @@ public class EngineRender {
     private SkyBoxRender skyBoxRender;
     private SceneFBO sceneFBO;
     private FXAARender fxaaRender;
+    private SSAOBuffer ssaoBuffer;
+    private SSAORender ssaoRender;
 
     public enum RenderStage {
         POST_GEOMETRY,
@@ -49,6 +51,8 @@ public class EngineRender {
         guiRender = new GuiRender(window);
         skyBoxRender = new SkyBoxRender();
         fxaaRender = new FXAARender();
+        ssaoBuffer = new SSAOBuffer(window);
+        ssaoRender = new SSAORender();
         renderPasses = new HashMap<>();
     }
 
@@ -61,6 +65,8 @@ public class EngineRender {
         guiRender.cleanup();
         skyBoxRender.cleanup();
         fxaaRender.cleanup();
+        ssaoBuffer.cleanup();
+        ssaoRender.cleanup();
     }
 
     public void render(Window window) {
@@ -77,13 +83,19 @@ public class EngineRender {
         // POST_GEOMETRY Pass
         renderStage(RenderStage.POST_GEOMETRY, scene);
 
+        // SSAO Pass
+        if(window.getWindowOptions().ssaoEnabled) {
+            ssaoRender.render(scene, gBuffer, ssaoBuffer);
+        }
+
         bindIntermediateFBO();
 
         // Copy the real per-pixel scene depth from the GBuffer into the SceneFBO's depth buffer.
         blitGBufferDepth();
 
         // Base Lighting Pass, draws to the SceneFBO.
-        lightsRender.render(scene, shadowRender, gBuffer, sceneFBO.getWidth(), sceneFBO.getHeight());
+        int ssaoTextureId = window.getWindowOptions().ssaoEnabled ? ssaoBuffer.getBlurTextureId() : ssaoBuffer.getFallbackWhiteTextureId();
+        lightsRender.render(scene, shadowRender, gBuffer, ssaoTextureId, sceneFBO.getWidth(), sceneFBO.getHeight());
 
         // POST_LIGHTING Pass
         renderStage(RenderStage.POST_LIGHTING, scene);

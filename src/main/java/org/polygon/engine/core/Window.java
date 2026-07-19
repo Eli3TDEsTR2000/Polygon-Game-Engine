@@ -262,6 +262,7 @@ public class Window {
         public int height;
         public float gamma = 2.2f;
         public float exposure = 1.0f;
+        public boolean ssaoEnabled = true;
     }
 
     public interface KeyCallback {

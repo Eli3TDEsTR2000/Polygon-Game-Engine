@@ -31,6 +31,7 @@ public class LightsRender {
     private final Vector2f screenSizeVec;
 
     private static final int IRRADIANCE_MAP_TEXTURE_UNIT = 8;
+    private static final int SSAO_TEXTURE_UNIT = 11;
 
     public LightsRender() {
         List<ShaderProgram.ShaderModuleData> baseShaderModules = new ArrayList<>();
@@ -75,6 +76,7 @@ public class LightsRender {
         baseLightUniformMap.createUniform("materialSampler");
         baseLightUniformMap.createUniform("emissiveSampler");
         baseLightUniformMap.createUniform("depthSampler");
+        baseLightUniformMap.createUniform("ssaoSampler");
         baseLightUniformMap.createUniform("invProjectionMatrix");
         baseLightUniformMap.createUniform("invViewMatrix");
         baseLightUniformMap.createUniform("viewMatrix");
@@ -125,19 +127,19 @@ public class LightsRender {
         lightVolumeUniformMap.createUniform("spotLight.cutOff");
     }
 
-    public void render(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int windowWidth, int windowHeight) {
+    public void render(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int ssaoTextureId, int windowWidth, int windowHeight) {
         if(scene.getSceneLights() == null) {
             scene.setBypassLighting(true);
         }
 
-        renderBaseLighting(scene, shadowRender, gBuffer);
+        renderBaseLighting(scene, shadowRender, gBuffer, ssaoTextureId);
 
         if (!scene.isLightingDisabled()) {
             renderLightVolumes(scene, gBuffer, windowWidth, windowHeight);
         }
     }
 
-    private void renderBaseLighting(Scene scene, ShadowRender shadowRender, GBuffer gBuffer) {
+    private void renderBaseLighting(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int ssaoTextureId) {
         glDisable(GL_BLEND);
 
         // Was made so the renderBaseLighting doesn't overwrite depth blitted from the G-Buffer
@@ -162,6 +164,10 @@ public class LightsRender {
         baseLightUniformMap.setUniform("invProjectionMatrix", scene.getProjection().getInvProjMatrix());
         baseLightUniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
         baseLightUniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
+
+        glActiveTexture(GL_TEXTURE0 + SSAO_TEXTURE_UNIT);
+        glBindTexture(GL_TEXTURE_2D, ssaoTextureId);
+        baseLightUniformMap.setUniform("ssaoSampler", SSAO_TEXTURE_UNIT);
 
         baseLightUniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
 

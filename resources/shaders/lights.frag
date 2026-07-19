@@ -40,6 +40,7 @@ uniform sampler2D normalSampler;
 uniform sampler2D materialSampler;
 uniform sampler2D emissiveSampler;
 uniform sampler2D depthSampler;
+uniform sampler2D ssaoSampler;
 
 uniform mat4 invProjectionMatrix;
 uniform mat4 invViewMatrix;
@@ -168,6 +169,8 @@ void main() {
     float metallic = materialProps.r;
     float roughness = materialProps.g;
     float ao = materialProps.b;
+    float ssao = texture(ssaoSampler, outTextCoord).r;
+    float finalAO = ao * ssao;
 
     // Reconstruct view-space position from depth
     float depth_vs = depth * 2.0 - 1.0;
@@ -211,7 +214,7 @@ void main() {
 
         // Sample irradiance map
         vec3 irradiance = texture(irradianceMap, N_world).rgb;
-        vec3 diffuseIBL = irradiance * kD * albedo * ao;
+        vec3 diffuseIBL = irradiance * kD * albedo * finalAO;
 
         vec3 R = reflect(-V, N); // View space reflection vector
         vec3 R_world = normalize(normalMatrix * R);
@@ -227,7 +230,7 @@ void main() {
 
     } else {
         // Fallback to simple ambient light if IBL is not active
-        ambient = ambientLight.color * ambientLight.intensity * albedo * ao;
+        ambient = ambientLight.color * ambientLight.intensity * albedo * finalAO;
         Lo += ambient; // Add fallback ambient
     }
 

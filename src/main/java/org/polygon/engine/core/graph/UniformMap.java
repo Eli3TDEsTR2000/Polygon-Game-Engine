@@ -56,7 +56,20 @@ public class UniformMap {
             for(int i = 0; i < length; i++) {
                 values[i].get(16 * i, floatBuffer);
             }
-            glUniformMatrix4fv(uniformReferences.get(uniformName), false, floatBuffer);
+            glUniformMatrix4fv(getUniformLocation(uniformName), false, floatBuffer);
+        }
+    }
+
+    public void setUniform(String uniformName, Vector3f[] values) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            int length = values != null ? values.length : 0;
+            FloatBuffer floatBuffer = stack.mallocFloat(3 * length);
+            for (int i = 0; i < length; i++) {
+                floatBuffer.put(3 * i, values[i].x);
+                floatBuffer.put(3 * i + 1, values[i].y);
+                floatBuffer.put(3 * i + 2, values[i].z);
+            }
+            glUniform3fv(getUniformLocation(uniformName), floatBuffer);
         }
     }
 
