@@ -1,9 +1,15 @@
 package org.polygon.engine.core.graph;
 
 import org.lwjgl.opengl.GL;
+import org.polygon.engine.core.IRenderPass;
 import org.polygon.engine.core.Window;
 import org.polygon.engine.core.graph.gui.GuiRender;
 import org.polygon.engine.core.scene.Scene;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL40.*;
 
@@ -16,6 +22,15 @@ public class EngineRender {
     private SkyBoxRender skyBoxRender;
     private SceneFBO sceneFBO;
     private FXAARender fxaaRender;
+    private SSAOBuffer ssaoBuffer;
+    private SSAORender ssaoRender;
+
+    public enum RenderStage {
+        POST_GEOMETRY,
+        POST_LIGHTING,
+    }
+
+    private Map <RenderStage, List<IRenderPass>> renderPasses;
 
     public EngineRender(Window window) {
         // This line is critical for LWJGL's interoperation with GLFW's
@@ -36,6 +51,9 @@ public class EngineRender {
         guiRender = new GuiRender(window);
         skyBoxRender = new SkyBoxRender();
         fxaaRender = new FXAARender();
+        ssaoBuffer = new SSAOBuffer(window);
+        ssaoRender = new SSAORender();
+        renderPasses = new HashMap<>();
     }
 
     public void cleanup() {
@@ -47,6 +65,8 @@ public class EngineRender {
         guiRender.cleanup();
         skyBoxRender.cleanup();
         fxaaRender.cleanup();
+        ssaoBuffer.cleanup();
+        ssaoRender.cleanup();
     }
 
     public void render(Window window) {
@@ -60,15 +80,31 @@ public class EngineRender {
         // Geometry Pass, draws to the G-Buffer FBO.
         sceneRender.render(scene, gBuffer);
 
+        // POST_GEOMETRY Pass
+        renderStage(RenderStage.POST_GEOMETRY, scene);
+
+        // SSAO Pass
+        if(window.getWindowOptions().ssaoEnabled) {
+            ssaoRender.render(scene, gBuffer, ssaoBuffer);
+        }
+
         bindIntermediateFBO();
 
+        // Copy the real per-pixel scene depth from the GBuffer into the SceneFBO's depth buffer.
+        blitGBufferDepth();
+
         // Base Lighting Pass, draws to the SceneFBO.
-        lightsRender.render(scene, shadowRender, gBuffer, sceneFBO.getWidth(), sceneFBO.getHeight());
+        int ssaoTextureId = window.getWindowOptions().ssaoEnabled ? ssaoBuffer.getBlurTextureId() : ssaoBuffer.getFallbackWhiteTextureId();
+        lightsRender.render(scene, shadowRender, gBuffer, ssaoTextureId, sceneFBO.getWidth(), sceneFBO.getHeight());
+
+        // POST_LIGHTING Pass
+        renderStage(RenderStage.POST_LIGHTING, scene);
 
         // Skybox Pass
         skyBoxRender.render(scene);
 
         unbindIntermediateFBO(window);
+
         // Post Processing: FXAA Pass, draws to the screen.
         fxaaRender.render(sceneFBO.getTextureId(), window);
 
@@ -82,8 +118,20 @@ public class EngineRender {
         sceneFBO.bind();
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
         glViewport(0, 0, sceneFBO.getWidth(), sceneFBO.getHeight());
+    }
+
+    private void blitGBufferDepth() {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer.getGBufferId());
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, sceneFBO.getFboId());
+        glBlitFramebuffer(
+                0, 0, gBuffer.getWidth(), gBuffer.getHeight(),
+                0, 0, sceneFBO.getWidth(), sceneFBO.getHeight(),
+                GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+
+        // Restore SceneFBO as both read and draw target for the passes that follow.
+        glBindFramebuffer(GL_FRAMEBUFFER, sceneFBO.getFboId());
     }
 
     private void unbindIntermediateFBO(Window window) {
@@ -99,5 +147,18 @@ public class EngineRender {
         glDepthMask(true);
         glDisable(GL_BLEND);
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    }
+
+    public void addRenderPass(RenderStage stage, IRenderPass renderPass) {
+        renderPasses.computeIfAbsent(stage, renderPasses -> new ArrayList<>());
+        renderPasses.get(stage).add(renderPass);
+    }
+
+    private void renderStage (RenderStage stage, Scene scene) {
+        if(renderPasses.get(stage) != null) {
+            for(IRenderPass renderPass : renderPasses.get(stage)) {
+                renderPass.render(scene);
+            }
+        }
     }
 }

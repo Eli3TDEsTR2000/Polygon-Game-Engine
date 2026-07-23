@@ -31,6 +31,7 @@ public class LightsRender {
     private final Vector2f screenSizeVec;
 
     private static final int IRRADIANCE_MAP_TEXTURE_UNIT = 8;
+    private static final int SSAO_TEXTURE_UNIT = 11;
 
     public LightsRender() {
         List<ShaderProgram.ShaderModuleData> baseShaderModules = new ArrayList<>();
@@ -75,6 +76,7 @@ public class LightsRender {
         baseLightUniformMap.createUniform("materialSampler");
         baseLightUniformMap.createUniform("emissiveSampler");
         baseLightUniformMap.createUniform("depthSampler");
+        baseLightUniformMap.createUniform("ssaoSampler");
         baseLightUniformMap.createUniform("invProjectionMatrix");
         baseLightUniformMap.createUniform("invViewMatrix");
         baseLightUniformMap.createUniform("viewMatrix");
@@ -125,20 +127,24 @@ public class LightsRender {
         lightVolumeUniformMap.createUniform("spotLight.cutOff");
     }
 
-    public void render(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int windowWidth, int windowHeight) {
+    public void render(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int ssaoTextureId, int windowWidth, int windowHeight) {
         if(scene.getSceneLights() == null) {
             scene.setBypassLighting(true);
         }
 
-        renderBaseLighting(scene, shadowRender, gBuffer);
+        renderBaseLighting(scene, shadowRender, gBuffer, ssaoTextureId);
 
         if (!scene.isLightingDisabled()) {
             renderLightVolumes(scene, gBuffer, windowWidth, windowHeight);
         }
     }
 
-    private void renderBaseLighting(Scene scene, ShadowRender shadowRender, GBuffer gBuffer) {
+    private void renderBaseLighting(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int ssaoTextureId) {
         glDisable(GL_BLEND);
+
+        // Was made so the renderBaseLighting doesn't overwrite depth blitted from the G-Buffer
+        glDepthMask(false);
+        glDisable(GL_DEPTH_TEST);
 
         baseLightShaderProgram.bind();
 
@@ -159,12 +165,19 @@ public class LightsRender {
         baseLightUniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
         baseLightUniformMap.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
 
+        glActiveTexture(GL_TEXTURE0 + SSAO_TEXTURE_UNIT);
+        glBindTexture(GL_TEXTURE_2D, ssaoTextureId);
+        baseLightUniformMap.setUniform("ssaoSampler", SSAO_TEXTURE_UNIT);
+
         baseLightUniformMap.setUniform("bypassLighting", scene.isLightingDisabled());
 
         if (scene.isLightingDisabled()) {
             glBindVertexArray(quadMesh.getVaoId());
             glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
             baseLightShaderProgram.unbind();
+            // Restore depth state
+            glEnable(GL_DEPTH_TEST);
+            glDepthMask(true);
             return;
         }
 
@@ -211,6 +224,10 @@ public class LightsRender {
         glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
 
         baseLightShaderProgram.unbind();
+
+        // Restore depth state
+        glEnable(GL_DEPTH_TEST);
+        glDepthMask(true);
     }
 
     private void renderLightVolumes(Scene scene, GBuffer gBuffer, int windowWidth, int windowHeight) {
@@ -256,8 +273,8 @@ public class LightsRender {
             updateLightVolumePointLightUniforms(pointLight, viewMatrix);
 
             modelMatrix.identity()
-                       .translate(pointLight.getPosition())
-                       .scale(pointLight.getRadius());
+                    .translate(pointLight.getPosition())
+                    .scale(pointLight.getRadius());
             lightVolumeUniformMap.setUniform("modelMatrix", modelMatrix);
 
             glDrawElements(GL_TRIANGLES, sphereMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
@@ -272,8 +289,8 @@ public class LightsRender {
             updateLightVolumeSpotLightUniforms(spotLight, viewMatrix);
 
             modelMatrix.identity()
-                       .translate(spotLight.getPosition())
-                       .scale(spotLight.getRadius());
+                    .translate(spotLight.getPosition())
+                    .scale(spotLight.getRadius());
             lightVolumeUniformMap.setUniform("modelMatrix", modelMatrix);
 
             glDrawElements(GL_TRIANGLES, sphereMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
@@ -296,7 +313,7 @@ public class LightsRender {
             glBindTexture(GL_TEXTURE_2D, textureIds[i]);
         }
         if (numTextures == 0) {
-             glActiveTexture(GL_TEXTURE0);
+            glActiveTexture(GL_TEXTURE0);
         }
     }
 

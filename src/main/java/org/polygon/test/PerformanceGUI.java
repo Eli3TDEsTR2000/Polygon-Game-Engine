@@ -1,19 +1,17 @@
 package org.polygon.test;
 
 import imgui.ImGui;
-import imgui.ImGuiIO;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImBoolean;
 import org.polygon.engine.core.IGuiInstance;
 import org.polygon.engine.core.Window;
 
-public class performanceGUI implements IGuiInstance {
+public class PerformanceGUI implements IGuiInstance {
     boolean showFPS;
 
-    public performanceGUI(boolean showFPS) {
+    public PerformanceGUI(boolean showFPS) {
         this.showFPS = showFPS;
     }
 

@@ -30,7 +30,7 @@ public class SceneFBO {
         // Create Color Texture Attachment
         textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT
                 , (ByteBuffer) null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -41,7 +41,7 @@ public class SceneFBO {
         // Create Depth Renderbuffer Attachment
         depthRenderBufferId = glGenRenderbuffers();
         glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferId);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, width, height);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderBufferId);
 
         // Set the list of draw buffers.
@@ -76,12 +76,12 @@ public class SceneFBO {
 
         // Resize Texture
         glBindTexture(GL_TEXTURE_2D, textureId);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, (ByteBuffer) null);
         glBindTexture(GL_TEXTURE_2D, 0);
 
         // Resize Depth Renderbuffer
         glBindRenderbuffer(GL_RENDERBUFFER, depthRenderBufferId);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, width, height);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
 
@@ -105,4 +105,4 @@ public class SceneFBO {
     public int getHeight() { return height; }
     public int getTextureId() { return textureId; }
     public int getFboId() { return fboId; }
-} 
+}
