@@ -32,6 +32,7 @@ public class LightsRender {
 
     private static final int IRRADIANCE_MAP_TEXTURE_UNIT = 8;
     private static final int SSAO_TEXTURE_UNIT = 11;
+    public static final int POINT_SHADOW_TEXTURE_UNIT = 12;
 
     public LightsRender() {
         List<ShaderProgram.ShaderModuleData> baseShaderModules = new ArrayList<>();
@@ -114,9 +115,12 @@ public class LightsRender {
         lightVolumeUniformMap.createUniform("pointLight.color");
         lightVolumeUniformMap.createUniform("pointLight.intensity");
         lightVolumeUniformMap.createUniform("pointLight.position_view");
+        lightVolumeUniformMap.createUniform("pointLight.position_world");
         lightVolumeUniformMap.createUniform("pointLight.attenuation.constant");
         lightVolumeUniformMap.createUniform("pointLight.attenuation.linear");
         lightVolumeUniformMap.createUniform("pointLight.attenuation.exponent");
+        lightVolumeUniformMap.createUniform("pointLight.shadowIndex");
+        lightVolumeUniformMap.createUniform("pointLight.farPlane");
         lightVolumeUniformMap.createUniform("spotLight.color");
         lightVolumeUniformMap.createUniform("spotLight.intensity");
         lightVolumeUniformMap.createUniform("spotLight.position_view");
@@ -125,9 +129,14 @@ public class LightsRender {
         lightVolumeUniformMap.createUniform("spotLight.attenuation.exponent");
         lightVolumeUniformMap.createUniform("spotLight.coneDirection_view");
         lightVolumeUniformMap.createUniform("spotLight.cutOff");
+        lightVolumeUniformMap.createUniform("invViewMatrix");
+        for(int i = 0; i < PointShadowBuffer.MAX_POINT_LIGHT_SHADOWS; i++) {
+            lightVolumeUniformMap.createUniform("pointShadowMap[" + i + "]");
+        }
     }
 
-    public void render(Scene scene, ShadowRender shadowRender, GBuffer gBuffer, int ssaoTextureId, int windowWidth, int windowHeight) {
+    public void render(Scene scene, ShadowRender shadowRender, PointShadowRender pointShadowRender
+            , GBuffer gBuffer, int ssaoTextureId, int windowWidth, int windowHeight) {
         if(scene.getSceneLights() == null) {
             scene.setBypassLighting(true);
         }
@@ -135,7 +144,7 @@ public class LightsRender {
         renderBaseLighting(scene, shadowRender, gBuffer, ssaoTextureId);
 
         if (!scene.isLightingDisabled()) {
-            renderLightVolumes(scene, gBuffer, windowWidth, windowHeight);
+            renderLightVolumes(scene, gBuffer, pointShadowRender, windowWidth, windowHeight);
         }
     }
 
@@ -230,7 +239,8 @@ public class LightsRender {
         glDepthMask(true);
     }
 
-    private void renderLightVolumes(Scene scene, GBuffer gBuffer, int windowWidth, int windowHeight) {
+    private void renderLightVolumes(Scene scene, GBuffer gBuffer
+            , PointShadowRender pointShadowRender, int windowWidth, int windowHeight) {
         if (sphereMesh == null) {
             throw new IllegalStateException("Error: Sphere mesh not initialized for light volume rendering.");
         }
@@ -249,6 +259,13 @@ public class LightsRender {
         lightVolumeUniformMap.setUniform("normalSampler", 1);
         lightVolumeUniformMap.setUniform("materialSampler", 2);
         lightVolumeUniformMap.setUniform("depthSampler", 4);
+
+        lightVolumeUniformMap.setUniform("invViewMatrix", scene.getCamera().getInvViewMatrix());
+        List<PointLight> activeShadowLights = pointShadowRender.getActiveShadowLights();
+        for(int i = 0; i < PointShadowBuffer.MAX_POINT_LIGHT_SHADOWS; i++) {
+            lightVolumeUniformMap.setUniform("pointShadowMap["+ i +"]", POINT_SHADOW_TEXTURE_UNIT + i);
+        }
+        pointShadowRender.getPointShadowBuffer().bindTextures(GL_TEXTURE0 + POINT_SHADOW_TEXTURE_UNIT);
 
         glEnable(GL_BLEND);
         glBlendEquation(GL_FUNC_ADD);
@@ -270,7 +287,7 @@ public class LightsRender {
                 continue;
             }
 
-            updateLightVolumePointLightUniforms(pointLight, viewMatrix);
+            updateLightVolumePointLightUniforms(pointLight, viewMatrix, activeShadowLights);
 
             modelMatrix.identity()
                     .translate(pointLight.getPosition())
@@ -338,11 +355,13 @@ public class LightsRender {
         baseLightUniformMap.setUniform("fog.density", fog.getDensity());
     }
 
-    private void updateLightVolumePointLightUniforms(PointLight pointLight, Matrix4f viewMatrix) {
+    private void updateLightVolumePointLightUniforms(PointLight pointLight
+            , Matrix4f viewMatrix, List<PointLight> activeShadowLights) {
         auxVec4.set(pointLight.getPosition(), 1).mul(viewMatrix);
         auxVec3.set(auxVec4.x, auxVec4.y, auxVec4.z);
 
         lightVolumeUniformMap.setUniform("pointLight.position_view", auxVec3);
+        lightVolumeUniformMap.setUniform("pointLight.position_world", pointLight.getPosition());
 
         lightVolumeUniformMap.setUniform("pointLight.color", pointLight.getColor());
         lightVolumeUniformMap.setUniform("pointLight.intensity", pointLight.getIntensity());
@@ -351,6 +370,10 @@ public class LightsRender {
         lightVolumeUniformMap.setUniform("pointLight.attenuation.constant", attenuation.getConstant());
         lightVolumeUniformMap.setUniform("pointLight.attenuation.linear", attenuation.getLinear());
         lightVolumeUniformMap.setUniform("pointLight.attenuation.exponent", attenuation.getExponent());
+
+        int shadowIndex = activeShadowLights.indexOf(pointLight);
+        lightVolumeUniformMap.setUniform("pointLight.shadowIndex", shadowIndex);
+        lightVolumeUniformMap.setUniform("pointLight.farPlane", pointLight.getRadius());
     }
 
     private void updateLightVolumeSpotLightUniforms(SpotLight spotLight, Matrix4f viewMatrix) {

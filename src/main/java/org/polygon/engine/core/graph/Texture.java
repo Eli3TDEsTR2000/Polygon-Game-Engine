@@ -61,6 +61,10 @@ public class Texture {
     private void generateTexture(int width, int height, ByteBuffer bfr) {
         // Generate a texture in the GPU
         textureId = glGenTextures();
+
+        int previousActiveTextureUnit = glGetInteger(GL_ACTIVE_TEXTURE);
+        glActiveTexture(GL_TEXTURE0);
+
         // Bind that texture
         glBindTexture(GL_TEXTURE_2D, textureId);
         // Since the channels for the image is one byte each, the param is 1 (RGBA).
@@ -79,5 +83,8 @@ public class Texture {
                 GL_RGBA, GL_UNSIGNED_BYTE, bfr);
         // Generate a mipmap for our HD image when mapped object is scaled
         glGenerateMipmap(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glActiveTexture(previousActiveTextureUnit);
     }
 }

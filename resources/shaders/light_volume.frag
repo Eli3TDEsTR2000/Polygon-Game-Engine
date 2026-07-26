@@ -6,6 +6,8 @@ const float SPECULAR_POWER = 10;
 
 const int DEBUG_LIGHT_VOLUME = 0;
 
+const int MAX_POINT_LIGHT_SHADOWS = 4;
+
 struct Attenuation {
     float constant;
     float linear;
@@ -16,7 +18,10 @@ struct PointLight {
     vec3 color;
     float intensity;
     vec3 position_view;
+    vec3 position_world;
     Attenuation attenuation;
+    int shadowIndex;
+    float farPlane;
 };
 
 struct SpotLight {
@@ -40,6 +45,10 @@ uniform mat4 invProjectionMatrix;
 uniform int lightType;
 uniform PointLight pointLight;
 uniform SpotLight spotLight;
+
+// Used to get from view space to world space : for point light's shadow mapping
+uniform mat4 invViewMatrix;
+uniform samplerCube pointShadowMap[MAX_POINT_LIGHT_SHADOWS];
 
 // Vertex position in view space
 in vec3 FragPos_view;
@@ -165,6 +174,21 @@ float calcAttenuation(vec3 lightPos_view, vec3 fragPos_view, Attenuation att)
     return (attenuation > 0.0) ? (1.0 / attenuation) : 0.0;
 }
 
+float calcPointShadow(vec3 fragPos_world, PointLight light) {
+    if(light.shadowIndex < 0) {
+        return 1.0; // fully lit - no shadows
+    }
+
+    vec3 fragToLight = fragPos_world - light.position_world;
+    float currentDistance = length(fragToLight);
+
+    float closestDistance = texture(pointShadowMap[light.shadowIndex], fragToLight).r;
+    closestDistance *= light.farPlane;
+
+    float bias = 0.05;
+    return (currentDistance - bias > closestDistance) ? 0.0 : 1.0;
+}
+
 void main()
 {
     // Calculate texture coordinates from fragment's screen position
@@ -203,7 +227,11 @@ void main()
         lightResult = calcPBRContrib(pointLight.color, pointLight.intensity, pointLight.position_view,
                                      fragPos_vs, N, V, albedo, metallic, roughness);
         float attenuation = calcAttenuation(pointLight.position_view, fragPos_vs, pointLight.attenuation);
-        lightResult *= attenuation;
+
+        vec4 fragPos_world_h = invViewMatrix * vec4(fragPos_vs, 1.0);
+        float shadow = calcPointShadow(fragPos_world_h.xyz, pointLight);
+
+        lightResult *= attenuation * shadow;
     }
     else // Spot Light (Type == 1)
     {

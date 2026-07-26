@@ -11,6 +11,9 @@ public class TextureArray {
         ids = new int[numTextures];
         glGenTextures(ids);
 
+        int previousActiveTextureUnit = glGetInteger(GL_ACTIVE_TEXTURE);
+        glActiveTexture(GL_TEXTURE0);
+
         for(int i = 0; i < numTextures; i++) {
             glBindTexture(GL_TEXTURE_2D, ids[i]);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT
@@ -21,6 +24,8 @@ public class TextureArray {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         }
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glActiveTexture(previousActiveTextureUnit);
     }
 
     public void cleanup() {
