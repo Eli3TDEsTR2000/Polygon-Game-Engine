@@ -8,6 +8,7 @@ public class PointLight extends Light implements ILightHasRadius {
     protected Attenuation attenuation;
     protected Vector3f position;
     protected float radius;
+    private boolean shadowCasting = false;
 
     public PointLight(Vector3f color, float intensity, Vector3f position) {
         super(color, intensity);
@@ -89,6 +90,14 @@ public class PointLight extends Light implements ILightHasRadius {
     public void setColor(float r, float g, float b) {
         super.setColor(r, g, b);
         calculateRadius();
+    }
+
+    public boolean isShadowCasting() {
+        return shadowCasting;
+    }
+
+    public void setShadowCasting(boolean shadowCasting) {
+        this.shadowCasting = shadowCasting;
     }
 
     public static class Attenuation {

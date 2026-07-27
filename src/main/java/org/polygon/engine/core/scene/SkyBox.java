@@ -196,6 +196,9 @@ public class SkyBox {
             }
 
             // Create a 2D texture from the loaded HDR data
+            int previousActiveTextureUnit = glGetInteger(GL_ACTIVE_TEXTURE);
+            glActiveTexture(GL_TEXTURE0);
+
             int hdrTexture2D = glGenTextures();
             glBindTexture(GL_TEXTURE_2D, hdrTexture2D);
             // Use GL_RGB32F for HDR
@@ -259,8 +262,10 @@ public class SkyBox {
             // Mipmaps for the cubemap
             glBindTexture(GL_TEXTURE_CUBE_MAP, hdrTexture);
             glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-            glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+            glActiveTexture(previousActiveTextureUnit);
         }
 
         return hdrTexture;

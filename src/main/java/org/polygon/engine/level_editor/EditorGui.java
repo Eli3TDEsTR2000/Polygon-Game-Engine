@@ -596,6 +596,9 @@ public class EditorGui implements IGuiInstance {
                                 if (ImGui.dragFloat3("Position##pl", position, 0.1f)) {
                                     pl.setPosition(position[0], position[1], position[2]);
                                 }
+                                if(ImGui.checkbox("Cast Shadows", pl.isShadowCasting())) {
+                                    pl.setShadowCasting(!pl.isShadowCasting());
+                                }
                                 ImGui.treePop();
                             } else {
                                 // Add remove button even when collapsed
