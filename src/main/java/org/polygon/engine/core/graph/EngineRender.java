@@ -15,6 +15,7 @@ import static org.lwjgl.opengl.GL40.*;
 
 public class EngineRender {
     private ShadowRender shadowRender;
+    private PointShadowRender pointShadowRender;
     private GBuffer gBuffer;
     private SceneRender sceneRender;
     private LightsRender lightsRender;
@@ -44,6 +45,7 @@ public class EngineRender {
         glCullFace(GL_BACK);
 
         shadowRender = new ShadowRender();
+        pointShadowRender = new PointShadowRender();
         gBuffer = new GBuffer(window);
         sceneFBO = new SceneFBO(window);
         sceneRender = new SceneRender();
@@ -58,6 +60,7 @@ public class EngineRender {
 
     public void cleanup() {
         shadowRender.cleanup();
+        pointShadowRender.cleanup();
         gBuffer.cleanup();
         sceneFBO.cleanup();
         sceneRender.cleanup();
@@ -77,6 +80,9 @@ public class EngineRender {
         // Shadow Pass
         shadowRender.render(scene);
 
+        // Point lights shadow Pass
+        pointShadowRender.render(scene);
+
         // Geometry Pass, draws to the G-Buffer FBO.
         sceneRender.render(scene, gBuffer);
 
@@ -95,7 +101,8 @@ public class EngineRender {
 
         // Base Lighting Pass, draws to the SceneFBO.
         int ssaoTextureId = window.getWindowOptions().ssaoEnabled ? ssaoBuffer.getBlurTextureId() : ssaoBuffer.getFallbackWhiteTextureId();
-        lightsRender.render(scene, shadowRender, gBuffer, ssaoTextureId, sceneFBO.getWidth(), sceneFBO.getHeight());
+        lightsRender.render(scene, shadowRender, pointShadowRender
+                , gBuffer, ssaoTextureId, sceneFBO.getWidth(), sceneFBO.getHeight());
 
         // POST_LIGHTING Pass
         renderStage(RenderStage.POST_LIGHTING, scene);
