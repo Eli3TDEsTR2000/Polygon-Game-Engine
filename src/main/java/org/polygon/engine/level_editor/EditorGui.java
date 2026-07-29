@@ -418,17 +418,17 @@ public class EditorGui implements IGuiInstance {
                         if (ImGui.colorEdit4("Diffuse Color##mat" + i, diffuseColor)) {
                             material.setDiffuseColor(new Vector4f(diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]));
                         }
-                        drawTextureInput("Diffuse Map", i, material.getTexturePath(), textureCache, material::setTexturePath);
+                        drawTextureInput("Diffuse Map", i, material.getTexturePath(), textureCache, material::setTexturePath, true);
                         
                         // --- Normal Map --- 
-                        drawTextureInput("Normal Map", i, material.getNormalMapPath(), textureCache, material::setNormalMapPath);
+                        drawTextureInput("Normal Map", i, material.getNormalMapPath(), textureCache, material::setNormalMapPath, false);
 
                         // --- Metallic & Map ---
                         float[] metallic = {material.getMetallic()};
                         if(ImGui.dragFloat("Metallic##mat"+i, metallic, 0.01f, 0.0f, 1.0f)) {
                              material.setMetallic(metallic[0]);
                         }
-                        drawTextureInput("Metallic Map", i, material.getMetallicMapPath(), textureCache, material::setMetallicMapPath);
+                        drawTextureInput("Metallic Map", i, material.getMetallicMapPath(), textureCache, material::setMetallicMapPath, false);
 
                         // --- Roughness & Map ---
                         float[] roughness = {material.getRoughness()};
@@ -436,17 +436,17 @@ public class EditorGui implements IGuiInstance {
                              material.setRoughness(roughness[0]);
                         }
                         // Note: Roughness map might share path with Metallic for combined textures
-                        drawTextureInput("Roughness Map", i, material.getRoughnessMapPath(), textureCache, material::setRoughnessMapPath);
+                        drawTextureInput("Roughness Map", i, material.getRoughnessMapPath(), textureCache, material::setRoughnessMapPath, false);
 
                         // --- AO & Map ---
                         float[] aoStrength = {material.getAoStrength()};
                         if(ImGui.dragFloat("AO Strength##mat"+i, aoStrength, 0.01f, 0.0f, 1.0f)) {
                             material.setAoStrength(aoStrength[0]);
                         }
-                        drawTextureInput("AO Map", i, material.getAoMapPath(), textureCache, material::setAoMapPath);
+                        drawTextureInput("AO Map", i, material.getAoMapPath(), textureCache, material::setAoMapPath, false);
                        
                         // --- Emissive Map --- 
-                        drawTextureInput("Emissive Map", i, material.getEmissiveMapPath(), textureCache, material::setEmissiveMapPath);
+                        drawTextureInput("Emissive Map", i, material.getEmissiveMapPath(), textureCache, material::setEmissiveMapPath, true);
 
 
                         ImGui.treePop();
@@ -460,7 +460,8 @@ public class EditorGui implements IGuiInstance {
     }
 
     // Helper function to draw texture input field and icon
-    private void drawTextureInput(String label, int materialIndex, String currentPath, TextureCache cache, java.util.function.Consumer<String> pathSetter) {
+    private void drawTextureInput(String label, int materialIndex, String currentPath, TextureCache cache
+            , java.util.function.Consumer<String> pathSetter, boolean sRGB) {
         ImString pathInput = new ImString(currentPath != null ? currentPath : "", 256);
         ImGui.text(label + ":");
         ImGui.sameLine();
@@ -498,7 +499,7 @@ public class EditorGui implements IGuiInstance {
                 try {
                     // This will load the texture if not already cached,
                     // or just return the existing one if it is.
-                    cache.createTexture(updatedPath);
+                    cache.createTexture(updatedPath, sRGB);
                     System.out.println("Ensured texture is loaded/cached: " + updatedPath);
                 } catch (Exception e) {
                     System.err.println("Failed to load texture from new path [" + updatedPath + "]: " + e.getMessage());

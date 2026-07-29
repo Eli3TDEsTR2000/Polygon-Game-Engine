@@ -171,7 +171,7 @@ public class ModelLoader {
             String texturePath = aiTexturePath.dataString();
             if (texturePath != null && texturePath.length() > 0) {
                 material.setTexturePath(modelDir + File.separator + new File(texturePath).getName());
-                textureCache.createTexture(material.getTexturePath());
+                textureCache.createTexture(material.getTexturePath(), true);
                 material.setDiffuseColor(Material.DEFAULT_COLOR);
             }
 
@@ -181,7 +181,7 @@ public class ModelLoader {
             String normalMapPath = aiNormalMapPath.dataString();
             if(normalMapPath != null && normalMapPath.length() > 0) {
                 material.setNormalMapPath(modelDir + File.separator + new File(normalMapPath).getName());
-                textureCache.createTexture(material.getNormalMapPath());
+                textureCache.createTexture(material.getNormalMapPath(), false);
             }
 
             float[] metallicFactor = { 0.0f };
@@ -198,7 +198,7 @@ public class ModelLoader {
             String metallicMapPath = aiMetallicMapPath.dataString();
             if (metallicMapPath != null && metallicMapPath.length() > 0) {
                 material.setMetallicMapPath(modelDir + File.separator + new File(metallicMapPath).getName());
-                textureCache.createTexture(material.getMetallicMapPath());
+                textureCache.createTexture(material.getMetallicMapPath(),false);
             }
 
             float[] roughnessFactor = { 0.5f };
@@ -219,7 +219,7 @@ public class ModelLoader {
             String roughnessMapPath = aiRoughnessMapPath.dataString();
             if (roughnessMapPath != null && roughnessMapPath.length() > 0 && !roughnessMapPath.equals(metallicMapPath)) {
                 material.setRoughnessMapPath(modelDir + File.separator + new File(roughnessMapPath).getName());
-                textureCache.createTexture(material.getRoughnessMapPath());
+                textureCache.createTexture(material.getRoughnessMapPath(),false);
             } else if (metallicMapPath != null && metallicMapPath.length() > 0) {
                 // If we found a metallic map path via UNKNOWN, assume it's a combined MetallicRoughness texture
                 // Point roughness path to the same texture. Shader will need logic to sample correct channels.
@@ -242,7 +242,7 @@ public class ModelLoader {
             String aoMapPath = aiAoMapPath.dataString();
             if (aoMapPath != null && aoMapPath.length() > 0 && !aoMapPath.equals(texturePath)) {
                 material.setAoMapPath(modelDir + File.separator + new File(aoMapPath).getName());
-                textureCache.createTexture(material.getAoMapPath());
+                textureCache.createTexture(material.getAoMapPath(), false);
             }
 
             AIString aiEmissiveMapPath = AIString.calloc(stack);
@@ -251,7 +251,7 @@ public class ModelLoader {
             String emissiveMapPath = aiEmissiveMapPath.dataString();
             if(emissiveMapPath != null && emissiveMapPath.length() > 0) {
                 material.setEmissiveMapPath(modelDir + File.separator + new File(emissiveMapPath).getName());
-                textureCache.createTexture(material.getEmissiveMapPath());
+                textureCache.createTexture(material.getEmissiveMapPath(), true);
             }
 
             return material;

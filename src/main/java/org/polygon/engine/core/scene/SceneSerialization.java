@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.polygon.engine.core.graph.Material;
 import org.polygon.engine.core.graph.Model;
+import org.polygon.engine.core.graph.Texture;
 import org.polygon.engine.core.graph.TextureCache;
 import org.polygon.engine.core.scene.lights.*;
 
@@ -32,12 +33,12 @@ public class SceneSerialization {
         camera.setRotation(data.cameraData.rotX, data.cameraData.rotY);
 
         // Recreate textures from saved paths
-        if (data.texturePaths != null) {
-            for (String path : data.texturePaths) {
+        if (data.textures != null) {
+            for (Texture texture : data.textures) {
                 try {
-                    textureCache.createTexture(path);
+                    textureCache.createTexture(texture.getTexturePath(), texture.isInternalFormatSRGB());
                 } catch (Exception e) {
-                    System.err.println("Failed to load texture during scene load: " + path);
+                    System.err.println("Failed to load texture during scene load: " + texture.getTexturePath());
                     e.printStackTrace();
                 }
             }
@@ -255,8 +256,8 @@ public class SceneSerialization {
         data.cameraData.rotX = camRot.x;
         data.cameraData.rotY = camRot.y;
 
-        // Save texture paths
-        data.texturePaths = new ArrayList<>(scene.getTextureCache().getTexturePaths());
+        // Save texture
+        data.textures = new ArrayList<>(scene.getTextureCache().getTextureList());
 
         // Save model data
         data.modelDataList = new ArrayList<>();
@@ -415,7 +416,7 @@ public class SceneSerialization {
 
     private static class SceneSaveData {
         CameraData cameraData;
-        List<String> texturePaths;
+        List<Texture> textures;
         List<ModelData> modelDataList;
         List<EntityData> entityDataList;
         SceneLightsData sceneLightsData;

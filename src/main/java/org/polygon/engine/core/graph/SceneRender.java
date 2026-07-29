@@ -67,6 +67,7 @@ public class SceneRender {
     }
 
     public void render(Scene scene, GBuffer gBuffer) {
+        glEnable(GL_FRAMEBUFFER_SRGB);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gBuffer.getGBufferId());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, gBuffer.getWidth(), gBuffer.getHeight());
@@ -170,6 +171,7 @@ public class SceneRender {
 
         glBindVertexArray(0);
         glEnable(GL_BLEND);
+        glDisable(GL_FRAMEBUFFER_SRGB);
         shaderProgram.unbind();
     }
 }

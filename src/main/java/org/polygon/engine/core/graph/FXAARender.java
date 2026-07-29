@@ -36,12 +36,12 @@ public class FXAARender {
         uniformMap = new UniformMap(shaderProgram.getProgramId());
         uniformMap.createUniform("sceneSampler");
         uniformMap.createUniform("inverseScreenSize");
-        uniformMap.createUniform("gamma");
         uniformMap.createUniform("exposure");
-        uniformMap.createUniform("enableToneGamma");
+        uniformMap.createUniform("enableToneMap");
     }
 
     public void render(int sceneTextureId, Window window) {
+        glEnable(GL_FRAMEBUFFER_SRGB);
         int width = window.getWidth();
         int height = window.getHeight();
         Window.WindowOptions options = window.getWindowOptions();
@@ -54,9 +54,8 @@ public class FXAARender {
         uniformMap.setUniform("sceneSampler", 0); // Texture unit 0
         inverseScreenSize.set(1.0f / width, 1.0f / height);
         uniformMap.setUniform("inverseScreenSize", inverseScreenSize);
-        uniformMap.setUniform("gamma", options.gamma);
         uniformMap.setUniform("exposure", options.exposure);
-        uniformMap.setUniform("enableToneGamma", options.enableToneGamma);
+        uniformMap.setUniform("enableToneMap", options.enableToneMap);
 
         // Bind input texture
         glActiveTexture(GL_TEXTURE0);
@@ -67,6 +66,7 @@ public class FXAARender {
         glDrawElements(GL_TRIANGLES, quadMesh.getNumVertices(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
+        glDisable(GL_FRAMEBUFFER_SRGB);
         shaderProgram.unbind();
     }
 } 

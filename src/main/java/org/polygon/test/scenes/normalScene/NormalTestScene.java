@@ -26,10 +26,10 @@ public class NormalTestScene extends BasicScene {
         scene.addModel(damagedHelmet);
 
         damagedHelmet.getMaterialList().get(0).setMetallicMapPath("resources/models/test/Default_metallic.jpg");
-        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getMetallicMapPath());
+        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getMetallicMapPath(), false);
 
         damagedHelmet.getMaterialList().get(0).setRoughnessMapPath("resources/models/test/Default_roughness.jpg");
-        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getRoughnessMapPath());
+        scene.getTextureCache().createTexture(damagedHelmet.getMaterialList().get(0).getRoughnessMapPath(), false);
 
 
         float spacingX = 2.5f;
