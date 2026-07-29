@@ -137,9 +137,6 @@ public class LightsRender {
 
     public void render(Scene scene, ShadowRender shadowRender, PointShadowRender pointShadowRender
             , GBuffer gBuffer, int ssaoTextureId, int windowWidth, int windowHeight) {
-        if(scene.getSceneLights() == null) {
-            scene.setBypassLighting(true);
-        }
 
         renderBaseLighting(scene, shadowRender, gBuffer, ssaoTextureId);
 

@@ -33,8 +33,8 @@ public class IBLTestScene extends BasicScene {
         Material damagedHelmetMaterial = damagedHelmet.getMaterialList().get(0);
         damagedHelmetMaterial.setRoughnessMapPath("resources/models/test/Default_roughness.jpg");
         damagedHelmetMaterial.setMetallicMapPath("resources/models/test/Default_metallic.jpg");
-        scene.getTextureCache().createTexture(damagedHelmetMaterial.getMetallicMapPath());
-        scene.getTextureCache().createTexture(damagedHelmetMaterial.getRoughnessMapPath());
+        scene.getTextureCache().createTexture(damagedHelmetMaterial.getMetallicMapPath(), false);
+        scene.getTextureCache().createTexture(damagedHelmetMaterial.getRoughnessMapPath(), false);
         scene.addModel(damagedHelmet);
 
         Entity damagedHelmetEntity = new Entity("damagedHelmet-01", damagedHelmet.getModelId());

@@ -9,19 +9,76 @@ import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
-    private int textureId;
-    private String texturePath;
+    private final int textureId;
+    private final String texturePath;
+    private final boolean sRGB;
 
-    public static final Texture BRDF_LUT = new Texture("resources/textures/brdf.png");
+    public static final Texture BRDF_LUT = new Texture("resources/textures/brdf.png", false);
 
-    public Texture(int width, int height, ByteBuffer bfr) {
+    public Texture(int width, int height, ByteBuffer bfr, boolean sRGB) {
         texturePath = "";
-        generateTexture(width, height, bfr);
+        textureId = generateTexture(width, height, bfr, sRGB);
+        this.sRGB = sRGB;
     }
 
-    public Texture(String texturePath) {
+    public Texture(String texturePath, boolean sRGB) {
+        this.texturePath = texturePath;
+        this.textureId = generateTexture(texturePath, sRGB);
+        this.sRGB = sRGB;
+    }
+
+    public String getTexturePath() {
+        return texturePath;
+    }
+
+    public boolean isInternalFormatSRGB() {
+        return sRGB;
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public void bind() {
+        glBindTexture(GL_TEXTURE_2D, textureId);
+    }
+
+    public void cleanup() {
+        glDeleteTextures(textureId);
+    }
+
+    private int generateTexture(int width, int height, ByteBuffer bfr, boolean sRGB) {
+        // Generate a texture in the GPU
+        int textureId = glGenTextures();
+
+        int previousActiveTextureUnit = glGetInteger(GL_ACTIVE_TEXTURE);
+        glActiveTexture(GL_TEXTURE0);
+
+        // Bind that texture
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // TODO - HARDCODED MAX_ANISOTROPY for ANISOTROPIC FILTERING, rework when implementing graphics settings
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 16.0f);
+        // Load the texture data
+        // Loads the texture with a target 2D texture (GL_TEXTURE_2D)
+        // Level of details is set to 0, base image level of detail
+        // The internal format is set to RGBA
+        // border value must be 0
+        // We then send the image data stored in bfr to generate the texture
+        int internalFormat = sRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0,
+                GL_RGBA, GL_UNSIGNED_BYTE, bfr);
+        // Generate a mipmap for our HD image when mapped object is scaled
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glActiveTexture(previousActiveTextureUnit);
+        return textureId;
+    }
+
+    private int generateTexture(String texturePath, boolean sRGB) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            this.texturePath = texturePath;
             // Allocate off-heap memory for the width, height and image channels
             IntBuffer w = stack.mallocInt(1);
             IntBuffer h = stack.mallocInt(1);
@@ -39,52 +96,7 @@ public class Texture {
             int height = h.get();
 
             // This will generate a texture in the gpu based on the Image buffer
-            generateTexture(width, height, bfr);
-
-            // We then need to free the byte buffer
-            stbi_image_free(bfr);
+            return generateTexture(width, height, bfr, sRGB);
         }
-    }
-
-    public String getTexturePath() {
-        return texturePath;
-    }
-
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, textureId);
-    }
-
-    public void cleanup() {
-        glDeleteTextures(textureId);
-    }
-
-    private void generateTexture(int width, int height, ByteBuffer bfr) {
-        // Generate a texture in the GPU
-        textureId = glGenTextures();
-
-        int previousActiveTextureUnit = glGetInteger(GL_ACTIVE_TEXTURE);
-        glActiveTexture(GL_TEXTURE0);
-
-        // Bind that texture
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        // Since the channels for the image is one byte each, the param is 1 (RGBA).
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // TODO - HARDCODED MAX_ANISOTROPY for ANISOTROPIC FILTERING, rework when implementing graphics settings
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 16.0f);
-        // Load the texture data
-        // Loads the texture with a target 2D texture (GL_TEXTURE_2D)
-        // Level of details is set to 0, base image level of detail
-        // The internal format is set to RGBA
-        // border value must be 0
-        // We then send the image data stored in bfr to generate the texture
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
-                GL_RGBA, GL_UNSIGNED_BYTE, bfr);
-        // Generate a mipmap for our HD image when mapped object is scaled
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glActiveTexture(previousActiveTextureUnit);
     }
 }

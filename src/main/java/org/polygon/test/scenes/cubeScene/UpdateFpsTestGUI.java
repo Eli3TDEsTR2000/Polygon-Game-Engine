@@ -15,7 +15,7 @@ public class UpdateFpsTestGUI implements IGuiInstance {
     private ImInt ups;
     private ImInt fps;
     private ImBoolean vsyncEnabled;
-    private ImBoolean postProcessingEnabled;
+    private ImBoolean toneMapEnabled;
     private float[] gamma;
     private float[] exposure;
     private Window window;
@@ -34,10 +34,9 @@ public class UpdateFpsTestGUI implements IGuiInstance {
             fps.set(window.getWindowOptions().fps);
         }
 
-        gamma = new float[]{window.getWindowOptions().gamma};
         exposure = new float[]{window.getWindowOptions().exposure};
-        postProcessingEnabled = new ImBoolean();
-        postProcessingEnabled.set(window.getWindowOptions().enableToneGamma);
+        toneMapEnabled = new ImBoolean();
+        toneMapEnabled.set(window.getWindowOptions().enableToneMap);
 
         this.window = window;
     }
@@ -91,23 +90,13 @@ public class UpdateFpsTestGUI implements IGuiInstance {
 
         ImGui.dummy(0, 20);
 
-        if(ImGui.checkbox("Post-Processing", postProcessingEnabled)) {
-            if(postProcessingEnabled.get()) {
-                window.getWindowOptions().enableToneGamma = true;
-            } else {
-                window.getWindowOptions().enableToneGamma = false;
-            }
+        if(ImGui.checkbox("Post-Processing", toneMapEnabled)) {
+            window.getWindowOptions().enableToneMap = toneMapEnabled.get();
         }
 
         ImGui.dummy(0, 10);
 
-        if(ImGui.collapsingHeader("Tone mapping / Gamma correction", ImGuiTreeNodeFlags.DefaultOpen)) {
-            ImGui.labelText("##GammaCorrectionSlider", "Gamma: ");
-            ImGui.sameLine(100);
-            if(ImGui.sliderFloat("##Gamma", gamma, 0.0f, 10.0f, "%.2f")) {
-                window.getWindowOptions().gamma = this.gamma[0];
-            }
-
+        if(ImGui.collapsingHeader("Tone mapping settings", ImGuiTreeNodeFlags.DefaultOpen)) {
             ImGui.labelText("##ExposureSlider", "Exposure: ");
             ImGui.sameLine(100);
             if(ImGui.sliderFloat("##Exposure", exposure, 0.0f, 10.0f, "%.2f")) {

@@ -49,6 +49,9 @@ public class Window {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
+        // request an sRGB-capable default framebuffer
+        glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
+
         // Checks if compatible profile is enabled, (default: false)
         if(this.opts.compatibleProfile) {
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
@@ -255,12 +258,11 @@ public class Window {
 
     public static class WindowOptions {
         public boolean compatibleProfile;
-        public boolean enableToneGamma = true;
+        public boolean enableToneMap = true;
         public int fps;
         public int ups = Engine.TARGET_UPS;
         public int width;
         public int height;
-        public float gamma = 2.2f;
         public float exposure = 1.0f;
         public boolean ssaoEnabled = true;
     }
