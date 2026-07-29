@@ -1,7 +1,6 @@
 package org.polygon.engine.core.graph;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 // This class handles loaded textures to load each texture just once
 public class TextureCache {
@@ -12,15 +11,15 @@ public class TextureCache {
 
     public TextureCache() {
         textureMap = new HashMap<>();
-        textureMap.put(DEFAULT_TEXTURE, new Texture(DEFAULT_TEXTURE));
+        textureMap.put(DEFAULT_TEXTURE, new Texture(DEFAULT_TEXTURE, true));
     }
 
     public void cleanup() {
         textureMap.values().forEach(Texture::cleanup);
     }
 
-    public Texture createTexture(String texturePath) {
-        return textureMap.computeIfAbsent(texturePath, Texture::new);
+    public Texture createTexture(String texturePath, boolean sRGB) {
+        return textureMap.computeIfAbsent(texturePath, key -> new Texture(key, sRGB));
     }
 
     public Texture getTexture(String texturePath) {
@@ -35,5 +34,14 @@ public class TextureCache {
         }
 
         return texture;
+    }
+
+    public List<Texture> getTextureList() {
+        List<Texture> textureList = new ArrayList<>(textureMap.values());
+        return textureList;
+    }
+
+    public Set<String> getTexturePaths() {
+        return textureMap.keySet();
     }
 }

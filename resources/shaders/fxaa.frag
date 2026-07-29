@@ -8,10 +8,9 @@ uniform sampler2D sceneSampler;
 // Inverse of screen resolution (1.0 / width, 1.0 / height)
 uniform vec2 inverseScreenSize;
 
-// Controls for tone-mapping / gamma correction.
+// Controls for tone-mapping.
 uniform float exposure = 1.0;
-uniform float gamma = 2.2;
-uniform int enableToneGamma;
+uniform int enableToneMap;
 
 // Input from vertex shader
 in vec2 vTexCoord;
@@ -108,27 +107,18 @@ vec3 toneMapACESFitted(vec3 color)
     return color;
 }
 
-// Gamma Correction
-vec3 gammaCorrect(vec3 color) {
-    color = max(color, vec3(0.0)); 
-    return pow(color, vec3(1.0/gamma));
-}
-
 void main() {
     vec3 finalResult;
 
-    if(enableToneGamma == 1) {
+    if(enableToneMap == 1) {
         // Apply FXAA to the HDR scene texture
         vec3 hdrResult = FxaaPixelShader(vTexCoord, sceneSampler, inverseScreenSize);
 
         // Apply exposure control
         hdrResult *= exposure;
 
-        // Apply ACES Fitted Tone Mapping 
-        vec3 mappedResult = toneMapACESFitted(hdrResult);
-
-        // Apply Gamma Correction for display
-        finalResult = gammaCorrect(mappedResult);
+        // Apply ACES Fitted Tone Mapping
+        finalResult = toneMapACESFitted(hdrResult);
     } else {
         finalResult = FxaaPixelShader(vTexCoord, sceneSampler, inverseScreenSize);
     }

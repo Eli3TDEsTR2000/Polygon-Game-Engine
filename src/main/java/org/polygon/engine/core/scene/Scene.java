@@ -47,7 +47,7 @@ public class Scene {
         // Initialize the scene's fog.
         fog = new Fog();
 
-        bypassLighting = false;
+        bypassLighting = true;
 
         guiInstances = new ArrayList<>();
     }
@@ -70,7 +70,7 @@ public class Scene {
         modelMap = new HashMap<>();
         textureCache = new TextureCache();
         camera = new Camera();
-        bypassLighting = false;
+        bypassLighting = true;
         guiInstances = new ArrayList<>();
     }
 
@@ -138,6 +138,7 @@ public class Scene {
     }
 
     public void setSceneLights(SceneLights sceneLights) {
+        bypassLighting = false;
         this.sceneLights = sceneLights;
     }
     public void setFog(Fog fog) {

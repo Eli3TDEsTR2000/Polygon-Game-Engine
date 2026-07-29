@@ -154,6 +154,7 @@ public class EngineRender {
         glDepthMask(true);
         glDisable(GL_BLEND);
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+        glDisable(GL_FRAMEBUFFER_SRGB);
     }
 
     public void addRenderPass(RenderStage stage, IRenderPass renderPass) {
