@@ -42,7 +42,7 @@ public class ModelLoader {
                 , aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices
                         | aiProcess_Triangulate | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace
                         | aiProcess_LimitBoneWeights | aiProcess_GenBoundingBoxes
-                        | (importAnimations ? 0 : aiProcess_PreTransformVertices));
+                        | (importAnimations ? 0 : aiProcess_PreTransformVertices), importAnimations);
     }
 
     public static Model loadAnimation(String modelId, String modelPath, TextureCache textureCache) {
@@ -52,7 +52,7 @@ public class ModelLoader {
                         | aiProcess_LimitBoneWeights | aiProcess_GenBoundingBoxes);
     }
 
-    private static Model loadModel(String modelId, String modelPath, TextureCache textureCache, int flags) {
+    private static Model loadModel(String modelId, String modelPath, TextureCache textureCache, int flags, boolean hasAnimation) {
         // check if the model path exists
         File file = new File(modelPath);
         if (!file.exists()) {
@@ -115,7 +115,7 @@ public class ModelLoader {
 
         aiReleaseImport(aiScene);
 
-        return new Model(modelId, materialList, animationList);
+        return new Model(modelId, modelPath, materialList, animationList, hasAnimation);
     }
 
     private static Model loadAnimation(String modelId, String modelPath, int flags) {
@@ -147,7 +147,7 @@ public class ModelLoader {
 
         aiReleaseImport(aiScene);
 
-        return new Model(modelId, null, animationList);
+        return new Model(modelId, modelPath, null, animationList, true);
     }
 
     private static Material processMaterial(AIMaterial aiMaterial, String modelDir, TextureCache textureCache) {
@@ -157,7 +157,7 @@ public class ModelLoader {
 
             int result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT, aiTextureType_NONE, 0, aiColor4D);
             if(result == aiReturn_SUCCESS) {
-                 material.setAmbientColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
+                material.setAmbientColor(new Vector4f(aiColor4D.r(), aiColor4D.g(), aiColor4D.b(), aiColor4D.a()));
             }
 
             result = aiGetMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE, aiTextureType_NONE, 0, aiColor4D);
@@ -213,8 +213,8 @@ public class ModelLoader {
             int resultRoughness = aiGetMaterialTexture(aiMaterial, aiTextureType_DIFFUSE_ROUGHNESS, 0
                     , aiRoughnessMapPath, (IntBuffer) null, null, null, null, null, null);
             if (resultRoughness != aiReturn_SUCCESS) {
-                 aiGetMaterialTexture(aiMaterial, aiTextureType_UNKNOWN, 0, aiRoughnessMapPath
-                         , (IntBuffer) null, null, null, null, null, null);
+                aiGetMaterialTexture(aiMaterial, aiTextureType_UNKNOWN, 0, aiRoughnessMapPath
+                        , (IntBuffer) null, null, null, null, null, null);
             }
             String roughnessMapPath = aiRoughnessMapPath.dataString();
             if (roughnessMapPath != null && roughnessMapPath.length() > 0 && !roughnessMapPath.equals(metallicMapPath)) {
@@ -224,7 +224,7 @@ public class ModelLoader {
                 // If we found a metallic map path via UNKNOWN, assume it's a combined MetallicRoughness texture
                 // Point roughness path to the same texture. Shader will need logic to sample correct channels.
                 if (roughnessMapPath != null && roughnessMapPath.equals(metallicMapPath)) {
-                   material.setRoughnessMapPath(material.getMetallicMapPath());
+                    material.setRoughnessMapPath(material.getMetallicMapPath());
                 }
             }
 
@@ -236,8 +236,8 @@ public class ModelLoader {
                         , aiAoMapPath, (IntBuffer) null, null, null, null, null, null);
             }
             if (resultAO != aiReturn_SUCCESS) {
-                 aiGetMaterialTexture(aiMaterial, aiTextureType_AMBIENT, 0, aiAoMapPath
-                         , (IntBuffer) null, null, null, null, null, null);
+                aiGetMaterialTexture(aiMaterial, aiTextureType_AMBIENT, 0, aiAoMapPath
+                        , (IntBuffer) null, null, null, null, null, null);
             }
             String aoMapPath = aiAoMapPath.dataString();
             if (aoMapPath != null && aoMapPath.length() > 0 && !aoMapPath.equals(texturePath)) {
@@ -578,4 +578,3 @@ public class ModelLoader {
     private record Bone(int boneId, String boneName, Matrix4f offsetMatrix) {}
     private record VertexWeight(int boneId, int vertexId, float weight) {}
 }
-
