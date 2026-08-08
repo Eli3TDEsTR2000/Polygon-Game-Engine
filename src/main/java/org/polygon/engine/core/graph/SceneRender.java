@@ -1,6 +1,7 @@
 package org.polygon.engine.core.graph;
 
-import org.polygon.engine.core.IRenderPass;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.polygon.engine.core.scene.AnimationData;
 import org.polygon.engine.core.scene.Entity;
 import org.polygon.engine.core.scene.Scene;
@@ -14,9 +15,8 @@ import static org.lwjgl.opengl.GL40.*;
 public class SceneRender {
     private ShaderProgram shaderProgram;
     private UniformMap uniformMap;
-    private List<IRenderPass> preRenders;
+    private final Matrix4f projViewAux = new Matrix4f();
     public SceneRender() {
-        preRenders = new ArrayList<>();
         // This will hold shader modules
         List<ShaderProgram.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
         shaderModuleDataList.add(new ShaderProgram.ShaderModuleData(
@@ -62,11 +62,21 @@ public class SceneRender {
         shaderProgram.cleanup();
     }
 
-    public List<IRenderPass> getPreRenders() {
-        return preRenders;
+    private List<Entity> getVisibleEntities(Model model, Frustum frustum) {
+        List<Entity> visible = new ArrayList<>();
+        Vector3f localMin = model.getAabbMinCorner();
+        Vector3f localMax = model.getAabbMaxCorner();
+
+        for(Entity entity : model.getEntityList()) {
+            if(frustum.isBoxVisible(localMin, localMax, entity.getModelMatrix())) {
+                visible.add(entity);
+            }
+        }
+
+        return visible;
     }
 
-    public void render(Scene scene, GBuffer gBuffer) {
+    public void render(Scene scene, GBuffer gBuffer, Frustum frustum) {
         glEnable(GL_FRAMEBUFFER_SRGB);
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, gBuffer.getGBufferId());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -78,6 +88,11 @@ public class SceneRender {
         glDisable(GL_BLEND);
         glEnable(GL_CULL_FACE); // Standard back-face culling
         glCullFace(GL_BACK);
+
+        // update view Frustum
+        projViewAux.set(scene.getProjection().getProjMatrix())
+                .mul(scene.getCamera().getViewMatrix());
+        frustum.update(projViewAux);
 
         shaderProgram.bind();
 
@@ -99,7 +114,10 @@ public class SceneRender {
         Collection<Model> models = scene.getModelMap().values();
         TextureCache textureCache = scene.getTextureCache();
         for(Model model : models) {
-            List<Entity> entityList = model.getEntityList();
+            List<Entity> entityList = getVisibleEntities(model, frustum);
+            if(entityList.isEmpty()) {
+                continue;
+            }
 
             for(Material material : model.getMaterialList()) {
                 boolean hasTexture = material.getTexturePath() != null;
