@@ -25,6 +25,7 @@ public class EngineRender {
     private FXAARender fxaaRender;
     private SSAOBuffer ssaoBuffer;
     private SSAORender ssaoRender;
+    private Frustum frustum;
 
     public enum RenderStage {
         POST_GEOMETRY,
@@ -56,6 +57,7 @@ public class EngineRender {
         ssaoBuffer = new SSAOBuffer(window);
         ssaoRender = new SSAORender();
         renderPasses = new HashMap<>();
+        frustum = new Frustum();
     }
 
     public void cleanup() {
@@ -84,7 +86,7 @@ public class EngineRender {
         pointShadowRender.render(scene);
 
         // Geometry Pass, draws to the G-Buffer FBO.
-        sceneRender.render(scene, gBuffer);
+        sceneRender.render(scene, gBuffer, frustum);
 
         // POST_GEOMETRY Pass
         renderStage(RenderStage.POST_GEOMETRY, scene);
